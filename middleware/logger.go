@@ -132,6 +132,8 @@ func AccessLog(conf LoggerConfig) gin.HandlerFunc {
 		}
 
 		zlog.InfoLogger(c, "notice", commonFields...)
+		zlog.Errorf(c, "测试err日志")
+		zlog.Warnf(c, "测试warn日志")
 	}
 }
 

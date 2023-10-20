@@ -81,10 +81,24 @@ func newLogger() *zap.Logger {
 	var zapCore []zapcore.Core
 	zapCore = append(zapCore, zapcore.NewCore(
 		getEncoder(),
-		getLogWriter("server", LogFileLevelStdout),
+		getLogWriter("info", LogFileLevelStdout),
 		zap.InfoLevel))
+	// zapCore = append(zapCore, zapcore.NewCore(
+	// 	getEncoder(),
+	// 	getLogWriter("warn", LogFileLevelStdout),
+	// 	zap.WarnLevel))
+	zapCore = append(zapCore, zapcore.NewCore(
+		getEncoder(),
+		getLogWriter("error", LogFileLevelStdout),
+		zap.ErrorLevel))
+	if true {
+		consoleEncoder := zapcore.NewConsoleEncoder(zap.NewDevelopmentEncoderConfig())
+		zapCore = append(zapCore, zapcore.NewCore(
+			consoleEncoder,
+			zapcore.Lock(os.Stdout),
+			zapcore.DebugLevel))
+	}
 	core := zapcore.NewTee(zapCore...)
-
 	// 开启堆栈跟踪
 	caller := zap.WithCaller(true)
 
