@@ -7,4 +7,5 @@ import (
 func Backend(router *gin.RouterGroup) {
 	router = router.Group("/backend")
 	userRouterGroup(router)
+	exampleRouterGroup(router)
 }

@@ -83,10 +83,6 @@ func newLogger() *zap.Logger {
 		getEncoder(),
 		getLogWriter("info", LogFileLevelStdout),
 		zap.InfoLevel))
-	// zapCore = append(zapCore, zapcore.NewCore(
-	// 	getEncoder(),
-	// 	getLogWriter("warn", LogFileLevelStdout),
-	// 	zap.WarnLevel))
 	zapCore = append(zapCore, zapcore.NewCore(
 		getEncoder(),
 		getLogWriter("error", LogFileLevelStdout),
