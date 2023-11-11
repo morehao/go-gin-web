@@ -32,33 +32,47 @@ func responseFormat(val reflect.Value) {
 			}
 		}
 	case reflect.Map:
-		keys := val.MapKeys()
-		for _, v := range keys {
-			field := val.MapIndex(v)
-			responseFormat(field)
+		mapRange := val.MapRange()
+		for mapRange.Next() {
+			key := mapRange.Key()
+			value := mapRange.Value()
+			switch value.Kind() {
+			case reflect.Ptr, reflect.Interface:
+				if !value.IsNil() {
+					responseFormat(value.Elem())
+				}
+			case reflect.Struct:
+				newValue := reflect.New(value.Type()).Elem()
+				newValue.Set(value)
+				responseFormat(newValue.Addr())
+				val.SetMapIndex(key, newValue)
+			case reflect.Slice:
+				if value.IsNil() {
+					if value.CanSet() {
+						newSlice := reflect.MakeSlice(vType, 0, 0)
+						value.Set(newSlice)
+					}
+				} else {
+					for i := 0; i < value.Len(); i++ {
+						field := value.Index(i)
+						responseFormat(field)
+					}
+				}
+			}
 		}
 	case reflect.Struct:
-		// if val.IsZero() {
-		// 	break
-		// }
 		for i := 0; i < val.NumField(); i++ {
 			field := val.Field(i)
-			// vKind := field.Kind()
-			// name := vType.Field(i).Name
-			// fmt.Println(name)
-			fmt.Println("字段名2：", vType.Field(i).Name)
 			responseFormat(field)
 		}
 	case reflect.Ptr:
-		if val.IsZero() {
-			break
+		if !val.IsNil() {
+			st := val.Elem()
+			for i := 0; i < st.NumField(); i++ {
+				field := st.Field(i)
+				responseFormat(field)
+			}
 		}
-		st := val.Elem()
-		for i := 0; i < st.NumField(); i++ {
-			field := st.Field(i)
-			responseFormat(field)
-		}
-
 	default:
 		return
 	}
@@ -132,8 +146,10 @@ func setFloat64Prec(v interface{}) {
 				}
 			}
 		case reflect.Map:
-			for _, key := range field.MapKeys() {
-				value := field.MapIndex(key)
+			mapRange := field.MapRange()
+			for mapRange.Next() {
+				key := mapRange.Key()
+				value := mapRange.Value()
 				switch value.Kind() {
 				case reflect.Ptr, reflect.Interface:
 					if !value.IsNil() {
@@ -152,8 +168,24 @@ func setFloat64Prec(v interface{}) {
 					}
 					rounded := round(value.Float(), precision)
 					field.SetMapIndex(key, reflect.ValueOf(rounded))
+				case reflect.Slice:
+					for j := 0; j < value.Len(); j++ {
+						elem := value.Index(j)
+						if elem.Kind() == reflect.Float64 {
+							precision, err := strconv.Atoi(precisionTag)
+							if err != nil {
+								fmt.Println("Invalid precision:", err)
+								continue
+							}
+							rounded := round(elem.Float(), precision)
+							elem.SetFloat(rounded)
+						} else {
+							setFloat64Prec(elem.Addr().Interface())
+						}
+					}
 				}
 			}
+
 		}
 	}
 }
