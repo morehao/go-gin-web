@@ -3,11 +3,16 @@ package zlog
 import "go.uber.org/zap"
 
 type LogConfig struct {
-	Level  string `yaml:"level"`
-	Stdout bool   `yaml:"stdout"`
+	Level     string
+	Path      string
+	InConsole bool
+	AppName   string
 }
 
-func InitLog(conf LogConfig) *zap.SugaredLogger {
+var logConfig *LogConfig
+
+func InitLog(conf *LogConfig) *zap.SugaredLogger {
+	logConfig = conf
 	SugaredLogger = GetLogger()
 	return SugaredLogger
 }

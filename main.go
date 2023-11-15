@@ -9,7 +9,7 @@ import (
 )
 
 func main() {
-	zlog.InitLog(zlog.LogConfig{})
+	zlog.InitLog(&zlog.LogConfig{})
 	HttpServer()
 }
 

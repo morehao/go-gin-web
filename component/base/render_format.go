@@ -78,18 +78,6 @@ func responseFormat(val reflect.Value) {
 	}
 }
 
-func isBasicDataType(kd reflect.Kind) bool {
-	switch kd {
-	case reflect.Uint, reflect.Uint8, reflect.Uint16, reflect.Uint32, reflect.Uint64,
-		reflect.Int8, reflect.Int, reflect.Int16, reflect.Int32, reflect.Int64,
-		reflect.Float64, reflect.Float32,
-		reflect.String, reflect.Bool:
-		return true
-	}
-
-	return false
-}
-
 func setFloat64Prec(v interface{}) {
 	val := reflect.ValueOf(v)
 
@@ -193,4 +181,16 @@ func setFloat64Prec(v interface{}) {
 func round(x float64, precision int) float64 {
 	pow := math.Pow(10, float64(precision))
 	return math.Round(x*pow) / pow
+}
+
+func isBasicDataType(kd reflect.Kind) bool {
+	switch kd {
+	case reflect.Uint, reflect.Uint8, reflect.Uint16, reflect.Uint32, reflect.Uint64,
+		reflect.Int8, reflect.Int, reflect.Int16, reflect.Int32, reflect.Int64,
+		reflect.Float64, reflect.Float32,
+		reflect.String, reflect.Bool:
+		return true
+	}
+
+	return false
 }

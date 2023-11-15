@@ -26,7 +26,7 @@ func sugaredLogger(ctx *gin.Context) *zap.SugaredLogger {
 	}
 	s := SugaredLogger.With(
 		zap.String(ContextKeyLogID, GetLogId(ctx)),
-		zap.String(ContextKeyIp, ctx.ClientIP()),
+		zap.String(ContextKeyIp, ctx.GetString(ContextKeyIp)),
 		zap.String(ContextKeyUri, ctx.GetString(ContextKeyUri)),
 	)
 	return s
