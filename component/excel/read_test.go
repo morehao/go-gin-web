@@ -14,7 +14,7 @@ func TestReader(t *testing.T) {
 	type Dest struct {
 		SerialNumber int64  `ex:"head:序号,type:int64" validate:"min=10,max=100"`
 		UserName     string `ex:"head:姓名"`
-		Age          int64  `ex:"head:年龄"`
+		Age          int64  `ex:"head:年龄,type:int64"`
 	}
 	var dataList []Dest
 	excelReader := NewReader(f, &ReaderOption{

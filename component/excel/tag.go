@@ -34,16 +34,10 @@ func parseFieldTags(tag string) (firstCtag, current *cTag) {
 		}
 
 		switch parts[0] {
-		case SubTagHead:
-			current.typeof = typeHead
-		case SubTagType:
-			current.typeof = typeType
-		case SubTagRequired:
-			current.typeof = typeRequired
-		case SubTagMax:
-			current.typeof = typeMax
-		default:
-			current.typeof = typeDefault
+		case subTagHead:
+			current.typeof = subtagTypeHead
+		case subTagType:
+			current.typeof = subtagTypeType
 		}
 		current.isBlockEnd = true
 	}

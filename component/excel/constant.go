@@ -1,19 +1,14 @@
 package excel
 
 const (
-	TagExcel = "ex"
+	tagExcel = "ex"
 
-	SubTagHead     = "head"
-	SubTagType     = "type"
-	SubTagMax      = "max"
-	SubTagRequired = "required"
+	subTagHead = "head"
+	subTagType = "type"
 )
 const (
-	typeDefault tagType = iota
-	typeHead
-	typeType
-	typeRequired
-	typeMax
+	subtagTypeHead tagType = iota + 1
+	subtagTypeType
 )
 
 const (

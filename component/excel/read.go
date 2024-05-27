@@ -123,18 +123,18 @@ func (r *Reader) bindDataToSt(dataList []string, headMap map[string]int, stValue
 
 	for i := 0; i < elem.NumField(); i++ {
 		field := elem.Field(i)
-		fieldType := elem.Type().Field(i)
-		if fieldType.Anonymous {
+		structField := elem.Type().Field(i)
+		if structField.Anonymous {
 			return r.bindDataToSt(dataList, headMap, field)
 		}
 		// 获取名为ex的tag的值
-		tagValue := fieldType.Tag.Get(TagExcel)
+		tagValue := structField.Tag.Get(tagExcel)
 		if tagValue == "" {
 			continue
 		}
 		// 获取tag中各个字段的值
 		subTagMap := getSubTagMap(tagValue)
-		headTag := subTagMap[SubTagHead]
+		headTag := subTagMap[subTagHead]
 		if headTag.param == "" {
 			return errors.New("head tag not found")
 		}
@@ -150,6 +150,10 @@ func (r *Reader) bindDataToSt(dataList []string, headMap map[string]int, stValue
 			continue
 		}
 		value := Trim(dataList[headIndex])
+		// 检查数据类型是否符合预期
+		if err := checkFieldTypes(field.Kind(), headTag.param, value); err != nil {
+			return err
+		}
 		if err := setFieldValue(field.Kind(), value, field, headTag.tag); err != nil {
 			return err
 		}
@@ -166,12 +170,12 @@ func (r *Reader) validateData(data interface{}) error {
 	_ = zhTrans.RegisterDefaultTranslations(validate, trans)
 	// 给validate注册一个自定义的标签名称获取函数，使用excel标签值中的head字段名称进行错误提示
 	validate.RegisterTagNameFunc(func(fld reflect.StructField) string {
-		tag := fld.Tag.Get(TagExcel)
+		tag := fld.Tag.Get(tagExcel)
 		if tag == "" {
 			return fld.Name
 		}
 		subTagMap := getSubTagMap(tag)
-		headTag, headExist := subTagMap[SubTagHead]
+		headTag, headExist := subTagMap[subTagHead]
 		if !headExist {
 			return fld.Name
 		}
@@ -190,9 +194,32 @@ func (r *Reader) validateData(data interface{}) error {
 			if errors.As(err, &validationErr) {
 				for _, v := range validationErr {
 					errMsg := v.Translate(trans)
-					return fmt.Errorf("rowNumber %d: %s", i+1, errMsg)
+					return fmt.Errorf("rowNumber %d: %s", i, errMsg)
 				}
 			}
+		}
+	}
+	return nil
+}
+
+// checkFieldTypes 检查 Excel 数据类型是否符合预期
+func checkFieldTypes(kind reflect.Kind, head, value string) error {
+	if head == "" {
+		return nil
+	}
+
+	switch kind {
+	case reflect.Int, reflect.Int8, reflect.Int16, reflect.Int32, reflect.Int64, reflect.Uint, reflect.Uint8, reflect.Uint32, reflect.Uint64:
+		// 如果有逗号，去掉逗号
+		newValue := strings.Replace(value, ",", "", -1)
+		if _, err := strconv.ParseInt(newValue, 10, 64); err != nil {
+			return fmt.Errorf("field %s: expected int64", head)
+		}
+	case reflect.Float32, reflect.Float64:
+		// 如果有逗号，去掉逗号
+		newValue := strings.Replace(value, ",", "", -1)
+		if _, err := strconv.ParseFloat(newValue, 64); err != nil {
+			return fmt.Errorf("field %s: expected float64", head)
 		}
 	}
 	return nil
