@@ -40,41 +40,47 @@ func NewReader(file *excelize.File, option *ReaderOption) *Reader {
 	}
 }
 
-func (r *Reader) Read(dest interface{}) error {
+func (r *Reader) Read(dest interface{}) (map[int][]ValidationError, error) {
 	r.lock.Lock()
 	defer r.lock.Unlock()
 	if r.headRow >= r.dataStartRow {
-		return errors.New("head row must less than data start row")
+		return nil, errors.New("head row must be less than data start row")
 	}
 	rows, getRowsErr := r.file.GetRows(r.sheetName)
 	if getRowsErr != nil {
-		return nil
+		return nil, getRowsErr
 	}
 	if len(rows) == 0 {
-		return errors.New("empty sheet")
+		return nil, errors.New("empty sheet")
 	}
-	// 需要确保有数据
 	if len(rows) <= r.dataStartRow {
-		return errors.New("no data")
+		return nil, errors.New("no data")
 	}
-	// 读取head和data
+
 	headRows := rows[r.headRow]
 	dataRows := rows[r.dataStartRow:]
 
-	// 读取head
 	headMap := r.getHeadMap(headRows)
 	if len(headMap) == 0 {
-		return errors.New("empty head")
+		return nil, errors.New("empty head")
 	}
-	// 绑定数据
-	if err := r.bindDataToDest(headMap, dataRows, dest); err != nil {
-		return err
+	validateErrMap := make(map[int][]ValidationError)
+	bindValidateErrMap, bindErr := r.bindDataToDest(headMap, dataRows, dest)
+	if bindErr != nil {
+		return nil, bindErr
 	}
-	// 数据校验
-	if err := r.validateData(dest); err != nil {
-		return err
+	for dataRowNumber, errList := range bindValidateErrMap {
+		validateErrMap[dataRowNumber] = append(validateErrMap[dataRowNumber], errList...)
 	}
-	return nil
+
+	dataValidateErrMap, validateErr := r.validateData(dest)
+	if validateErr != nil {
+		return nil, validateErr
+	}
+	for dataRowNumber, errList := range dataValidateErrMap {
+		validateErrMap[dataRowNumber] = append(validateErrMap[dataRowNumber], errList...)
+	}
+	return validateErrMap, nil
 }
 
 func (r *Reader) getHeadMap(headRows []string) map[string]int {
@@ -88,87 +94,83 @@ func (r *Reader) getHeadMap(headRows []string) map[string]int {
 	return headMap
 }
 
-func (r *Reader) bindDataToDest(headMap map[string]int, dataRows [][]string, dest interface{}) error {
-	rValue := reflect.ValueOf(dest)
-	rType := rValue.Type()
-	rKind := rType.Kind()
-	if rKind != reflect.Ptr || rValue.Elem().Kind() != reflect.Slice {
-		return errors.New("dest must be a pointer to a slice")
+func (r *Reader) bindDataToDest(headMap map[string]int, dataRows [][]string, dest interface{}) (map[int][]ValidationError, error) {
+	destValue := reflect.ValueOf(dest)
+	if destValue.Kind() != reflect.Ptr || destValue.Elem().Kind() != reflect.Slice {
+		return nil, errors.New("dest must be a pointer to a slice")
 	}
-	elem := rValue.Type().Elem()
-	// if elem.Kind() != reflect.Slice {
-	// 	return errors.New("dest structure must be a slice")
-	// }
+	elemType := destValue.Elem().Type().Elem()
 	formatDataList := make([]reflect.Value, 0)
-	subElem := elem.Elem()
-	for _, dataList := range dataRows {
+
+	destValidateErrMap := make(map[int][]ValidationError)
+
+	for dataRowNumber, dataList := range dataRows {
 		if isEmptyLine(dataList) {
 			continue
 		}
-		item := reflect.New(subElem)
-		if err := r.bindDataToSt(dataList, headMap, item); err != nil {
-			return err
+		item := reflect.New(elemType).Elem()
+		stValidateErrMap, bindErr := r.bindDataToSt(dataRowNumber, dataList, headMap, item)
+		if bindErr != nil {
+			return nil, bindErr
 		}
-		formatDataList = append(formatDataList, item.Elem())
+		for k, errList := range stValidateErrMap {
+			destValidateErrMap[k] = append(destValidateErrMap[dataRowNumber], errList...)
+		}
+		formatDataList = append(formatDataList, item)
 	}
-	rValue.Elem().Set(reflect.Append(rValue.Elem(), formatDataList...))
-	return nil
+	destValue.Elem().Set(reflect.Append(destValue.Elem(), formatDataList...))
+	return destValidateErrMap, nil
 }
 
-func (r *Reader) bindDataToSt(dataList []string, headMap map[string]int, stValue reflect.Value) error {
-	elem := stValue.Elem()
-	if elem.Kind() != reflect.Struct {
-		return errors.New("[bindDataToSt] elem must be a struct")
+func (r *Reader) bindDataToSt(dataRowNumber int, dataList []string, headMap map[string]int, stValue reflect.Value) (map[int][]ValidationError, error) {
+	if stValue.Kind() != reflect.Struct {
+		return nil, errors.New("[bindDataToSt] stValue must be a struct")
 	}
+	validateErrMap := make(map[int][]ValidationError)
 
-	for i := 0; i < elem.NumField(); i++ {
-		field := elem.Field(i)
-		structField := elem.Type().Field(i)
+	for i := 0; i < stValue.NumField(); i++ {
+		field := stValue.Field(i)
+		structField := stValue.Type().Field(i)
 		if structField.Anonymous {
-			return r.bindDataToSt(dataList, headMap, field)
+			return r.bindDataToSt(dataRowNumber, dataList, headMap, field)
 		}
-		// 获取名为ex的tag的值
 		tagValue := structField.Tag.Get(tagExcel)
 		if tagValue == "" {
 			continue
 		}
-		// 获取tag中各个字段的值
 		subTagMap := getSubTagMap(tagValue)
-		headTag := subTagMap[subTagHead]
-		if headTag.param == "" {
-			return errors.New("head tag not found")
+		headTag, headTagExist := subTagMap[subTagHead]
+		if !headTagExist || headTag.param == "" {
+			return nil, fmt.Errorf("head tag not found for field %s", structField.Name)
 		}
-		subTag, subTagExist := subTagMap[headTag.tag]
-		if !subTagExist {
-			return errors.New("head not found")
-		}
-		headIndex, headExist := headMap[subTag.param]
-		if !headExist {
+		headIndex, headExist := headMap[headTag.param]
+		if !headExist || headIndex >= len(dataList) {
 			continue
 		}
-		if headIndex >= len(dataList) {
-			continue
-		}
-		value := Trim(dataList[headIndex])
-		// 检查数据类型是否符合预期
-		if err := checkFieldTypes(field.Kind(), headTag.param, value); err != nil {
-			return err
+		value := strings.TrimSpace(dataList[headIndex])
+		if err := checkFieldTypes(structField.Type.Kind(), headTag.param, value); err != nil {
+			validateErrMap[dataRowNumber] = append(validateErrMap[i], ValidationError{
+				DataRowNumber: dataRowNumber,
+				Head:          headTag.param,
+				CellValue:     value,
+				ExpectType:    structField.Type.Kind().String(),
+				ErrorMessage:  err.Error(),
+			})
 		}
 		if err := setFieldValue(field.Kind(), value, field, headTag.tag); err != nil {
-			return err
+			return nil, err
 		}
-
 	}
-	return nil
+	return validateErrMap, nil
 }
 
-func (r *Reader) validateData(data interface{}) error {
+func (r *Reader) validateData(data interface{}) (map[int][]ValidationError, error) {
 	validate := validator.New()
 	zh := zh_Hans_CN.New()
 	uni := ut.New(zh, zh)
 	trans, _ := uni.GetTranslator("zh_Hans_CN")
 	_ = zhTrans.RegisterDefaultTranslations(validate, trans)
-	// 给validate注册一个自定义的标签名称获取函数，使用excel标签值中的head字段名称进行错误提示
+
 	validate.RegisterTagNameFunc(func(fld reflect.StructField) string {
 		tag := fld.Tag.Get(tagExcel)
 		if tag == "" {
@@ -176,30 +178,34 @@ func (r *Reader) validateData(data interface{}) error {
 		}
 		subTagMap := getSubTagMap(tag)
 		headTag, headExist := subTagMap[subTagHead]
-		if !headExist {
-			return fld.Name
-		}
-		if headTag.param == "" {
+		if !headExist || headTag.param == "" {
 			return fld.Name
 		}
 		return headTag.param
 	})
-	// 对data进行校验，如果校验不通过，返回错误
-	// data必须是一个slice
-	rValue := reflect.ValueOf(data).Elem()
-	for i := 0; i < rValue.Len(); i++ {
-		item := rValue.Index(i).Interface()
-		var validationErr validator.ValidationErrors
+
+	validateErrMap := make(map[int][]ValidationError)
+	destValue := reflect.ValueOf(data).Elem()
+	for i := 0; i < destValue.Len(); i++ {
+		item := destValue.Index(i).Interface()
 		if err := validate.Struct(item); err != nil {
-			if errors.As(err, &validationErr) {
-				for _, v := range validationErr {
+			var validationErrors validator.ValidationErrors
+			if errors.As(err, &validationErrors) {
+				for _, v := range validationErrors {
 					errMsg := v.Translate(trans)
-					return fmt.Errorf("rowNumber %d: %s", i, errMsg)
+					validateErrMap[i] = append(validateErrMap[i], ValidationError{
+						DataRowNumber: i,
+						Head:          v.Field(),
+						CellValue:     fmt.Sprintf("%v", v.Value()),
+						ErrorMessage:  errMsg,
+					})
 				}
+			} else {
+				return nil, err
 			}
 		}
 	}
-	return nil
+	return validateErrMap, nil
 }
 
 // checkFieldTypes 检查 Excel 数据类型是否符合预期
@@ -225,6 +231,7 @@ func checkFieldTypes(kind reflect.Kind, head, value string) error {
 	return nil
 }
 
+// setFieldValue 根据类型设置字段值
 func setFieldValue(kind reflect.Kind, value string, field reflect.Value, key string) error {
 	switch kind {
 	case reflect.String:
@@ -254,7 +261,7 @@ func setFieldValue(kind reflect.Kind, value string, field reflect.Value, key str
 
 func isEmptyLine(data []string) bool {
 	for _, v := range data {
-		if len(v) != 0 {
+		if len(strings.TrimSpace(v)) != 0 {
 			return false
 		}
 	}

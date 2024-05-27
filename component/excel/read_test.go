@@ -22,8 +22,10 @@ func TestReader(t *testing.T) {
 		HeadRow:      0,
 		DataStartRow: 1,
 	})
-	readerErr := excelReader.Read(&dataList)
+	validateErrMap, readerErr := excelReader.Read(&dataList)
 	assert.Nil(t, readerErr)
 	res, _ := jsoniter.MarshalToString(dataList)
 	fmt.Println(res)
+	errMap, _ := jsoniter.MarshalToString(validateErrMap)
+	fmt.Println(errMap)
 }
