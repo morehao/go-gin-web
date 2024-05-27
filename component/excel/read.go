@@ -13,7 +13,7 @@ import (
 type Reader struct {
 	file         *excelize.File
 	sheetName    string
-	headerRow    int
+	headRow      int
 	dataStartRow int
 	lock         sync.Mutex
 }
@@ -31,7 +31,7 @@ func NewReader(file *excelize.File, option *ReaderOption) *Reader {
 	return &Reader{
 		file:         file,
 		sheetName:    file.GetSheetName(option.SheetNumber),
-		headerRow:    option.HeaderRow,
+		headRow:      option.HeaderRow,
 		dataStartRow: option.DataStartRow,
 	}
 }
@@ -39,8 +39,8 @@ func NewReader(file *excelize.File, option *ReaderOption) *Reader {
 func (r *Reader) Read(dest interface{}) error {
 	r.lock.Lock()
 	defer r.lock.Unlock()
-	if r.headerRow >= r.dataStartRow {
-		return errors.New("header row must less than data start row")
+	if r.headRow >= r.dataStartRow {
+		return errors.New("head row must less than data start row")
 	}
 	rows, getRowsErr := r.file.GetRows(r.sheetName)
 	if getRowsErr != nil {
@@ -54,13 +54,13 @@ func (r *Reader) Read(dest interface{}) error {
 		return errors.New("no data")
 	}
 	// 读取header和data
-	headerRows := rows[r.headerRow]
+	headerRows := rows[r.headRow]
 	dataRows := rows[r.dataStartRow:]
 
 	// 读取header
 	headerMap := r.getHeaderMap(headerRows)
 	if len(headerMap) == 0 {
-		return errors.New("empty header")
+		return errors.New("empty head")
 	}
 	// 绑定数据
 	if err := r.bindDataToDest(headerMap, dataRows, dest); err != nil {
@@ -127,13 +127,16 @@ func (r *Reader) bindDataToSt(dataList []string, headMap map[string]int, stValue
 		// 获取tag中各个字段的值
 		subTagMap := getSubTagMap(tagValue)
 		headTag := subTagMap[SubTagHeader]
-		if headTag.tag == "" {
-			continue
+		if headTag.param == "" {
+			return errors.New("head tag not found")
 		}
-		// TODO: 获取对应的参数有问题
-		headIndex, ok := headMap[headTag.tag]
-		if !ok {
-			return errors.New("header not found")
+		subTag, subTagExist := subTagMap[headTag.tag]
+		if !subTagExist {
+			return errors.New("head not found")
+		}
+		headIndex, headExist := headMap[subTag.param]
+		if !headExist {
+			continue
 		}
 		if headIndex >= len(dataList) {
 			continue
@@ -152,16 +155,24 @@ func setFieldValue(kind reflect.Kind, value string, field reflect.Value, key str
 	case reflect.String:
 		field.Set(reflect.ValueOf(value))
 	case reflect.Int, reflect.Int8, reflect.Int16, reflect.Int32, reflect.Int64, reflect.Uint, reflect.Uint8, reflect.Uint32, reflect.Uint64:
+
 		// 如果有逗号，去掉逗号
 		value = strings.Replace(value, ",", "", -1)
 		uintVal, _ := strconv.ParseUint(value, 10, 64)
-		field.Set(reflect.ValueOf(uintVal))
+
+		integerKind := kind
+		switch integerKind {
+		case reflect.Int, reflect.Int8, reflect.Int16, reflect.Int32, reflect.Int64:
+			field.SetInt(int64(uintVal))
+		case reflect.Uint, reflect.Uint8, reflect.Uint16, reflect.Uint32, reflect.Uint64:
+			field.SetUint(uintVal)
+		}
 	case reflect.Float32, reflect.Float64:
 		value = strings.Replace(value, ",", "", -1)
-		v, _ := strconv.ParseFloat(value, 64)
-		field.Set(reflect.ValueOf(v))
+		floatVal, _ := strconv.ParseFloat(value, 64)
+		field.SetFloat(floatVal)
 	default:
-		return errors.New(fmt.Sprintf("field type not support, key: %s", key))
+		return fmt.Errorf("field type not support, key: %s", key)
 	}
 	return nil
 }

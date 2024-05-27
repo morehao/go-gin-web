@@ -3,7 +3,7 @@ package excel
 const (
 	TagExcel = "ex"
 
-	SubTagHeader   = "header"
+	SubTagHeader   = "head"
 	SubTagType     = "type"
 	SubTagMax      = "max"
 	SubTagRequired = "required"
