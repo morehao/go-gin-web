@@ -3,6 +3,10 @@ package excel
 import (
 	"errors"
 	"fmt"
+	"github.com/go-playground/locales/zh_Hans_CN"
+	ut "github.com/go-playground/universal-translator"
+	"github.com/go-playground/validator/v10"
+	zhTrans "github.com/go-playground/validator/v10/translations/zh"
 	"github.com/xuri/excelize/v2"
 	"reflect"
 	"strconv"
@@ -20,7 +24,7 @@ type Reader struct {
 
 type ReaderOption struct {
 	SheetNumber  int // 0开始
-	HeaderRow    int // 0开始
+	HeadRow      int // 0开始
 	DataStartRow int // 0开始
 }
 
@@ -31,7 +35,7 @@ func NewReader(file *excelize.File, option *ReaderOption) *Reader {
 	return &Reader{
 		file:         file,
 		sheetName:    file.GetSheetName(option.SheetNumber),
-		headRow:      option.HeaderRow,
+		headRow:      option.HeadRow,
 		dataStartRow: option.DataStartRow,
 	}
 }
@@ -53,44 +57,48 @@ func (r *Reader) Read(dest interface{}) error {
 	if len(rows) <= r.dataStartRow {
 		return errors.New("no data")
 	}
-	// 读取header和data
-	headerRows := rows[r.headRow]
+	// 读取head和data
+	headRows := rows[r.headRow]
 	dataRows := rows[r.dataStartRow:]
 
-	// 读取header
-	headerMap := r.getHeaderMap(headerRows)
-	if len(headerMap) == 0 {
+	// 读取head
+	headMap := r.getHeadMap(headRows)
+	if len(headMap) == 0 {
 		return errors.New("empty head")
 	}
 	// 绑定数据
-	if err := r.bindDataToDest(headerMap, dataRows, dest); err != nil {
+	if err := r.bindDataToDest(headMap, dataRows, dest); err != nil {
+		return err
+	}
+	// 数据校验
+	if err := r.validateData(dest); err != nil {
 		return err
 	}
 	return nil
 }
 
-func (r *Reader) getHeaderMap(headerRows []string) map[string]int {
-	headerMap := make(map[string]int)
-	for i, cell := range headerRows {
+func (r *Reader) getHeadMap(headRows []string) map[string]int {
+	headMap := make(map[string]int)
+	for i, cell := range headRows {
 		if cell == "" {
 			continue
 		}
-		headerMap[cell] = i
+		headMap[cell] = i
 	}
-	return headerMap
+	return headMap
 }
 
-func (r *Reader) bindDataToDest(headerMap map[string]int, dataRows [][]string, dest interface{}) error {
+func (r *Reader) bindDataToDest(headMap map[string]int, dataRows [][]string, dest interface{}) error {
 	rValue := reflect.ValueOf(dest)
 	rType := rValue.Type()
 	rKind := rType.Kind()
-	if rKind != reflect.Ptr {
-		return errors.New("dest must be a pointer")
+	if rKind != reflect.Ptr || rValue.Elem().Kind() != reflect.Slice {
+		return errors.New("dest must be a pointer to a slice")
 	}
 	elem := rValue.Type().Elem()
-	if elem.Kind() != reflect.Slice {
-		return errors.New("dest structure must be a slice")
-	}
+	// if elem.Kind() != reflect.Slice {
+	// 	return errors.New("dest structure must be a slice")
+	// }
 	formatDataList := make([]reflect.Value, 0)
 	subElem := elem.Elem()
 	for _, dataList := range dataRows {
@@ -98,7 +106,7 @@ func (r *Reader) bindDataToDest(headerMap map[string]int, dataRows [][]string, d
 			continue
 		}
 		item := reflect.New(subElem)
-		if err := r.bindDataToSt(dataList, headerMap, item); err != nil {
+		if err := r.bindDataToSt(dataList, headMap, item); err != nil {
 			return err
 		}
 		formatDataList = append(formatDataList, item.Elem())
@@ -126,7 +134,7 @@ func (r *Reader) bindDataToSt(dataList []string, headMap map[string]int, stValue
 		}
 		// 获取tag中各个字段的值
 		subTagMap := getSubTagMap(tagValue)
-		headTag := subTagMap[SubTagHeader]
+		headTag := subTagMap[SubTagHead]
 		if headTag.param == "" {
 			return errors.New("head tag not found")
 		}
@@ -146,6 +154,46 @@ func (r *Reader) bindDataToSt(dataList []string, headMap map[string]int, stValue
 			return err
 		}
 
+	}
+	return nil
+}
+
+func (r *Reader) validateData(data interface{}) error {
+	validate := validator.New()
+	zh := zh_Hans_CN.New()
+	uni := ut.New(zh, zh)
+	trans, _ := uni.GetTranslator("zh_Hans_CN")
+	_ = zhTrans.RegisterDefaultTranslations(validate, trans)
+	// 给validate注册一个自定义的标签名称获取函数，使用excel标签值中的head字段名称进行错误提示
+	validate.RegisterTagNameFunc(func(fld reflect.StructField) string {
+		tag := fld.Tag.Get(TagExcel)
+		if tag == "" {
+			return fld.Name
+		}
+		subTagMap := getSubTagMap(tag)
+		headTag, headExist := subTagMap[SubTagHead]
+		if !headExist {
+			return fld.Name
+		}
+		if headTag.param == "" {
+			return fld.Name
+		}
+		return headTag.param
+	})
+	// 对data进行校验，如果校验不通过，返回错误
+	// data必须是一个slice
+	rValue := reflect.ValueOf(data).Elem()
+	for i := 0; i < rValue.Len(); i++ {
+		item := rValue.Index(i).Interface()
+		var validationErr validator.ValidationErrors
+		if err := validate.Struct(item); err != nil {
+			if errors.As(err, &validationErr) {
+				for _, v := range validationErr {
+					errMsg := v.Translate(trans)
+					return fmt.Errorf("rowNumber %d: %s", i+1, errMsg)
+				}
+			}
+		}
 	}
 	return nil
 }

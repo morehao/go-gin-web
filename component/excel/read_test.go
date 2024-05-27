@@ -12,14 +12,14 @@ func TestReader(t *testing.T) {
 	f, err := excelize.OpenFile("read.xlsx")
 	assert.Nil(t, err)
 	type Dest struct {
-		SerialNumber int64  `ex:"head:序号,type:int64"`
-		UserName     string `ex:"head:姓名,type:string"`
-		Age          int64  `ex:"head:年龄,type:int64"`
+		SerialNumber int64  `ex:"head:序号,type:int64" validate:"min=10,max=100"`
+		UserName     string `ex:"head:姓名"`
+		Age          int64  `ex:"head:年龄"`
 	}
 	var dataList []Dest
 	excelReader := NewReader(f, &ReaderOption{
 		SheetNumber:  0,
-		HeaderRow:    0,
+		HeadRow:      0,
 		DataStartRow: 1,
 	})
 	readerErr := excelReader.Read(&dataList)

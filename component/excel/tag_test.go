@@ -17,10 +17,10 @@ func TestParseFieldTags(t *testing.T) {
 	field, _ := typ.FieldByName("Name")
 	tag := field.Tag.Get("ex")
 
-	firstCtag, current := parseFieldTags(tag)
+	firstCtag, _ := parseFieldTags(tag)
 
 	fmt.Println("Parsed Tags")
-	for current = firstCtag; current != nil; current = current.next {
+	for current := firstCtag; current != nil; current = current.next {
 		fmt.Printf("Tag: %s, Param: %s, Type: %d\n", current.tag, current.param, current.typeof)
 	}
 }

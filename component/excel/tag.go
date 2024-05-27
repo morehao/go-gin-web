@@ -34,7 +34,7 @@ func parseFieldTags(tag string) (firstCtag, current *cTag) {
 		}
 
 		switch parts[0] {
-		case SubTagHeader:
+		case SubTagHead:
 			current.typeof = typeHead
 		case SubTagType:
 			current.typeof = typeType
@@ -52,9 +52,9 @@ func parseFieldTags(tag string) (firstCtag, current *cTag) {
 
 func getSubTagMap(tag string) map[string]*cTag {
 	tagMap := make(map[string]*cTag)
-	firstCtag, current := parseFieldTags(tag)
+	firstCtag, _ := parseFieldTags(tag)
 
-	for current = firstCtag; current != nil; current = current.next {
+	for current := firstCtag; current != nil; current = current.next {
 		tagMap[current.tag] = current
 	}
 	return tagMap
