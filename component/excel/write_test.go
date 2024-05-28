@@ -5,7 +5,7 @@ import (
 	"testing"
 )
 
-func TestNewWrite(t *testing.T) {
+func TestSaveAs(t *testing.T) {
 	type Dest struct {
 		SerialNumber int64  `ex:"head:序号,type:int64" validate:"min=10,max=100"`
 		UserName     string `ex:"head:姓名"`
@@ -21,7 +21,6 @@ func TestNewWrite(t *testing.T) {
 		SheetName: "Sheet1",
 		HeadRow:   0,
 	})
-	buffer, err := excelWriter.GenerateFileStream(dataList)
+	err := excelWriter.SaveAs(dataList, "write.xlsx")
 	assert.Nil(t, err)
-	t.Log(buffer.String())
 }

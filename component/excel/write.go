@@ -32,6 +32,14 @@ func NewWrite(option *WriteOption) *Write {
 	}
 }
 
+func (w *Write) SaveAs(data interface{}, filePath string) error {
+	_, err := w.GenerateFileStream(data)
+	if err != nil {
+		return err
+	}
+	return w.file.SaveAs(filePath)
+}
+
 func (w *Write) GenerateFileStream(data interface{}) (*bytes.Buffer, error) {
 	w.lock.Lock()
 	defer w.lock.Unlock()
@@ -48,13 +56,14 @@ func (w *Write) GenerateFileStream(data interface{}) (*bytes.Buffer, error) {
 
 	// 获取头行数据
 	var headRows []string
+	var colMap map[string]int
 	if dataValue.Len() == 0 {
 		// 创建一个新实例以获取头行数据
 		elemType := dataValue.Type().Elem()
 		tempInstance := reflect.New(elemType).Elem().Interface()
-		headRows = w.getHeadRows(tempInstance)
+		headRows, colMap = w.getHeadRowsAndColMap(tempInstance)
 	} else {
-		headRows = w.getHeadRows(dataValue.Index(0).Interface())
+		headRows, colMap = w.getHeadRowsAndColMap(dataValue.Index(0).Interface())
 	}
 
 	// 写入头行数据
@@ -80,7 +89,7 @@ func (w *Write) GenerateFileStream(data interface{}) (*bytes.Buffer, error) {
 			return nil, fmt.Errorf("data must be a slice of structs")
 		}
 		// 写入每个元素的数据
-		if err := w.writeRow(i, elementValue.Interface(), headRows); err != nil {
+		if err := w.writeRow(i, elementValue.Interface(), colMap); err != nil {
 			return nil, err
 		}
 	}
@@ -88,16 +97,17 @@ func (w *Write) GenerateFileStream(data interface{}) (*bytes.Buffer, error) {
 	return w.getBuffer()
 }
 
-func (w *Write) SaveAs(data interface{}, filePath string) error {
-	_, err := w.GenerateFileStream(data)
-	if err != nil {
-		return err
+func (w *Write) getBuffer() (*bytes.Buffer, error) {
+	var buffer bytes.Buffer
+	if err := w.file.Write(&buffer); err != nil {
+		return nil, err
 	}
-	return w.file.SaveAs(filePath)
+	return &buffer, nil
 }
 
-func (w *Write) getHeadRows(elem interface{}) []string {
+func (w *Write) getHeadRowsAndColMap(elem interface{}) ([]string, map[string]int) {
 	var headRows []string
+	colMap := make(map[string]int)
 	elemValue := reflect.ValueOf(elem)
 	elemType := elemValue.Type()
 	for i := 0; i < elemType.NumField(); i++ {
@@ -111,8 +121,9 @@ func (w *Write) getHeadRows(elem interface{}) []string {
 			continue
 		}
 		headRows = append(headRows, headTag.param)
+		colMap[headTag.param] = i
 	}
-	return headRows
+	return headRows, colMap
 }
 
 func (w *Write) newSheet(sheetName string) error {
@@ -124,40 +135,17 @@ func (w *Write) newSheet(sheetName string) error {
 	return nil
 }
 
-func (w *Write) writeRow(rowIndex int, elem interface{}, headRows []string) error {
+func (w *Write) writeRow(rowIndex int, elem interface{}, colMap map[string]int) error {
 	elemValue := reflect.ValueOf(elem)
-	elemType := elemValue.Type()
-	for colIdx, head := range headRows {
-		for i := 0; i < elemType.NumField(); i++ {
-			field := elemType.Field(i)
-			tagValue := field.Tag.Get(tagExcel)
-			if tagValue == "" {
-				continue
-			}
-			headTag := getHeadTag(tagValue)
-			if headTag == nil || headTag.param == "" {
-				return fmt.Errorf("head tag not found for field %s", field.Name)
-			}
-			if headTag.param != head {
-				continue
-			}
-			fieldValue := elemValue.Field(i)
-			cell, transErr := excelize.CoordinatesToCellName(colIdx+1, w.headRow+2+rowIndex)
-			if transErr != nil {
-				return transErr
-			}
-			if err := w.file.SetCellValue(w.sheetName, cell, fieldValue.Interface()); err != nil {
-				return err
-			}
+	for _, colIdx := range colMap {
+		fieldValue := elemValue.Field(colIdx)
+		cell, transErr := excelize.CoordinatesToCellName(colIdx+1, w.headRow+2+rowIndex)
+		if transErr != nil {
+			return transErr
+		}
+		if err := w.file.SetCellValue(w.sheetName, cell, fieldValue.Interface()); err != nil {
+			return err
 		}
 	}
 	return nil
-}
-
-func (w *Write) getBuffer() (*bytes.Buffer, error) {
-	var buffer bytes.Buffer
-	if err := w.file.Write(&buffer); err != nil {
-		return nil, err
-	}
-	return &buffer, nil
 }
