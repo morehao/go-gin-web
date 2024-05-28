@@ -21,6 +21,7 @@ func TestNewWrite(t *testing.T) {
 		SheetName: "Sheet1",
 		HeadRow:   0,
 	})
-	err := excelWriter.Write(dataList)
+	buffer, err := excelWriter.GenerateFileStream(dataList)
 	assert.Nil(t, err)
+	t.Log(buffer.String())
 }
