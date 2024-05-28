@@ -13,7 +13,7 @@ type cTag struct {
 
 type tagType int
 
-func parseFieldTags(tag string) (firstCtag, current *cTag) {
+func parseFieldTags(tag string) (firstCTag, current *cTag) {
 	var t string
 	tags := strings.Split(tag, tagSeparator)
 
@@ -23,7 +23,7 @@ func parseFieldTags(tag string) (firstCtag, current *cTag) {
 
 		if i == 0 {
 			current = &cTag{tag: parts[0], hasParam: len(parts) > 1}
-			firstCtag = current
+			firstCTag = current
 		} else {
 			current.next = &cTag{tag: parts[0], hasParam: len(parts) > 1}
 			current = current.next
@@ -46,10 +46,22 @@ func parseFieldTags(tag string) (firstCtag, current *cTag) {
 
 func getSubTagMap(tag string) map[string]*cTag {
 	tagMap := make(map[string]*cTag)
-	firstCtag, _ := parseFieldTags(tag)
+	firstCTag, _ := parseFieldTags(tag)
 
-	for current := firstCtag; current != nil; current = current.next {
+	for current := firstCTag; current != nil; current = current.next {
 		tagMap[current.tag] = current
 	}
 	return tagMap
+}
+
+func getHeadTag(tag string) *cTag {
+	firstCTag, _ := parseFieldTags(tag)
+	var headCTag *cTag
+	for current := firstCTag; current != nil; current = current.next {
+		if current.tag == subTagHead {
+			headCTag = current
+			break
+		}
+	}
+	return headCTag
 }
