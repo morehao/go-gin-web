@@ -1,6 +1,7 @@
 package main
 
 import (
+	"go-gin-web/pkg/glog"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -13,13 +14,26 @@ func setupRouter() *gin.Engine {
 	// gin.DisableConsoleColor()
 	r := gin.Default()
 
+	log, newLogErr := glog.NewZapLogger(&glog.LoggerConfig{
+		ServiceName: "go-gin-web",
+		Level:       "debug",
+		InConsole:   true,
+		LogDir:      "./log",
+	})
+	if newLogErr != nil {
+		panic(newLogErr)
+	}
+
 	// Ping test
 	r.GET("/ping", func(c *gin.Context) {
+		log.Info(c, "ping1")
+		log.Info(c, "ping2")
 		c.String(http.StatusOK, "pong")
 	})
 
 	// Get user value
 	r.GET("/user/:name", func(c *gin.Context) {
+		log.Info(c, "user1")
 		user := c.Params.ByName("name")
 		value, ok := db[user]
 		if ok {
