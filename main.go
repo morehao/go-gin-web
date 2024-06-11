@@ -26,6 +26,8 @@ func setupRouter() *gin.Engine {
 
 	// Ping test
 	r.GET("/ping", func(c *gin.Context) {
+		traceId := glog.GetTraceId(c)
+		c.Set(glog.ContextKeyTraceId, traceId)
 		log.Info(c, "ping1")
 		log.Info(c, "ping2")
 		c.String(http.StatusOK, "pong")
@@ -49,7 +51,7 @@ func setupRouter() *gin.Engine {
 	// authorized.Use(gin.BasicAuth(gin.Credentials{
 	//	  "foo":  "bar",
 	//	  "manu": "123",
-	//}))
+	// }))
 	authorized := r.Group("/", gin.BasicAuth(gin.Accounts{
 		"foo":  "bar", // user:foo password:bar
 		"manu": "123", // user:manu password:123
