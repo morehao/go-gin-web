@@ -19,126 +19,99 @@ func responseFormat(val reflect.Value) {
 		val = val.Elem()
 	}
 
-	vType := val.Type()
-	kd := val.Kind()
-
-	switch kd {
+	switch val.Kind() {
 	case reflect.Slice, reflect.Array:
-		if val.IsNil() {
-			if val.CanSet() {
-				newSlice := reflect.MakeSlice(vType, 0, 0)
-				val.Set(newSlice)
-			}
-		} else {
-			for i := 0; i < val.Len(); i++ {
-				field := val.Index(i)
-				if field.Kind() == reflect.Float64 {
-					// TODO：格式化精度
-				} else {
-					responseFormat(field)
-				}
-			}
-		}
+		handleSliceArray(val)
 	case reflect.Map:
-		mapRange := val.MapRange()
-		for mapRange.Next() {
-			key := mapRange.Key()
-			value := mapRange.Value()
-			switch value.Kind() {
-			case reflect.Ptr, reflect.Interface:
-				if !value.IsNil() {
-					responseFormat(value.Elem())
-				}
-			case reflect.Struct:
-				newValue := reflect.New(value.Type()).Elem()
-				newValue.Set(value)
-				responseFormat(newValue.Addr())
-				val.SetMapIndex(key, newValue)
-			case reflect.Slice, reflect.Array:
-				if value.IsNil() {
-					if value.CanSet() {
-						newSlice := reflect.MakeSlice(vType, 0, 0)
-						value.Set(newSlice)
-					}
-				} else {
-					for i := 0; i < value.Len(); i++ {
-						field := value.Index(i)
-						responseFormat(field)
-					}
-				}
+		handleMap(val)
+	case reflect.Struct:
+		handleStruct(val)
+	case reflect.Ptr:
+		handlePointer(val)
+	}
+}
+
+func handleSliceArray(val reflect.Value) {
+	if val.IsNil() && val.CanSet() {
+		val.Set(reflect.MakeSlice(val.Type(), 0, 0))
+	} else {
+		for i := 0; i < val.Len(); i++ {
+			responseFormat(val.Index(i))
+		}
+	}
+}
+
+func handleMap(val reflect.Value) {
+	mapRange := val.MapRange()
+	for mapRange.Next() {
+		key := mapRange.Key()
+		value := mapRange.Value()
+		switch value.Kind() {
+		case reflect.Ptr, reflect.Interface:
+			if !value.IsNil() {
+				responseFormat(value.Elem())
+			}
+		case reflect.Struct:
+			newValue := reflect.New(value.Type()).Elem()
+			newValue.Set(value)
+			responseFormat(newValue.Addr())
+			val.SetMapIndex(key, newValue)
+		case reflect.Slice, reflect.Array:
+			handleSliceArray(value)
+		}
+	}
+}
+
+func handleStruct(val reflect.Value) {
+	for i := 0; i < val.NumField(); i++ {
+		field := val.Field(i)
+		typeField := val.Type().Field(i)
+		switch field.Kind() {
+		case reflect.Ptr, reflect.Struct, reflect.Interface:
+			responseFormat(field)
+		case reflect.Map:
+			handleMapField(field, typeField)
+		case reflect.Float64:
+			setFieldPrecision(field, typeField)
+		case reflect.Slice, reflect.Array:
+			handleSliceArrayField(field, typeField)
+		}
+	}
+}
+
+func handleMapField(field reflect.Value, typeField reflect.StructField) {
+	if field.Type().Elem().Kind() == reflect.Float64 {
+		setMapPrecision(field, typeField)
+	} else {
+		responseFormat(field)
+	}
+}
+
+func handleSliceArrayField(field reflect.Value, typeField reflect.StructField) {
+	if field.IsNil() && field.CanSet() {
+		field.Set(reflect.MakeSlice(field.Type(), 0, 0))
+	} else {
+		for j := 0; j < field.Len(); j++ {
+			subField := field.Index(j)
+			if subField.Kind() == reflect.Float64 {
+				setFieldPrecision(subField, typeField)
+			} else {
+				responseFormat(subField)
 			}
 		}
-	case reflect.Struct:
-		for i := 0; i < val.NumField(); i++ {
-			field := val.Field(i)
-			typeField := vType.Field(i)
-			switch field.Kind() {
-			case reflect.Ptr, reflect.Struct, reflect.Interface:
-				responseFormat(field)
-			case reflect.Map:
-				elem := field.Type().Elem()
-				if elem.Kind() == reflect.Float64 {
-					// 获取精度
-					precisionTag := typeField.Tag.Get("precision")
-					if precisionTag != "" && field.CanSet() {
-						precision, _ := strconv.Atoi(precisionTag)
-						// 遍历map
-						mapRange := field.MapRange()
-						for mapRange.Next() {
-							mapKey := mapRange.Key()
-							mapValue := mapRange.Value()
-							if mapValue.Kind() == reflect.Float64 {
-								newValue := reflect.New(mapValue.Type()).Elem()
-								// 给mapValue赋值，新值经过精度处理
-								newValue.SetFloat(round(mapValue.Float(), precision))
-								// 给map赋值
-								field.SetMapIndex(mapKey, newValue)
-							}
-						}
-					}
+	}
+}
 
-				} else {
-					responseFormat(field)
-				}
-
-			case reflect.Float64:
-				setFieldPrecision(field, typeField)
-			case reflect.Slice, reflect.Array:
-				if field.IsNil() {
-					if field.CanSet() {
-						newSlice := reflect.MakeSlice(field.Type(), 0, 0)
-						field.Set(newSlice)
-					}
-				} else {
-					for j := 0; j < field.Len(); j++ {
-						subField := field.Index(j)
-						if subField.Kind() == reflect.Float64 {
-							setFieldPrecision(subField, typeField)
-						} else {
-							responseFormat(subField)
-						}
-					}
-				}
-
-			}
+func handlePointer(val reflect.Value) {
+	if !val.IsNil() {
+		st := val.Elem()
+		for i := 0; i < st.NumField(); i++ {
+			field := st.Field(i)
+			typeField := st.Type().Field(i)
 			if field.Kind() == reflect.Float64 {
 				setFieldPrecision(field, typeField)
 			}
-
-		}
-	case reflect.Ptr:
-		if !val.IsNil() {
-			st := val.Elem()
-			for i := 0; i < st.NumField(); i++ {
-				field := st.Field(i)
-				typeField := st.Type().Field(i)
-
-				if field.Kind() == reflect.Float64 {
-					setFieldPrecision(field, typeField)
-				}
-
-				responseFormat(field)
-			}
+			responseFormat(field)
 		}
 	}
 }
@@ -151,8 +124,28 @@ func setFieldPrecision(field reflect.Value, typeField reflect.StructField) {
 			fmt.Println("Invalid precision:", err)
 			return
 		}
-		rounded := round(field.Float(), precision)
-		field.SetFloat(rounded)
+		field.SetFloat(round(field.Float(), precision))
+	}
+}
+
+func setMapPrecision(field reflect.Value, typeField reflect.StructField) {
+	precisionTag := typeField.Tag.Get("precision")
+	if precisionTag != "" {
+		precision, err := strconv.Atoi(precisionTag)
+		if err != nil {
+			fmt.Println("Invalid precision:", err)
+			return
+		}
+		mapRange := field.MapRange()
+		for mapRange.Next() {
+			mapKey := mapRange.Key()
+			mapValue := mapRange.Value()
+			if mapValue.Kind() == reflect.Float64 {
+				newValue := reflect.New(mapValue.Type()).Elem()
+				newValue.SetFloat(round(mapValue.Float(), precision))
+				field.SetMapIndex(mapKey, newValue)
+			}
+		}
 	}
 }
 

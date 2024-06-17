@@ -24,8 +24,7 @@ func FormatData(ctx *gin.Context) *dtoExample.FormatDataRes {
 				PriceList: []float64{1.22245, 1.22255},
 			},
 			"2": {
-				Price:     1.22245,
-				PriceList: []float64{},
+				Price: 1.22245,
 			},
 		},
 		NameMap: map[string][]string{
