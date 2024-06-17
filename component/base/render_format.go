@@ -11,13 +11,17 @@ func ResponseFormat(data interface{}) {
 	if data == nil {
 		return
 	}
-	setFloat64Prec(data)
 	responseFormat(reflect.ValueOf(data))
 }
 
 func responseFormat(val reflect.Value) {
+	if val.Kind() == reflect.Ptr && !val.IsNil() {
+		val = val.Elem()
+	}
+
 	vType := val.Type()
 	kd := val.Kind()
+
 	switch kd {
 	case reflect.Slice, reflect.Array:
 		if val.IsNil() {
@@ -28,7 +32,11 @@ func responseFormat(val reflect.Value) {
 		} else {
 			for i := 0; i < val.Len(); i++ {
 				field := val.Index(i)
-				responseFormat(field)
+				if field.Kind() == reflect.Float64 {
+					// TODO：格式化精度
+				} else {
+					responseFormat(field)
+				}
 			}
 		}
 	case reflect.Map:
@@ -58,11 +66,20 @@ func responseFormat(val reflect.Value) {
 						responseFormat(field)
 					}
 				}
+			case reflect.Float64:
+				// TODO：格式化精度
+
 			}
 		}
 	case reflect.Struct:
 		for i := 0; i < val.NumField(); i++ {
 			field := val.Field(i)
+			typeField := vType.Field(i)
+
+			if field.Kind() == reflect.Float64 {
+				setFieldPrecision(field, typeField)
+			}
+
 			responseFormat(field)
 		}
 	case reflect.Ptr:
@@ -70,112 +87,33 @@ func responseFormat(val reflect.Value) {
 			st := val.Elem()
 			for i := 0; i < st.NumField(); i++ {
 				field := st.Field(i)
+				typeField := st.Type().Field(i)
+
+				if field.Kind() == reflect.Float64 {
+					setFieldPrecision(field, typeField)
+				}
+
 				responseFormat(field)
 			}
 		}
-	default:
-		return
 	}
 }
 
-func setFloat64Prec(v interface{}) {
-	val := reflect.ValueOf(v)
-
-	if val.Kind() == reflect.Ptr && !val.IsNil() {
-		val = val.Elem()
-	}
-
-	if val.Kind() != reflect.Struct {
-		return
-	}
-
-	for i := 0; i < val.NumField(); i++ {
-		field := val.Field(i)
-		typeField := val.Type().Field(i)
-
-		precisionTag := typeField.Tag.Get("precision")
-		if precisionTag != "" && field.Kind() == reflect.Float64 {
-			if !field.CanSet() {
-				fmt.Println("Cannot set field:", typeField.Name)
-				continue
-			}
-
-			precision, err := strconv.Atoi(precisionTag)
-			if err != nil {
-				fmt.Println("Invalid precision:", err)
-				continue
-			}
-
-			rounded := round(field.Float(), precision)
-			field.SetFloat(rounded)
+func setFieldPrecision(field reflect.Value, typeField reflect.StructField) {
+	precisionTag := typeField.Tag.Get("precision")
+	if precisionTag != "" && field.CanSet() {
+		precision, err := strconv.Atoi(precisionTag)
+		if err != nil {
+			fmt.Println("Invalid precision:", err)
+			return
 		}
-
-		// Handle nested fields
-		switch field.Kind() {
-		case reflect.Ptr, reflect.Interface:
-			if !field.IsNil() {
-				setFloat64Prec(field.Elem().Interface())
-			}
-		case reflect.Struct:
-			setFloat64Prec(field.Addr().Interface())
-		case reflect.Slice:
-			for j := 0; j < field.Len(); j++ {
-				elem := field.Index(j)
-				if elem.Kind() == reflect.Float64 {
-					precision, err := strconv.Atoi(precisionTag)
-					if err != nil {
-						fmt.Println("Invalid precision:", err)
-						continue
-					}
-					rounded := round(elem.Float(), precision)
-					elem.SetFloat(rounded)
-				} else {
-					setFloat64Prec(elem.Addr().Interface())
-				}
-			}
-		case reflect.Map:
-			mapRange := field.MapRange()
-			for mapRange.Next() {
-				key := mapRange.Key()
-				value := mapRange.Value()
-				switch value.Kind() {
-				case reflect.Ptr, reflect.Interface:
-					if !value.IsNil() {
-						setFloat64Prec(value.Elem().Interface())
-					}
-				case reflect.Struct:
-					newValue := reflect.New(value.Type()).Elem()
-					newValue.Set(value)
-					setFloat64Prec(newValue.Addr().Interface())
-					field.SetMapIndex(key, newValue)
-				case reflect.Float64:
-					precision, err := strconv.Atoi(precisionTag)
-					if err != nil {
-						fmt.Println("Invalid precision:", err)
-						continue
-					}
-					rounded := round(value.Float(), precision)
-					field.SetMapIndex(key, reflect.ValueOf(rounded))
-				case reflect.Slice:
-					for j := 0; j < value.Len(); j++ {
-						elem := value.Index(j)
-						if elem.Kind() == reflect.Float64 {
-							precision, err := strconv.Atoi(precisionTag)
-							if err != nil {
-								fmt.Println("Invalid precision:", err)
-								continue
-							}
-							rounded := round(elem.Float(), precision)
-							elem.SetFloat(rounded)
-						} else {
-							setFloat64Prec(elem.Addr().Interface())
-						}
-					}
-				}
-			}
-
-		}
+		rounded := round(field.Float(), precision)
+		field.SetFloat(rounded)
 	}
+}
+
+func setFloatPrecision(val interface{}) {
+
 }
 
 func round(x float64, precision int) float64 {
