@@ -54,7 +54,7 @@ func responseFormat(val reflect.Value) {
 				newValue.Set(value)
 				responseFormat(newValue.Addr())
 				val.SetMapIndex(key, newValue)
-			case reflect.Slice:
+			case reflect.Slice, reflect.Array:
 				if value.IsNil() {
 					if value.CanSet() {
 						newSlice := reflect.MakeSlice(vType, 0, 0)
@@ -67,20 +67,40 @@ func responseFormat(val reflect.Value) {
 					}
 				}
 			case reflect.Float64:
-				// TODO：格式化精度
-
+				// TODO:组装参数，调用setFieldPrecision
 			}
 		}
 	case reflect.Struct:
 		for i := 0; i < val.NumField(); i++ {
 			field := val.Field(i)
 			typeField := vType.Field(i)
+			switch field.Kind() {
+			case reflect.Ptr, reflect.Struct, reflect.Map, reflect.Interface:
+				responseFormat(field)
+			case reflect.Float64:
+				setFieldPrecision(field, typeField)
+			case reflect.Slice, reflect.Array:
+				if field.IsNil() {
+					if field.CanSet() {
+						newSlice := reflect.MakeSlice(field.Type(), 0, 0)
+						field.Set(newSlice)
+					}
+				} else {
+					for j := 0; j < field.Len(); j++ {
+						subField := field.Index(j)
+						if subField.Kind() == reflect.Float64 {
+							setFieldPrecision(subField, typeField)
+						} else {
+							responseFormat(subField)
+						}
+					}
+				}
 
+			}
 			if field.Kind() == reflect.Float64 {
 				setFieldPrecision(field, typeField)
 			}
 
-			responseFormat(field)
 		}
 	case reflect.Ptr:
 		if !val.IsNil() {
@@ -110,10 +130,6 @@ func setFieldPrecision(field reflect.Value, typeField reflect.StructField) {
 		rounded := round(field.Float(), precision)
 		field.SetFloat(rounded)
 	}
-}
-
-func setFloatPrecision(val interface{}) {
-
 }
 
 func round(x float64, precision int) float64 {
