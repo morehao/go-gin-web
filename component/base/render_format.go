@@ -66,8 +66,6 @@ func responseFormat(val reflect.Value) {
 						responseFormat(field)
 					}
 				}
-			case reflect.Float64:
-				// TODO:组装参数，调用setFieldPrecision
 			}
 		}
 	case reflect.Struct:
@@ -75,8 +73,34 @@ func responseFormat(val reflect.Value) {
 			field := val.Field(i)
 			typeField := vType.Field(i)
 			switch field.Kind() {
-			case reflect.Ptr, reflect.Struct, reflect.Map, reflect.Interface:
+			case reflect.Ptr, reflect.Struct, reflect.Interface:
 				responseFormat(field)
+			case reflect.Map:
+				elem := field.Type().Elem()
+				if elem.Kind() == reflect.Float64 {
+					// 获取精度
+					precisionTag := typeField.Tag.Get("precision")
+					if precisionTag != "" && field.CanSet() {
+						precision, _ := strconv.Atoi(precisionTag)
+						// 遍历map
+						mapRange := field.MapRange()
+						for mapRange.Next() {
+							mapKey := mapRange.Key()
+							mapValue := mapRange.Value()
+							if mapValue.Kind() == reflect.Float64 {
+								newValue := reflect.New(mapValue.Type()).Elem()
+								// 给mapValue赋值，新值经过精度处理
+								newValue.SetFloat(round(mapValue.Float(), precision))
+								// 给map赋值
+								field.SetMapIndex(mapKey, newValue)
+							}
+						}
+					}
+
+				} else {
+					responseFormat(field)
+				}
+
 			case reflect.Float64:
 				setFieldPrecision(field, typeField)
 			case reflect.Slice, reflect.Array:
@@ -135,16 +159,4 @@ func setFieldPrecision(field reflect.Value, typeField reflect.StructField) {
 func round(x float64, precision int) float64 {
 	pow := math.Pow(10, float64(precision))
 	return math.Round(x*pow) / pow
-}
-
-func isBasicDataType(kd reflect.Kind) bool {
-	switch kd {
-	case reflect.Uint, reflect.Uint8, reflect.Uint16, reflect.Uint32, reflect.Uint64,
-		reflect.Int8, reflect.Int, reflect.Int16, reflect.Int32, reflect.Int64,
-		reflect.Float64, reflect.Float32,
-		reflect.String, reflect.Bool:
-		return true
-	}
-
-	return false
 }
