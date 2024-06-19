@@ -1,10 +1,12 @@
-package main
+package apiServer
 
 import (
-	"go-gin-web/pkg/glog"
+	"context"
+	"go-gin-web/internal/apiServer/middleware"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
+	"github.com/morehao/go-tools/glog"
 )
 
 var db = make(map[string]string)
@@ -14,28 +16,35 @@ func setupRouter() *gin.Engine {
 	// gin.DisableConsoleColor()
 	r := gin.Default()
 
-	log, newLogErr := glog.NewZapLogger(&glog.LoggerConfig{
+	initLogErr := glog.InitZapLogger(&glog.LoggerConfig{
 		ServiceName: "go-gin-web",
 		Level:       "debug",
 		InConsole:   true,
 		LogDir:      "./log",
+		ExtraKeys:   []string{glog.KeyTraceId, glog.KeySpanId, glog.KeyTraceFlags},
 	})
-	if newLogErr != nil {
-		panic(newLogErr)
+	if initLogErr != nil {
+		panic(initLogErr)
 	}
 
 	// Ping test
-	r.GET("/ping", func(c *gin.Context) {
-		traceId := glog.GetTraceId(c)
-		c.Set(glog.ContextKeyTraceId, traceId)
-		log.Info(c, "ping1")
-		log.Info(c, "ping2")
+	r.GET("/ping", middleware.Trace(), func(c *gin.Context) {
+		// traceInfo := glog.GetTraceInfo(c)
+
+		// c.Set(glog.KeyTraceId, traceInfo.TraceId)
+		// c.Set(glog.KeySpanId, traceInfo.SpanId)
+		// c.Set(glog.KeyTraceFlags, traceInfo.TraceFlags)
+		// glog.Info(c, "ping1")
+		// glog.Info(c, "ping2")
+		// glog.Infof(c, "ping%d", 3)
+		// glog.Warn(c, "ping4")
+		// glog.Errorf(c, "ping%d", 5)
 		c.String(http.StatusOK, "pong")
 	})
 
 	// Get user value
 	r.GET("/user/:name", func(c *gin.Context) {
-		log.Info(c, "user1")
+		glog.Info(c, "user1")
 		user := c.Params.ByName("name")
 		value, ok := db[user]
 		if ok {
@@ -83,8 +92,10 @@ func setupRouter() *gin.Engine {
 	return r
 }
 
-func main() {
-	r := setupRouter()
-	// Listen and Server in 0.0.0.0:8080
-	r.Run(":8080")
+func Run() {
+	router := setupRouter()
+	glog.Info(context.Background(), "apiServer run success, port:8080")
+	if err := router.Run(":8080"); err != nil {
+		glog.Error(context.Background(), "apiServer run fail, port:8080")
+	}
 }
