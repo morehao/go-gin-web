@@ -2,7 +2,7 @@ package apiServer
 
 import (
 	"context"
-	"go-gin-web/internal/apiServer/middleware"
+	"go-gin-web/internal/pkg/middleware"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -28,17 +28,17 @@ func setupRouter() *gin.Engine {
 	}
 
 	// Ping test
-	r.GET("/ping", middleware.Trace(), func(c *gin.Context) {
+	r.GET("/ping", middleware.AccessLog(), func(c *gin.Context) {
 		// traceInfo := glog.GetTraceInfo(c)
 
 		// c.Set(glog.KeyTraceId, traceInfo.TraceId)
 		// c.Set(glog.KeySpanId, traceInfo.SpanId)
 		// c.Set(glog.KeyTraceFlags, traceInfo.TraceFlags)
-		// glog.Info(c, "ping1")
-		// glog.Info(c, "ping2")
-		// glog.Infof(c, "ping%d", 3)
-		// glog.Warn(c, "ping4")
-		// glog.Errorf(c, "ping%d", 5)
+		glog.Info(c, "ping1")
+		glog.Info(c, "ping2")
+		glog.Infof(c, "ping%d", 3)
+		glog.Warn(c, "ping4")
+		glog.Errorf(c, "ping%d", 5)
 		c.String(http.StatusOK, "pong")
 	})
 
