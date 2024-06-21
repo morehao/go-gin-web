@@ -15,17 +15,11 @@ func AccessLog() gin.HandlerFunc {
 	otel.SetTracerProvider(traceProvider)
 	tr := traceProvider.Tracer("gin-server")
 	return func(c *gin.Context) {
-		// rCtx := c.Request.Context()
-		// spanCtx, span := tr.Start(rCtx, c.Request.URL.Path)
-		// c.Request = c.Request.WithContext(spanCtx)
-		// defer span.End()
-		// c.Set(glog.KeyTraceId, span.SpanContext().TraceID().String())
-		// c.Set(glog.KeyTraceFlags, span.SpanContext().TraceFlags().String())
-		// c.Set(glog.KeySpanId, span.SpanContext().SpanID().String())
 		traceId, spanId, traceFlags := getTraceInfo(c, tr)
 		c.Set(glog.KeyTraceId, traceId)
 		c.Set(glog.KeyTraceFlags, traceFlags)
 		c.Set(glog.KeySpanId, spanId)
+		c.Set(glog.KeyFERequestId, c.Request.Header.Get(glog.KeyFERequestId))
 		glog.Info(c, "[middleware]")
 		c.Next()
 	}
@@ -52,7 +46,7 @@ func getTraceInfo(c *gin.Context, tracer oteltrace.Tracer) (string, string, stri
 		c.Request = c.Request.WithContext(spanCtx)
 	} else {
 		newTraceId, _ := oteltrace.TraceIDFromHex(traceId)
-		traceFlagsByte := byte(0)
+		traceFlagsByte := byte(1)
 		if traceFlags != "" {
 			decoded, err := hex.DecodeString(traceFlags)
 			if err == nil && len(decoded) > 0 {
@@ -60,12 +54,16 @@ func getTraceInfo(c *gin.Context, tracer oteltrace.Tracer) (string, string, stri
 			}
 		}
 		spanContextCfg := oteltrace.SpanContextConfig{
-			TraceID: newTraceId,
-			// SpanID:     newSpanId,
+			TraceID:    newTraceId,
 			TraceFlags: oteltrace.TraceFlags(traceFlagsByte),
 		}
 		if spanId != "" {
 			newSpanId, _ := oteltrace.SpanIDFromHex(spanId)
+			spanContextCfg.SpanID = newSpanId
+		} else {
+			_, span := tracer.Start(oteltrace.ContextWithRemoteSpanContext(rCtx, oteltrace.NewSpanContext(spanContextCfg)), "generateSpanId")
+			newSpanId := span.SpanContext().SpanID()
+			span.End()
 			spanContextCfg.SpanID = newSpanId
 		}
 		spanContext := oteltrace.NewSpanContext(spanContextCfg)

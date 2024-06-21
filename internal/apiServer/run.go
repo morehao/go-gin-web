@@ -21,7 +21,7 @@ func setupRouter() *gin.Engine {
 		Level:       "debug",
 		InConsole:   true,
 		LogDir:      "./log",
-		ExtraKeys:   []string{glog.KeyTraceId, glog.KeySpanId, glog.KeyTraceFlags},
+		ExtraKeys:   []string{glog.KeyFERequestId, glog.KeyTraceId, glog.KeySpanId, glog.KeyTraceFlags},
 	})
 	if initLogErr != nil {
 		panic(initLogErr)
