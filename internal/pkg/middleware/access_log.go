@@ -47,14 +47,15 @@ func AccessLog() gin.HandlerFunc {
 			reqBody = reqBody[:reqBodyMaxLen]
 		}
 
+		// Body writer
+		respBodyWriter := &context.RespWriter{Body: bytes.NewBufferString(""), ResponseWriter: c.Writer}
+		c.Writer = respBodyWriter
+
 		c.Next()
 
 		end := time.Now()
 		cost := glog.GetRequestCost(start, end)
 
-		// Body writer
-		respBodyWriter := &context.RespWriter{Body: bytes.NewBufferString(""), ResponseWriter: c.Writer}
-		c.Writer = respBodyWriter
 		responseBody := ""
 		var responseBodySize int
 		var errInfo gerror.Error

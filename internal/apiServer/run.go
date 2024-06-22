@@ -28,7 +28,7 @@ func setupRouter() *gin.Engine {
 	if initLogErr != nil {
 		panic(initLogErr)
 	}
-
+	defer glog.Close()
 	// Ping test
 	r.GET("/ping", middleware.AccessLog(), func(c *gin.Context) {
 		// traceInfo := glog.GetTraceInfo(c)
@@ -42,7 +42,13 @@ func setupRouter() *gin.Engine {
 		glog.Warn(c, "ping4")
 		glog.Errorf(c, "ping%d", 5)
 		// c.String(http.StatusOK, "pong")
-		ginRender.RenderSuccess(c, "success")
+		type Data struct {
+			Name string `json:"name"`
+		}
+		data := &Data{
+			Name: "xiaoming",
+		}
+		ginRender.RenderSuccess(c, data)
 	})
 
 	// Get user value
