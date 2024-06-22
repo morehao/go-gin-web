@@ -1,7 +1,6 @@
 package utils
 
 import (
-	"github.com/gin-gonic/gin"
 	"net"
 )
 
@@ -19,11 +18,4 @@ func GetLocalIp() string {
 		}
 	}
 	return "127.0.0.1"
-}
-
-func GetClientIp(ctx *gin.Context) (clientIP string) {
-	if ctx == nil {
-		return clientIP
-	}
-	return ctx.ClientIP()
 }

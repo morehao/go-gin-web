@@ -1,7 +1,13 @@
 package middleware
 
 import (
+	"bytes"
 	"encoding/hex"
+	"go-gin-web/internal/pkg/context"
+	"time"
+
+	jsoniter "github.com/json-iterator/go"
+	"github.com/morehao/go-tools/gerror"
 
 	"github.com/gin-gonic/gin"
 	"github.com/morehao/go-tools/glog"
@@ -10,7 +16,101 @@ import (
 	oteltrace "go.opentelemetry.io/otel/trace"
 )
 
+var (
+	reqBodyMaxLen  = 10240
+	respBodyMaxLen = 10240
+	reqQueryMaxLen = 10240
+)
+
 func AccessLog() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		start := time.Now()
+
+		requestId := getRequestId(c)
+		c.Set(glog.KeyRequestId, requestId)
+
+		path := c.Request.URL.Path
+		c.Set(glog.KeyUri, path)
+
+		reqQuery := context.GetReqQuery(c)
+		// 截断参数
+		if len(reqQuery) > reqQueryMaxLen {
+			reqQuery = reqQuery[:reqQueryMaxLen]
+		}
+
+		reqBody, getBodyErr := context.GetReqBody(c)
+		if getBodyErr != nil {
+			c.Error(getBodyErr)
+		}
+		reqBodySize := len(reqBody)
+		if len(reqBody) > reqBodyMaxLen {
+			reqBody = reqBody[:reqBodyMaxLen]
+		}
+
+		c.Next()
+
+		end := time.Now()
+		cost := glog.GetRequestCost(start, end)
+
+		// Body writer
+		respBodyWriter := &context.RespWriter{Body: bytes.NewBufferString(""), ResponseWriter: c.Writer}
+		c.Writer = respBodyWriter
+		responseBody := ""
+		var responseBodySize int
+		var errInfo gerror.Error
+		if respBodyWriter.Body != nil && respBodyMaxLen != -1 {
+			responseBody = respBodyWriter.Body.String()
+			responseBodySize = len(responseBody)
+			if responseBodySize > 0 {
+				if err := jsoniter.Unmarshal([]byte(responseBody), &errInfo); err != nil {
+					c.Error(err)
+				}
+			}
+			if len(responseBody) > respBodyMaxLen {
+				responseBody = responseBody[:respBodyMaxLen]
+			}
+		}
+
+		keysAndValues := []interface{}{
+			glog.KeyHost, c.Request.Host,
+			glog.KeyClientIp, context.GetClientIp(c),
+			glog.KeyHandle, c.HandlerName(),
+			glog.KeyProto, c.Request.Proto,
+			glog.KeyRefer, c.Request.Referer(),
+			glog.KeyUserAgent, c.Request.UserAgent(),
+			glog.KeyHeader, context.GetHeader(c),
+			glog.KeyCookie, context.GetCookie(c),
+			glog.KeyUri, path,
+			glog.KeyMethod, c.Request.Method,
+			glog.KeyHttpStatusCode, c.Writer.Status(),
+			glog.KeyRequestQuery, reqQuery,
+			glog.KeyRequestBody, reqBody,
+			glog.KeyRequestBodySize, reqBodySize,
+			glog.KeyResponseBody, responseBody,
+			glog.KeyResponseBodySize, responseBodySize,
+			glog.KeyRequestStartTime, glog.FormatRequestTime(start),
+			glog.KeyRequestEndTime, glog.FormatRequestTime(end),
+			glog.KeyCostTime, cost,
+			glog.KeyErrorCode, errInfo.Code,
+			glog.KeyErrorMsg, errInfo.Msg,
+			glog.KeyRequestErr, c.Errors.ByType(gin.ErrorTypePrivate).String(),
+		}
+		glog.Infow(c, glog.MsgFlagNotice, keysAndValues...)
+	}
+}
+
+func getRequestId(c *gin.Context) string {
+	requestId := c.Request.Header.Get(glog.KeyRequestId)
+	if requestId == "" {
+		requestId = c.GetString(glog.KeyRequestId)
+	}
+	if requestId == "" {
+		requestId = glog.GenRequestID()
+	}
+	return requestId
+}
+
+func AccessLogOtel() gin.HandlerFunc {
 	traceProvider := trace.NewTracerProvider()
 	otel.SetTracerProvider(traceProvider)
 	tr := traceProvider.Tracer("gin-server")
@@ -19,7 +119,7 @@ func AccessLog() gin.HandlerFunc {
 		c.Set(glog.KeyTraceId, traceId)
 		c.Set(glog.KeyTraceFlags, traceFlags)
 		c.Set(glog.KeySpanId, spanId)
-		c.Set(glog.KeyFERequestId, c.Request.Header.Get(glog.KeyFERequestId))
+		c.Set(glog.KeyRequestId, c.Request.Header.Get(glog.KeyRequestId))
 		glog.Info(c, "[middleware]")
 		c.Next()
 	}

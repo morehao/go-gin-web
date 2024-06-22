@@ -5,6 +5,8 @@ import (
 	"go-gin-web/internal/pkg/middleware"
 	"net/http"
 
+	"github.com/morehao/go-tools/gcore/ginRender"
+
 	"github.com/gin-gonic/gin"
 	"github.com/morehao/go-tools/glog"
 )
@@ -21,7 +23,7 @@ func setupRouter() *gin.Engine {
 		Level:       "debug",
 		InConsole:   true,
 		LogDir:      "./log",
-		ExtraKeys:   []string{glog.KeyFERequestId, glog.KeyTraceId, glog.KeySpanId, glog.KeyTraceFlags},
+		ExtraKeys:   []string{glog.KeyRequestId},
 	})
 	if initLogErr != nil {
 		panic(initLogErr)
@@ -39,7 +41,8 @@ func setupRouter() *gin.Engine {
 		glog.Infof(c, "ping%d", 3)
 		glog.Warn(c, "ping4")
 		glog.Errorf(c, "ping%d", 5)
-		c.String(http.StatusOK, "pong")
+		// c.String(http.StatusOK, "pong")
+		ginRender.RenderSuccess(c, "success")
 	})
 
 	// Get user value
