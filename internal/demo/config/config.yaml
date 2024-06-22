@@ -1,0 +1,11 @@
+server:
+  name: demo
+  port: 8080
+
+log:
+  service_name: demo
+  level: debug
+  stdout: true
+  dir: log
+  extra_keys:
+    - requestId
