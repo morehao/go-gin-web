@@ -5,7 +5,7 @@ import (
 	"go-gin-web/internal/demo/service/svcUser"
 
 	"github.com/gin-gonic/gin"
-	"github.com/morehao/go-tools/gcore/ginRender"
+	"github.com/morehao/go-tools/gcontext/ginRender"
 )
 
 type UserCtr interface {
