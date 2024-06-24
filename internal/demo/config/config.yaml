@@ -9,3 +9,15 @@ log:
   dir: log
   extra_keys:
     - requestId
+
+mysql:
+  service: demo
+  address: 127.0.0.1:3306
+  user: root
+  password: 123456
+  database: demo
+  charset: utf8mb4
+  timeout: 5s
+  read_timeout: 3s
+  write_timeout: 3s
+

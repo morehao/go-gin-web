@@ -16,7 +16,8 @@ func Run() {
 	engine := gin.Default()
 
 	helper.PreInit()
-	defer glog.Close()
+	helper.InitResource()
+	defer helper.Clear()
 
 	routerGroup := engine.Group("/demo")
 	routerGroup.Use(middleware.AccessLog())

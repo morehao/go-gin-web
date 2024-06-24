@@ -2,6 +2,7 @@ package config
 
 import (
 	"github.com/morehao/go-tools/conf"
+	"github.com/morehao/go-tools/gcore"
 	"github.com/morehao/go-tools/glog"
 )
 
@@ -15,6 +16,7 @@ func InitConfig() {
 type Config struct {
 	Server Server            `yaml:"server"`
 	Log    glog.LoggerConfig `yaml:"log"`
+	Mysql  gcore.MysqlConfig `yaml:"mysql"`
 }
 
 type Server struct {
