@@ -3,8 +3,8 @@ server:
   port: 8080
 
 log:
-  service_name: demo
-  level: debug
+  service: demo
+  level: info
   stdout: true
   dir: log
   extra_keys:
@@ -12,7 +12,7 @@ log:
 
 mysql:
   service: demo
-  address: 127.0.0.1:3306
+  addr: 127.0.0.1:3306
   user: root
   password: 123456
   database: demo
@@ -20,4 +20,14 @@ mysql:
   timeout: 5s
   read_timeout: 3s
   write_timeout: 3s
+
+redis:
+  service: demo
+  addr: 127.0.0.1:6379
+  password: 123456
+  db: 0
+  dial_timeout: 5s
+  read_timeout: 3s
+  write_timeout: 3s
+
 
