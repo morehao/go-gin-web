@@ -1,28 +1,12 @@
-package main
+package genCode
 
 import (
-	"go-gin-web/internal/demo/helper"
-	"os"
 	"path/filepath"
 	"text/template"
 
-	"github.com/morehao/go-tools/gutils"
-
 	"github.com/morehao/go-tools/codeGen"
+	"github.com/morehao/go-tools/gutils"
 )
-
-func main() {
-	// 初始化配置
-	helper.PreInit()
-	helper.InitResource()
-	workDir, getWorkDirErr := os.Getwd()
-	if getWorkDirErr != nil {
-		panic(getWorkDirErr)
-	}
-	genModule(workDir)
-	// 读取配置文件
-	// 生成代码
-}
 
 func genModule(workDir string) {
 	tplDir := filepath.Join(workDir, "internal/resource/codeTpl/module")
@@ -30,19 +14,15 @@ func genModule(workDir string) {
 	layerDirMap := map[codeGen.LayerName]string{
 		codeGen.LayerNameErrorCode: filepath.Join(rootDir, "/pkg"),
 	}
-	importDirPrefix := "go-gin-web/internal/demo"
-	moduleDescription := "用户"
-	apiDocTag := "用户管理"
-	moduleApiPrefix := "/go-gin-web/user"
 	cfg := &codeGen.ModuleCfg{
 		TplDir:      tplDir,
-		PackageName: "user",
-		TableName:   "user",
+		PackageName: Config.CodeGen.Module.PackageName,
+		TableName:   Config.CodeGen.Module.TableName,
 		RootDir:     rootDir,
 		LayerDirMap: layerDirMap,
 	}
 	gen := codeGen.NewGenerator()
-	tplParamsRes, getModuleParamErr := gen.GetModuleTemplateParams(helper.MysqlClient, cfg)
+	tplParamsRes, getModuleParamErr := gen.GetModuleTemplateParams(MysqlClient, cfg)
 	if getModuleParamErr != nil {
 		panic(getModuleParamErr)
 	}
@@ -91,14 +71,14 @@ func genModule(workDir string) {
 			ExtraParams: ModuleExtraParams{
 				PackageName:            tplParamsRes.PackageName,
 				PackagePascalName:      tplParamsRes.PackagePascalName,
-				ImportDirPrefix:        importDirPrefix,
+				ImportDirPrefix:        Config.CodeGen.Module.ImportDirPrefix,
 				TableName:              tplParamsRes.TableName,
-				Description:            moduleDescription,
+				Description:            Config.CodeGen.Module.ModuleDescription,
 				StructName:             tplParamsRes.StructName,
 				ReceiverTypeName:       gutils.FirstLetterToLower(tplParamsRes.StructName),
-				ReceiverTypePascalName: gutils.FirstLetterToUpper(tplParamsRes.StructName),
-				ApiDocTag:              apiDocTag,
-				ModuleApiPrefix:        moduleApiPrefix,
+				ReceiverTypePascalName: tplParamsRes.StructName,
+				ApiDocTag:              Config.CodeGen.Module.ApiDocTag,
+				ModuleApiPrefix:        Config.CodeGen.Module.ModuleApiPrefix,
 				Template:               v.Template,
 				ModelFields:            modelFields,
 			},

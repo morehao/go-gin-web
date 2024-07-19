@@ -17,12 +17,17 @@ var {{.StructName}}UpdateErr = gerror.Error{
 	Msg:  "修改{{.Description}}失败",
 }
 
-var Get{{.StructName}}DetailErr = gerror.Error{
+var {{.StructName}}GetDetailErr = gerror.Error{
 	Code: 100103,
 	Msg:  "查看{{.Description}}失败",
 }
 
-var Get{{.StructName}}PageListErr = gerror.Error{
-	Code: 100100,
+var {{.StructName}}GetPageListErr = gerror.Error{
+	Code: 100104,
 	Msg:  "查看{{.Description}}列表失败",
+}
+
+var {{.StructName}}NotExistErr = gerror.Error{
+	Code: 100105,
+	Msg:  "{{.Description}}已存在",
 }

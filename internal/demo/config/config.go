@@ -6,11 +6,11 @@ import (
 	"github.com/morehao/go-tools/glog"
 )
 
-var Cfg *Config
-
-func InitConfig() {
+func InitConfig() *Config {
+	var cfg Config
 	configFilepath := conf.GetAppRootDir() + "/config/config.yaml"
-	conf.LoadConfig(configFilepath, &Cfg)
+	conf.LoadConfig(configFilepath, &cfg)
+	return &cfg
 }
 
 type Config struct {

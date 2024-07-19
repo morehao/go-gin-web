@@ -1,0 +1,30 @@
+mysql:
+  service: demo
+  addr: 127.0.0.1:3306
+  user: root
+  password: 123456
+  database: demo
+  charset: utf8mb4
+  timeout: 5s
+  read_timeout: 3s
+  write_timeout: 3s
+
+log:
+  service: genCode
+  level: info
+  stdout: true
+  dir: log
+  extra_keys:
+    - requestId
+
+code_gen:
+  mode: module
+  module:
+    tpl_dir: internal/resource/codeTpl/module
+    root_dir: internal/demo
+    import_dir_prefix: go-gin-web/internal/demo
+    module_description: 平台
+    api_doc_tag: 平台管理
+    module_api_prefix: /demo/platform
+    package_name: platform
+    table_name: platform

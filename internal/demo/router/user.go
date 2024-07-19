@@ -1,4 +1,4 @@
-package routerHttp
+package router
 
 import (
 	"go-gin-web/internal/demo/controller/ctrUser"
