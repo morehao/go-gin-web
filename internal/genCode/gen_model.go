@@ -27,7 +27,7 @@ func genModel(workDir string) {
 	gen := codeGen.NewGenerator()
 	analysisRes, analysisErr := gen.AnalysisModuleTpl(MysqlClient, analysisCfg)
 	if analysisErr != nil {
-		panic(fmt.Errorf("analysis module tpl error: %v", analysisErr))
+		panic(fmt.Errorf("analysis model tpl error: %v", analysisErr))
 	}
 
 	var genParamsList []codeGen.GenParamsItem

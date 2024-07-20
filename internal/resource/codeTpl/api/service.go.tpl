@@ -1,14 +1,14 @@
 package svc{{.PackagePascalName}}
 
 import (
-    "{{.ImportDirPrefix}}/demo/dto/dtoUser"
+    "{{.ImportDirPrefix}}/dto/dto{{.PackagePascalName}}"
 
     "github.com/gin-gonic/gin"
 )
 
-{{if .TargetFileExist}}
+{{if not .TargetFileExist}}
 type {{.ReceiverTypePascalName}}Svc interface {
-    {{.FunctionName}}(c *gin.Context)
+    {{.FunctionName}}(c *gin.Context, req *dto{{.PackagePascalName}}.{{.FunctionName}}Req) (*dto{{.PackagePascalName}}.{{.FunctionName}}Resp, error)
 }
 
 type {{.ReceiverTypeName}}Svc struct {
@@ -21,7 +21,6 @@ func New{{.ReceiverTypePascalName}}Svc() {{.ReceiverTypePascalName}}Svc {
     }
 }
 {{end}}
-
-func (svc *{{.ReceiverTypeName}}Svc) {{.FunctionName}}(c *gin.Context, req *dto{{.PackagePascalName}}.{{.FunctionName}}Req) (*dto{{.PackagePascalName}}.{{.FunctionName}}Res, error) {
-    return &dto{{.PackagePascalName}}.{{.FunctionName}}Res{}, nil
+func (svc *{{.ReceiverTypeName}}Svc) {{.FunctionName}}(c *gin.Context, req *dto{{.PackagePascalName}}.{{.FunctionName}}Req) (*dto{{.PackagePascalName}}.{{.FunctionName}}Resp, error) {
+    return &dto{{.PackagePascalName}}.{{.FunctionName}}Resp{}, nil
 }

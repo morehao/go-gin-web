@@ -7,10 +7,9 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/morehao/go-tools/gcontext/ginRender"
 )
-
-{{if .TargetFileExist}}
+{{if not .TargetFileExist}}
 type {{.ReceiverTypePascalName}}Ctr interface {
-	Create(c *gin.Context)
+	{{.FunctionName}}(c *gin.Context)
 }
 
 type {{.ReceiverTypeName}}Ctr struct {
@@ -21,33 +20,31 @@ var _ {{.ReceiverTypePascalName}}Ctr = (*{{.ReceiverTypeName}}Ctr)(nil)
 
 func New{{.ReceiverTypePascalName}}Ctr() {{.ReceiverTypePascalName}}Ctr {
 	return &{{.ReceiverTypeName}}Ctr{
-		{{.ReceiverTypePascalName}}Svc: svc{{.ReceiverTypePascalName}}.New{{.ReceiverTypePascalName}}Svc(),
+		{{.ReceiverTypeName}}Svc: svc{{.ReceiverTypePascalName}}.New{{.ReceiverTypePascalName}}Svc(),
 	}
 }
-
 {{end}}
-
 {{if eq .HttpMethod "POST"}}
-// Create {{.Description}}
+// {{.FunctionName}} {{.Description}}
 // @Tags {{.ApiDocTag}}
 // @Summary {{.Description}}
 // @accept application/json
 // @Produce application/json
-// @Param req body dto{{.PackagePascalName}}.CreateReq true "{{.Description}}"
-// @Success 200 {object} dto{{.PackagePascalName}}.CreateRes "{"code": 0,"data": "ok","msg": "success"}"
+// @Param req body dto{{.PackagePascalName}}.{{.FunctionName}}Req true "{{.Description}}"
+// @Success 200 {object} dto{{.PackagePascalName}}.{{.FunctionName}}Resp "{"code": 0,"data": "ok","msg": "success"}"
 // @Router {{.ApiPath}} [post]
-func (ctr *{{.ReceiverTypeName}}Ctr) Create(c *gin.Context) {
-	var req dto{{.PackagePascalName}}.CreateReq
-	if err := c.ShouldBindJSON(c, &req); err != nil {
-		base.RenderJsonFail(c, err)
+func (ctr *{{.ReceiverTypeName}}Ctr) {{.FunctionName}}(c *gin.Context) {
+	var req dto{{.PackagePascalName}}.{{.FunctionName}}Req
+	if err := c.ShouldBindJSON(&req); err != nil {
+		ginRender.Fail(c, err)
 		return
 	}
-	res, err := ctr.{{.ReceiverTypeName}}Svc.Create(c, &req)
+	res, err := ctr.{{.ReceiverTypeName}}Svc.{{.FunctionName}}(c, &req)
 	if err != nil {
-		base.RenderJsonFail(c, err)
+		ginRender.Fail(c, err)
 		return
 	} else {
-		base.RenderJsonSucc(c, res)
+		ginRender.Success(c, res)
 	}
 }
 {{else if eq .HttpMethod "GET"}}
@@ -56,21 +53,21 @@ func (ctr *{{.ReceiverTypeName}}Ctr) Create(c *gin.Context) {
 // @Summary {{.Description}}
 // @accept application/json
 // @Produce application/json
-// @Param req query dto{{.PackagePascalName}}.CreateReq true "{{.Description}}"
-// @Success 200 {object} dto{{.PackagePascalName}}.CreateRes "{"code": 0,"data": "ok","msg": "success"}"
+// @Param req query dto{{.PackagePascalName}}.{{.FunctionName}}Req true "{{.Description}}"
+// @Success 200 {object} dto{{.PackagePascalName}}.{{.FunctionName}}Resp "{"code": 0,"data": "ok","msg": "success"}"
 // @Router {{.ApiPath}} [get]
-func (ctr *{{.ReceiverTypeName}}Ctr)Create(c *gin.Context) {
-	var req dto{{.PackagePascalName}}.CreateReq
-	if err := c.ShouldBindQuery(c, &req); err != nil {
-		base.RenderJsonFail(c, err)
+func (ctr *{{.ReceiverTypeName}}Ctr){{.FunctionName}}(c *gin.Context) {
+	var req dto{{.PackagePascalName}}.{{.FunctionName}}Req
+	if err := c.ShouldBindQuery(&req); err != nil {
+		ginRender.Fail(c, err)
 		return
 	}
-	res, err := ctr.{{.ReceiverTypeName}}Svc.Create(c, &req)
+	res, err := ctr.{{.ReceiverTypeName}}Svc.{{.FunctionName}}(c, &req)
 	if err != nil {
-		base.RenderJsonFail(c, err)
+		ginRender.Fail(c, err)
 		return
 	} else {
-		base.RenderJsonSucc(c, res)
+		ginRender.Success(c, res)
 	}
 }
 {{end}}
