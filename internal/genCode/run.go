@@ -1,6 +1,7 @@
 package genCode
 
 import (
+	"fmt"
 	"go-gin-web/internal/genCode/config"
 	"os"
 )
@@ -20,4 +21,5 @@ func Run() {
 	default:
 		panic("unknown mode")
 	}
+	fmt.Println(Config.CodeGen.Model, " 模式下，生成代码完成")
 }

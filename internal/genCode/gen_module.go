@@ -3,6 +3,7 @@ package genCode
 import (
 	"fmt"
 	"path/filepath"
+	"strings"
 	"text/template"
 
 	"github.com/morehao/go-tools/gast"
@@ -61,7 +62,8 @@ func genModule(workDir string) {
 				ReceiverTypeName:       gutils.FirstLetterToLower(analysisRes.StructName),
 				ReceiverTypePascalName: analysisRes.StructName,
 				ApiDocTag:              cfg.ApiDocTag,
-				ModuleApiPrefix:        cfg.ModuleApiPrefix,
+				ApiGroup:               cfg.ApiGroup,
+				ApiPrefix:              strings.TrimSuffix(cfg.ApiPrefix, "/"),
 				Template:               v.Template,
 				ModelFields:            modelFields,
 			},
@@ -92,7 +94,8 @@ type ModuleExtraParams struct {
 	StructName             string
 	ReceiverTypeName       string
 	ReceiverTypePascalName string
-	ModuleApiPrefix        string
+	ApiGroup               string
+	ApiPrefix              string
 	ApiDocTag              string
 	Template               *template.Template
 	ModelFields            []ModelField

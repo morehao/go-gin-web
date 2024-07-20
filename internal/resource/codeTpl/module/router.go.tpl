@@ -6,10 +6,10 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-// {{.ReceiverTypeName}}Router 初始化 {{.Description}} 路由信息
+// {{.ReceiverTypeName}}Router 初始化{{.Description}}路由信息
 func {{.ReceiverTypeName}}Router(privateRouter *gin.RouterGroup) {
 	{{.ReceiverTypeName}}Ctr := ctr{{.PackagePascalName}}.New{{.ReceiverTypePascalName}}Ctr()
-	routerGroup := privateRouter.Group("{{.ModuleApiPrefix}}")
+	routerGroup := privateRouter.Group("{{.ApiGroup}}")
 	{
 		routerGroup.POST("create", {{.ReceiverTypeName}}Ctr.Create)   // 新建{{.Description}}
 		routerGroup.POST("delete", {{.ReceiverTypeName}}Ctr.Delete)   // 删除{{.Description}}

@@ -23,9 +23,10 @@ code_gen:
     tpl_dir: internal/resource/codeTpl/module
     root_dir: internal/demo
     import_dir_prefix: go-gin-web/internal/demo
-    module_description: 平台
+    description: 平台
     api_doc_tag: 平台管理
-    module_api_prefix: /demo/platform
+    api_group: platform
+    api_prefix: /demo/platform/
     package_name: platform
     table_name: platform
   model:
@@ -43,8 +44,9 @@ code_gen:
     package_name: platform
     target_filename: platform.go
     http_method: POST
-    function_name: Test
+    function_name: Test1
     api_doc_tag: 平台管理
-    api_path: /demo/platform/test
     api_group: platform
+    api_prefix: /demo/platform/
+    api_suffix: test1
     routerGroup: platformGroup

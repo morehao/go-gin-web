@@ -24,7 +24,8 @@ type ModuleConfig struct {
 	ImportDirPrefix string `yaml:"import_dir_prefix"` // import目录前缀
 	Description     string `yaml:"description"`       // 描述
 	ApiDocTag       string `yaml:"api_doc_tag"`       // api文档tag
-	ModuleApiPrefix string `yaml:"module_api_prefix"` // api前缀
+	ApiGroup        string `yaml:"api_group"`         // api分组
+	ApiPrefix       string `yaml:"api_prefix"`        // api前缀
 	PackageName     string `yaml:"package_name"`      // 包名
 	TableName       string `yaml:"table_name"`        // 表名
 }
@@ -48,8 +49,9 @@ type ApiConfig struct {
 	HttpMethod      string `yaml:"http_method"`       // http方法
 	FunctionName    string `yaml:"function_name"`     // 函数名
 	ApiDocTag       string `yaml:"api_doc_tag"`       // api文档tag
-	ApiPath         string `yaml:"api_path"`          // api路径
 	ApiGroup        string `yaml:"api_group"`         // api组，RouterGroup对应的接口路径
+	ApiPrefix       string `yaml:"api_prefix"`        // api前缀
+	ApiSuffix       string `yaml:"api_suffix"`        // api后缀
 	RouterGroup     string `yaml:"router_group"`      // 路由组
 }
 

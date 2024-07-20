@@ -31,8 +31,8 @@ func New{{.ReceiverTypePascalName}}Ctr() {{.ReceiverTypePascalName}}Ctr {
 // @accept application/json
 // @Produce application/json
 // @Param req body dto{{.PackagePascalName}}.{{.FunctionName}}Req true "{{.Description}}"
-// @Success 200 {object} dto{{.PackagePascalName}}.{{.FunctionName}}Resp "{"code": 0,"data": "ok","msg": "success"}"
-// @Router {{.ApiPath}} [post]
+// @Success 200 {object} dto.DefaultRender{data=dto{{.PackagePascalName}}.{{.FunctionName}}Resp} "{"code": 0,"data": "ok","msg": "success"}"
+// @Router {{.ApiPrefix}}/{{.ApiSuffix}} [post]
 func (ctr *{{.ReceiverTypeName}}Ctr) {{.FunctionName}}(c *gin.Context) {
 	var req dto{{.PackagePascalName}}.{{.FunctionName}}Req
 	if err := c.ShouldBindJSON(&req); err != nil {
@@ -54,8 +54,8 @@ func (ctr *{{.ReceiverTypeName}}Ctr) {{.FunctionName}}(c *gin.Context) {
 // @accept application/json
 // @Produce application/json
 // @Param req query dto{{.PackagePascalName}}.{{.FunctionName}}Req true "{{.Description}}"
-// @Success 200 {object} dto{{.PackagePascalName}}.{{.FunctionName}}Resp "{"code": 0,"data": "ok","msg": "success"}"
-// @Router {{.ApiPath}} [get]
+// @Success 200 {object} dto.DefaultRender{data=dto{{.PackagePascalName}}.{{.FunctionName}}Resp} "{"code": 0,"data": "ok","msg": "success"}"
+// @Router {{.ApiPrefix}}/{{.ApiSuffix}} [get]
 func (ctr *{{.ReceiverTypeName}}Ctr){{.FunctionName}}(c *gin.Context) {
 	var req dto{{.PackagePascalName}}.{{.FunctionName}}Req
 	if err := c.ShouldBindQuery(&req); err != nil {
