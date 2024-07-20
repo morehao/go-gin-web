@@ -1,6 +1,7 @@
 package genCode
 
 import (
+	"fmt"
 	"path/filepath"
 	"text/template"
 
@@ -15,16 +16,18 @@ func genModule(workDir string) {
 		codeGen.LayerNameErrorCode: filepath.Join(rootDir, "/pkg"),
 	}
 	cfg := &codeGen.ModuleCfg{
-		TplDir:      tplDir,
-		PackageName: Config.CodeGen.Module.PackageName,
-		TableName:   Config.CodeGen.Module.TableName,
-		RootDir:     rootDir,
-		LayerDirMap: layerDirMap,
+		CommonConfig: codeGen.CommonConfig{
+			TplDir:      tplDir,
+			PackageName: Config.CodeGen.Module.PackageName,
+			RootDir:     rootDir,
+			LayerDirMap: layerDirMap,
+		},
+		TableName: Config.CodeGen.Module.TableName,
 	}
 	gen := codeGen.NewGenerator()
-	tplParamsRes, getModuleParamErr := gen.GetModuleTemplateParams(MysqlClient, cfg)
-	if getModuleParamErr != nil {
-		panic(getModuleParamErr)
+	analysisRes, analysisErr := gen.AnalysisModuleTpl(MysqlClient, cfg)
+	if analysisErr != nil {
+		panic(fmt.Sprintf("analysis module tpl error: %v", analysisErr))
 	}
 
 	type ModelField struct {
@@ -51,7 +54,7 @@ func genModule(workDir string) {
 		ModelFields            []ModelField
 	}
 	var genParamsList []codeGen.GenParamsItem
-	for _, v := range tplParamsRes.TemplateList {
+	for _, v := range analysisRes.TplAnalysisList {
 		var modelFields []ModelField
 		for _, field := range v.ModelFields {
 			modelFields = append(modelFields, ModelField{
@@ -69,14 +72,14 @@ func genModule(workDir string) {
 			TargetFileName: v.TargetFilename,
 			Template:       v.Template,
 			ExtraParams: ModuleExtraParams{
-				PackageName:            tplParamsRes.PackageName,
-				PackagePascalName:      tplParamsRes.PackagePascalName,
+				PackageName:            analysisRes.PackageName,
+				PackagePascalName:      analysisRes.PackagePascalName,
 				ImportDirPrefix:        Config.CodeGen.Module.ImportDirPrefix,
-				TableName:              tplParamsRes.TableName,
+				TableName:              analysisRes.TableName,
 				Description:            Config.CodeGen.Module.ModuleDescription,
-				StructName:             tplParamsRes.StructName,
-				ReceiverTypeName:       gutils.FirstLetterToLower(tplParamsRes.StructName),
-				ReceiverTypePascalName: tplParamsRes.StructName,
+				StructName:             analysisRes.StructName,
+				ReceiverTypeName:       gutils.FirstLetterToLower(analysisRes.StructName),
+				ReceiverTypePascalName: analysisRes.StructName,
 				ApiDocTag:              Config.CodeGen.Module.ApiDocTag,
 				ModuleApiPrefix:        Config.CodeGen.Module.ModuleApiPrefix,
 				Template:               v.Template,

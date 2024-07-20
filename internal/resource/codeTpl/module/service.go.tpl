@@ -31,7 +31,7 @@ func New{{.ReceiverTypePascalName}}Svc() {{.ReceiverTypePascalName}}Svc {
 func (svc *{{.ReceiverTypeName}}Svc) Create(c *gin.Context, req *dto{{.PackagePascalName}}.{{.StructName}}CreateReq) (*dto{{.PackagePascalName}}.{{.StructName}}CreateResp, error) {
 	insertEntity := &dao{{.PackagePascalName}}.{{.StructName}}Entity{}
 	if err := dao{{.PackagePascalName}}.New{{.StructName}}Dao().Insert(c, insertEntity); err != nil {
-		glog.Errorf(c, "[svc{{.PackagePascalName}}.{{.StructName}}Create] dao{{.PackagePascalName}} Create fail, err:%v, req:%s", err, gutils.ToJsonString(req))
+		glog.Errorf(c, "[svc{{.PackagePascalName}}.{{.StructName}}Create] dao{{.StructName}} Create fail, err:%v, req:%s", err, gutils.ToJsonString(req))
 		return nil, errorCode.{{.StructName}}CreateErr
 	}
 	return &dto{{.PackagePascalName}}.{{.StructName}}CreateResp{
@@ -44,7 +44,7 @@ func (svc *{{.ReceiverTypeName}}Svc) Delete(c *gin.Context, req *dto{{.PackagePa
 	deletedBy := context.GetUserId(c)
 
 	if err := dao{{.PackagePascalName}}.New{{.StructName}}Dao().Delete(c, req.Id, deletedBy); err != nil {
-		glog.Errorf(c, "[svc{{.PackagePascalName}}.Delete] dao{{.PackagePascalName}} Delete fail, err:%v, req:%s", err, gutils.ToJsonString(req))
+		glog.Errorf(c, "[svc{{.PackagePascalName}}.Delete] dao{{.StructName}} Delete fail, err:%v, req:%s", err, gutils.ToJsonString(req))
 		return errorCode.{{.StructName}}DeleteErr
 	}
 	return nil
@@ -56,7 +56,7 @@ func (svc *{{.ReceiverTypeName}}Svc) Update(c *gin.Context, req *dto{{.PackagePa
         Id:   req.Id,
     }
     if err := dao{{.PackagePascalName}}.New{{.StructName}}Dao().Update(c, updateEntity); err != nil {
-        glog.Errorf(c, "[svc{{.PackagePascalName}}.{{.StructName}}Update] dao{{.PackagePascalName}} Update fail, err:%v, req:%s", err, gutils.ToJsonString(req))
+        glog.Errorf(c, "[svc{{.PackagePascalName}}.{{.StructName}}Update] dao{{.StructName}} Update fail, err:%v, req:%s", err, gutils.ToJsonString(req))
         return errorCode.{{.StructName}}UpdateErr
     }
     return nil
@@ -66,7 +66,7 @@ func (svc *{{.ReceiverTypeName}}Svc) Update(c *gin.Context, req *dto{{.PackagePa
 func (svc *{{.ReceiverTypeName}}Svc) Detail(c *gin.Context, req *dto{{.PackagePascalName}}.{{.StructName}}DetailReq) (*dto{{.PackagePascalName}}.{{.StructName}}DetailResp, error) {
 	detailEntity, err := dao{{.PackagePascalName}}.New{{.StructName}}Dao().GetById(c, req.Id)
 	if err != nil {
-		glog.Errorf(c, "[svc{{.PackagePascalName}}.{{.StructName}}Detail] dao{{.PackagePascalName}} GetById fail, err:%v, req:%s", err, gutils.ToJsonString(req))
+		glog.Errorf(c, "[svc{{.PackagePascalName}}.{{.StructName}}Detail] dao{{.StructName}} GetById fail, err:%v, req:%s", err, gutils.ToJsonString(req))
 		return nil, errorCode.{{.StructName}}GetDetailErr
 	}
     // 判断是否存在
@@ -87,7 +87,7 @@ func (svc *{{.ReceiverTypeName}}Svc) PageList(c *gin.Context, req *dto{{.Package
 	}
 	dataList, total, err := dao{{.PackagePascalName}}.New{{.StructName}}Dao().GetPageListByCond(c, cond)
 	if err != nil {
-		glog.Errorf(c, "[svc{{.PackagePascalName}}.{{.StructName}}PageList] dao{{.PackagePascalName}} GetPageListByCond fail, err:%v, req:%s", err, gutils.ToJsonString(req))
+		glog.Errorf(c, "[svc{{.PackagePascalName}}.{{.StructName}}PageList] dao{{.StructName}} GetPageListByCond fail, err:%v, req:%s", err, gutils.ToJsonString(req))
 		return nil, errorCode.{{.StructName}}GetPageListErr
 	}
 	list := make([]dto{{.PackagePascalName}}.{{.StructName}}PageListItem, 0, len(dataList))

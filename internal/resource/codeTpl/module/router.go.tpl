@@ -6,7 +6,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-// {{.PackageName}}Router 初始化 {{.Description}} 路由信息
+// {{.ReceiverTypeName}}Router 初始化 {{.Description}} 路由信息
 func {{.ReceiverTypeName}}Router(privateRouter *gin.RouterGroup) {
 	{{.ReceiverTypeName}}Ctr := ctr{{.PackagePascalName}}.New{{.ReceiverTypePascalName}}Ctr()
 	routerGroup := privateRouter.Group("{{.ModuleApiPrefix}}")
