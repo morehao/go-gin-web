@@ -13,6 +13,8 @@ import (
 
 func Run() {
 	engine := gin.Default()
+	helper.SetRootDir("/internal/demo")
+	helper.PreInit()
 	helper.InitDbClient()
 	defer helper.Close()
 

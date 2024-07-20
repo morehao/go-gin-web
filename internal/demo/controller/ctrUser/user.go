@@ -38,19 +38,19 @@ func NewUserCtr() UserCtr {
 func (ctr *userCtr) Get(c *gin.Context) {
 	var req dtoUser.GetUserReq
 	if err := c.ShouldBind(&req); err != nil {
-		ginRender.RenderFail(c, err)
+		ginRender.Fail(c, err)
 		return
 	}
 	res, err := ctr.userSvc.Get(c, &req)
 	if err != nil {
-		ginRender.RenderFail(c, err)
+		ginRender.Fail(c, err)
 		return
 	}
-	ginRender.RenderSuccess(c, res)
+	ginRender.Success(c, res)
 }
 
 func (ctr *userCtr) FormatData(c *gin.Context) {
 	res := ctr.userSvc.FormatData(c)
 
-	ginRender.RenderSuccessWithFormat(c, res)
+	ginRender.SuccessWithFormat(c, res)
 }

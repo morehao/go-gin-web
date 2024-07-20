@@ -5,12 +5,10 @@ import (
 	"os"
 	"path/filepath"
 
-	"github.com/morehao/go-tools/glog"
-
-	"gorm.io/gorm"
-
 	"github.com/morehao/go-tools/conf"
 	"github.com/morehao/go-tools/dbClient"
+	"github.com/morehao/go-tools/glog"
+	"gorm.io/gorm"
 )
 
 var Config *config.Config
@@ -23,9 +21,14 @@ func init() {
 	} else {
 		conf.SetAppRootDir(filepath.Join(workDir, "/internal/genCode"))
 	}
-	Config = config.InitConfig()
+	configFilepath := conf.GetAppRootDir() + "/config/config.yaml"
+	var cfg config.Config
+	conf.LoadConfig(configFilepath, &cfg)
+	Config = &cfg
+
+	// 初始化日志组件
 	if err := glog.InitZapLogger(&Config.Log); err != nil {
-		panic("init zap logger error")
+		panic("glog initZapLogger error")
 	}
 	mysqlClient, getMysqlClientErr := dbClient.InitMysql(Config.Mysql)
 	if getMysqlClientErr != nil {

@@ -5,6 +5,8 @@ import (
 	"path/filepath"
 	"text/template"
 
+	"github.com/morehao/go-tools/gast"
+
 	"github.com/morehao/go-tools/codeGen"
 	"github.com/morehao/go-tools/gutils"
 )
@@ -27,32 +29,9 @@ func genModule(workDir string) {
 	gen := codeGen.NewGenerator()
 	analysisRes, analysisErr := gen.AnalysisModuleTpl(MysqlClient, cfg)
 	if analysisErr != nil {
-		panic(fmt.Sprintf("analysis module tpl error: %v", analysisErr))
+		panic(fmt.Errorf("analysis module tpl error: %v", analysisErr))
 	}
 
-	type ModelField struct {
-		FieldName    string // 字段名称
-		FieldType    string // 字段数据类型，如int、string
-		ColumnName   string // 列名
-		ColumnType   string // 列数据类型，如varchar(255)
-		Comment      string // 字段注释
-		IsPrimaryKey bool   // 是否是主键
-	}
-
-	type ModuleExtraParams struct {
-		ImportDirPrefix        string
-		PackageName            string
-		PackagePascalName      string
-		TableName              string
-		Description            string
-		StructName             string
-		ReceiverTypeName       string
-		ReceiverTypePascalName string
-		ModuleApiPrefix        string
-		ApiDocTag              string
-		Template               *template.Template
-		ModelFields            []ModelField
-	}
 	var genParamsList []codeGen.GenParamsItem
 	for _, v := range analysisRes.TplAnalysisList {
 		var modelFields []ModelField
@@ -94,4 +73,33 @@ func genModule(workDir string) {
 	if err := gen.Gen(genParams); err != nil {
 		panic(err)
 	}
+	routerCallContent := fmt.Sprintf("%sRouter(routerGroup)", gutils.FirstLetterToLower(analysisRes.StructName))
+	routerEnterFilepath := filepath.Join(rootDir, "/router/enter.go")
+	if err := gast.AddContentToFunc(routerCallContent, "RegisterRouter", routerEnterFilepath); err != nil {
+		panic(fmt.Errorf("appendContentToFunc error: %v", err))
+	}
+}
+
+type ModelField struct {
+	FieldName    string // 字段名称
+	FieldType    string // 字段数据类型，如int、string
+	ColumnName   string // 列名
+	ColumnType   string // 列数据类型，如varchar(255)
+	Comment      string // 字段注释
+	IsPrimaryKey bool   // 是否是主键
+}
+
+type ModuleExtraParams struct {
+	ImportDirPrefix        string
+	PackageName            string
+	PackagePascalName      string
+	TableName              string
+	Description            string
+	StructName             string
+	ReceiverTypeName       string
+	ReceiverTypePascalName string
+	ModuleApiPrefix        string
+	ApiDocTag              string
+	Template               *template.Template
+	ModelFields            []ModelField
 }
