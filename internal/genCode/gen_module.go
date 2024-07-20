@@ -12,22 +12,23 @@ import (
 )
 
 func genModule(workDir string) {
-	tplDir := filepath.Join(workDir, "internal/resource/codeTpl/module")
-	rootDir := filepath.Join(workDir, "internal/demo")
+	cfg := Config.CodeGen.Module
+	tplDir := filepath.Join(workDir, cfg.TplDir)
+	rootDir := filepath.Join(workDir, cfg.RootDir)
 	layerDirMap := map[codeGen.LayerName]string{
 		codeGen.LayerNameErrorCode: filepath.Join(rootDir, "/pkg"),
 	}
-	cfg := &codeGen.ModuleCfg{
+	analysisCfg := &codeGen.ModuleCfg{
 		CommonConfig: codeGen.CommonConfig{
 			TplDir:      tplDir,
-			PackageName: Config.CodeGen.Module.PackageName,
+			PackageName: cfg.PackageName,
 			RootDir:     rootDir,
 			LayerDirMap: layerDirMap,
 		},
-		TableName: Config.CodeGen.Module.TableName,
+		TableName: cfg.TableName,
 	}
 	gen := codeGen.NewGenerator()
-	analysisRes, analysisErr := gen.AnalysisModuleTpl(MysqlClient, cfg)
+	analysisRes, analysisErr := gen.AnalysisModuleTpl(MysqlClient, analysisCfg)
 	if analysisErr != nil {
 		panic(fmt.Errorf("analysis module tpl error: %v", analysisErr))
 	}
@@ -53,14 +54,14 @@ func genModule(workDir string) {
 			ExtraParams: ModuleExtraParams{
 				PackageName:            analysisRes.PackageName,
 				PackagePascalName:      analysisRes.PackagePascalName,
-				ImportDirPrefix:        Config.CodeGen.Module.ImportDirPrefix,
+				ImportDirPrefix:        cfg.ImportDirPrefix,
 				TableName:              analysisRes.TableName,
-				Description:            Config.CodeGen.Module.ModuleDescription,
+				Description:            cfg.Description,
 				StructName:             analysisRes.StructName,
 				ReceiverTypeName:       gutils.FirstLetterToLower(analysisRes.StructName),
 				ReceiverTypePascalName: analysisRes.StructName,
-				ApiDocTag:              Config.CodeGen.Module.ApiDocTag,
-				ModuleApiPrefix:        Config.CodeGen.Module.ModuleApiPrefix,
+				ApiDocTag:              cfg.ApiDocTag,
+				ModuleApiPrefix:        cfg.ModuleApiPrefix,
 				Template:               v.Template,
 				ModelFields:            modelFields,
 			},
@@ -73,20 +74,13 @@ func genModule(workDir string) {
 	if err := gen.Gen(genParams); err != nil {
 		panic(err)
 	}
+
+	// 注册路由
 	routerCallContent := fmt.Sprintf("%sRouter(routerGroup)", gutils.FirstLetterToLower(analysisRes.StructName))
 	routerEnterFilepath := filepath.Join(rootDir, "/router/enter.go")
 	if err := gast.AddContentToFunc(routerCallContent, "RegisterRouter", routerEnterFilepath); err != nil {
 		panic(fmt.Errorf("appendContentToFunc error: %v", err))
 	}
-}
-
-type ModelField struct {
-	FieldName    string // 字段名称
-	FieldType    string // 字段数据类型，如int、string
-	ColumnName   string // 列名
-	ColumnType   string // 列数据类型，如varchar(255)
-	Comment      string // 字段注释
-	IsPrimaryKey bool   // 是否是主键
 }
 
 type ModuleExtraParams struct {

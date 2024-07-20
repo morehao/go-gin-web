@@ -14,6 +14,7 @@ func Run() {
 	case config.ModeModule:
 		genModule(workDir)
 	case config.ModeModel:
+		genModel(workDir)
 	case config.ModeController:
 	default:
 		panic("unknown mode")

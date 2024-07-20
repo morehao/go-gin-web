@@ -3,7 +3,7 @@ package dao{{.PackagePascalName}}
 import (
 	"fmt"
 	"{{.ImportDirPrefix}}/model"
-	"{{.ImportDirPrefix}}/pkg/errorCode"
+	"go-gin-web/internal/pkg/errorCode"
 	"time"
 
 	"github.com/gin-gonic/gin"

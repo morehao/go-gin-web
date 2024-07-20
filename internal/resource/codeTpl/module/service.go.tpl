@@ -3,7 +3,8 @@ package svc{{.PackagePascalName}}
 import (
 	"{{.ImportDirPrefix}}/dto/dto{{.PackagePascalName}}"
 	"{{.ImportDirPrefix}}/model/dao{{.PackagePascalName}}"
-	"{{.ImportDirPrefix}}/pkg/errorCode"
+	"go-gin-web/internal/pkg/context"
+	"go-gin-web/internal/pkg/errorCode"
 
 	"github.com/gin-gonic/gin"
 	"github.com/morehao/go-tools/glog"

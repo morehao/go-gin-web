@@ -18,7 +18,7 @@ log:
     - requestId
 
 code_gen:
-  mode: module
+  mode: model
   module:
     tpl_dir: internal/resource/codeTpl/module
     root_dir: internal/demo
@@ -28,3 +28,10 @@ code_gen:
     module_api_prefix: /demo/platform
     package_name: platform
     table_name: platform
+  model:
+    tpl_dir: internal/resource/codeTpl/model
+    root_dir: internal/demo
+    import_dir_prefix: go-gin-web/internal/demo
+    description: 平台
+    package_name: platform
+    table_name: platform_application
