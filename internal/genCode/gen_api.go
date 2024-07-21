@@ -98,7 +98,7 @@ func genApi(workDir string) {
 	if isNewRouter {
 		routerCallContent := fmt.Sprintf("%sRouter(routerGroup)", receiverTypeName)
 		routerEnterFilepath := filepath.Join(rootDir, "/router/enter.go")
-		if err := gast.AddContentToFunc(routerCallContent, "RegisterRouter", routerEnterFilepath); err != nil {
+		if err := gast.AddContentToFunc(routerEnterFilepath, "RegisterRouter", routerCallContent); err != nil {
 			panic(fmt.Errorf("appendContentToFunc error: %v", err))
 		}
 	} else {
