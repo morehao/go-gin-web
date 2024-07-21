@@ -58,6 +58,9 @@ github.com/modern-go/concurrent v0.0.0-20180306012644-bacd9c7ef1dd h1:TRLaZ9cD/w
 github.com/modern-go/concurrent v0.0.0-20180306012644-bacd9c7ef1dd/go.mod h1:6dJC0mAP4ikYIbvyc7fijjWJddQyLn8Ig3JB5CqoB9Q=
 github.com/modern-go/reflect2 v1.0.2 h1:xBagoLtFs94CBntxluKeaWgTMpvLxC4ur3nMaC9Gz0M=
 github.com/modern-go/reflect2 v1.0.2/go.mod h1:yWuevngMOJpCy52FWWMvUC8ws7m/LJsjYzDa0/r8luk=
+github.com/morehao/go-tools v1.1.1-0.20240618003802-1ea568eebbe8/go.mod h1:WWMScJJhJn9OtC4LlE8JJQAeFEDbp1W4rpGMAAKgRvw=
+github.com/morehao/go-tools v1.2.0 h1:Ppk0InHn9BA1ALkutRzDdsAOei290DmeIXpkx4SfoPw=
+github.com/morehao/go-tools v1.2.0/go.mod h1:Ba0vmxvlpm/DsyJgm6iOvYZ1ylhFnDBixQrXiumZn68=
 github.com/pelletier/go-toml/v2 v2.2.2 h1:aYUidT7k73Pcl9nb2gScu7NSrKCSHIDE89b3+6Wq+LM=
 github.com/pelletier/go-toml/v2 v2.2.2/go.mod h1:1t835xjRzz80PqgE6HHgN2JOsmgYu/h4qDAS4n929Rs=
 github.com/pkg/errors v0.9.1 h1:FEBLx1zS214owpjy7qsBeixbURkuhQAwrK5UwLGTwt4=

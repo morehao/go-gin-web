@@ -1,9 +1,10 @@
 server:
-  name: demo
+  name: app
   port: 8080
+  env: dev
 
 log:
-  service: demo
+  service: app
   level: info
   stdout: true
   dir: log
@@ -11,7 +12,7 @@ log:
     - requestId
 
 mysql:
-  service: demo
+  service: app
   addr: 127.0.0.1:3306
   user: root
   password: 123456
@@ -22,7 +23,7 @@ mysql:
   write_timeout: 3s
 
 redis:
-  service: demo
+  service: app
   addr: 127.0.0.1:6379
   password: 123456
   db: 0

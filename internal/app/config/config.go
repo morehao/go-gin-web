@@ -13,6 +13,7 @@ type Config struct {
 }
 
 type Server struct {
-	Name string `yaml:"name"`
-	Port string `yaml:"port"`
+	Name string `yaml:"name"` // 服务名称
+	Port string `yaml:"port"` // 服务端口
+	Env  string `yaml:"env"`  // 环境变量
 }

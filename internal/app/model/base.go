@@ -1,7 +1,7 @@
 package model
 
 import (
-	"go-gin-web/internal/demo/helper"
+	"go-gin-web/internal/app/helper"
 
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"

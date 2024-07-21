@@ -7,11 +7,11 @@ import (
 )
 {{if not .TargetFileExist}}
 // {{.ReceiverTypeName}}Router 初始化{{.Description}}路由信息
-func {{.ReceiverTypeName}}Router(privateRouter *gin.RouterGroup) {
+func {{.ReceiverTypeName}}Router(routerGroup *gin.RouterGroup) {
 	{{.ReceiverTypeName}}Ctr := ctr{{.PackagePascalName}}.New{{.ReceiverTypePascalName}}Ctr()
-	routerGroup := privateRouter.Group("{{.ApiGroup}}")
+	{{.ReceiverTypeName}}Group := routerGroup.Group("{{.ApiGroup}}")
 	{
-		routerGroup.{{.HttpMethod}}("{{.ApiSuffix}}", {{.ReceiverTypeName}}Ctr.{{.FunctionName}})   // {{.Description}}
+		{{.ReceiverTypeName}}Group.{{.HttpMethod}}("{{.ApiSuffix}}", {{.ReceiverTypeName}}Ctr.{{.FunctionName}})   // {{.Description}}
 	}
 }
 {{end}}
