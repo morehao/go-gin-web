@@ -1,0 +1,52 @@
+mysql:
+  service: demo
+  addr: 127.0.0.1:3306
+  user: root
+  password: 123456
+  database: demo
+  charset: utf8mb4
+  timeout: 5s
+  read_timeout: 3s
+  write_timeout: 3s
+
+log:
+  service: genCode
+  level: info
+  stdout: true
+  dir: log
+  extra_keys:
+    - requestId
+
+code_gen:
+  mode: api
+  module:
+    tpl_dir: internal/resource/codeTpl/module
+    root_dir: internal/demo
+    import_dir_prefix: go-gin-web/internal/demo
+    description: 平台
+    api_doc_tag: 平台管理
+    api_group: platform
+    api_prefix: /demo/platform/
+    package_name: platform
+    table_name: platform
+  model:
+    tpl_dir: internal/resource/codeTpl/model
+    root_dir: internal/demo
+    import_dir_prefix: go-gin-web/internal/demo
+    description: 平台
+    package_name: platform
+    table_name: platform_application
+  api:
+    tpl_dir: internal/resource/codeTpl/api
+    root_dir: internal/demo
+    import_dir_prefix: go-gin-web/internal/demo
+    description: 平台
+    package_name: platform
+    target_filename: platform.go
+    http_method: POST
+    function_name: Test2
+    api_doc_tag: 平台管理
+    api_group: platform
+    api_prefix: /demo/platform/
+    api_suffix: test
+    routerGroup: platformGroup

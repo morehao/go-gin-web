@@ -9,16 +9,25 @@ import (
 	"github.com/morehao/go-tools/glog"
 )
 
-func PreInit() {
+var Config *config.Config
+
+func SetRootDir(projectDir string) {
 	if workDir, err := os.Getwd(); err != nil {
 		panic("get work dir error")
 	} else {
-		conf.SetAppRootDir(filepath.Join(workDir, "/internal/demo"))
+		conf.SetAppRootDir(filepath.Join(workDir, projectDir))
 	}
-	config.InitConfig()
-	glog.InitZapLogger(&config.Cfg.Log)
 }
 
-func Clear() {
-	glog.Close()
+func PreInit() {
+	// 加载配置
+	configFilepath := conf.GetAppRootDir() + "/config/config.yaml"
+	var cfg config.Config
+	conf.LoadConfig(configFilepath, &cfg)
+	Config = &cfg
+
+	// 初始化日志
+	if err := glog.InitZapLogger(&Config.Log); err != nil {
+		panic("init zap logger error")
+	}
 }

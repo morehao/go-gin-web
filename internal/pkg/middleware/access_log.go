@@ -91,7 +91,7 @@ func AccessLog() gin.HandlerFunc {
 			glog.KeyResponseBodySize, responseBodySize,
 			glog.KeyRequestStartTime, glog.FormatRequestTime(start),
 			glog.KeyRequestEndTime, glog.FormatRequestTime(end),
-			glog.KeyCostTime, cost,
+			glog.KeyCost, cost,
 			glog.KeyErrorCode, errInfo.Code,
 			glog.KeyErrorMsg, errInfo.Msg,
 			glog.KeyRequestErr, c.Errors.ByType(gin.ErrorTypePrivate).String(),

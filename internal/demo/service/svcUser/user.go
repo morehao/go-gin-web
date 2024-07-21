@@ -2,6 +2,7 @@ package svcUser
 
 import (
 	"go-gin-web/internal/demo/dto/dtoUser"
+	"go-gin-web/internal/demo/helper"
 
 	"github.com/gin-gonic/gin"
 )
@@ -21,6 +22,13 @@ func NewUserSvc() UserSvc {
 }
 
 func (svc *userSvc) Get(c *gin.Context, req *dtoUser.GetUserReq) (*dtoUser.GetUserRes, error) {
+	var count int64
+	if err := helper.MysqlClient.WithContext(c).Table("user").Count(&count).Error; err != nil {
+		return nil, err
+	}
+	if err := helper.RedisClient.Set(c, "count", count, 0).Err(); err != nil {
+		return nil, err
+	}
 	return &dtoUser.GetUserRes{}, nil
 }
 

@@ -3,9 +3,8 @@ package demo
 import (
 	"context"
 	"fmt"
-	"go-gin-web/internal/demo/config"
 	"go-gin-web/internal/demo/helper"
-	"go-gin-web/internal/demo/router/routerHttp"
+	"go-gin-web/internal/demo/router"
 	"go-gin-web/internal/pkg/middleware"
 
 	"github.com/gin-gonic/gin"
@@ -14,16 +13,17 @@ import (
 
 func Run() {
 	engine := gin.Default()
-
+	helper.SetRootDir("/internal/demo")
 	helper.PreInit()
-	defer glog.Close()
+	helper.InitDbClient()
+	defer helper.Close()
 
 	routerGroup := engine.Group("/demo")
 	routerGroup.Use(middleware.AccessLog())
-	routerHttp.RegisterRouter(routerGroup)
-	if err := engine.Run(fmt.Sprintf(":%s", config.Cfg.Server.Port)); err != nil {
-		glog.Error(context.Background(), fmt.Sprintf("demo run fail, port:%s", config.Cfg.Server.Port))
+	router.RegisterRouter(routerGroup)
+	if err := engine.Run(fmt.Sprintf(":%s", helper.Config.Server.Port)); err != nil {
+		glog.Error(context.Background(), fmt.Sprintf("demo run fail, port:%s", helper.Config.Server.Port))
 	} else {
-		glog.Info(context.Background(), fmt.Sprintf("demo run success, port:%s", config.Cfg.Server.Port))
+		glog.Info(context.Background(), fmt.Sprintf("demo run success, port:%s", helper.Config.Server.Port))
 	}
 }
