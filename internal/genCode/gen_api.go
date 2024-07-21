@@ -104,7 +104,7 @@ func genApi(workDir string) {
 	} else {
 		routerCallContent := fmt.Sprintf(`routerGroup.%s("/%s", %sCtr.%s)`, cfg.HttpMethod, cfg.ApiSuffix, receiverTypeName, cfg.FunctionName)
 		routerEnterFilepath := filepath.Join(rootDir, fmt.Sprintf("/router/%s.go", gutils.TrimFileExtension(cfg.TargetFilename)))
-		if err := gast.AddContentToFunc(routerCallContent, fmt.Sprintf("%sRouter", receiverTypeName), routerEnterFilepath); err != nil {
+		if err := gast.AddContentToFuncWithLineNumber(routerEnterFilepath, fmt.Sprintf("%sRouter", receiverTypeName), routerCallContent, -2); err != nil {
 			panic(fmt.Errorf("appendContentToFunc error: %v", err))
 		}
 	}
