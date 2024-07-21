@@ -36,7 +36,7 @@ func genApi(workDir string) {
 	receiverTypePascalName := gutils.SnakeToPascal(gutils.TrimFileExtension(cfg.TargetFilename))
 	receiverTypeName := gutils.FirstLetterToLower(receiverTypePascalName)
 	var genParamsList []codeGen.GenParamsItem
-	var isNewRouter bool
+	var isNewRouter, isNewController bool
 	var controllerFilepath, serviceFilepath string
 	for _, v := range analysisRes.TplAnalysisList {
 		switch v.LayerName {
@@ -44,6 +44,7 @@ func genApi(workDir string) {
 			isNewRouter = !v.TargetFileExist
 		case codeGen.LayerNameController:
 			controllerFilepath = filepath.Join(v.TargetDir, v.TargetFilename)
+			isNewController = !v.TargetFileExist
 		case codeGen.LayerNameService:
 			serviceFilepath = filepath.Join(v.TargetDir, v.TargetFilename)
 		}
@@ -81,14 +82,16 @@ func genApi(workDir string) {
 		panic(err)
 	}
 
-	// 将方法添加到interface接口中
-	controllerInterfaceName := fmt.Sprintf("%sCtr", receiverTypePascalName)
-	if err := gast.AddMethodToInterfaceInFile(controllerFilepath, controllerInterfaceName, receiverTypeName+"Ctr", cfg.FunctionName); err != nil {
-		panic(fmt.Errorf("add controller method to interface error: %w", err))
-	}
-	serviceInterfaceName := fmt.Sprintf("%Svc", receiverTypePascalName)
-	if err := gast.AddMethodToInterfaceInFile(serviceFilepath, serviceInterfaceName, receiverTypeName+"Svc", cfg.FunctionName); err != nil {
-		panic(fmt.Errorf("add service method to interface error: %w", err))
+	if !isNewController {
+		// 将方法添加到interface接口中
+		controllerInterfaceName := fmt.Sprintf("%sCtr", receiverTypePascalName)
+		if err := gast.AddMethodToInterface(controllerFilepath, receiverTypeName+"Ctr", cfg.FunctionName, controllerInterfaceName); err != nil {
+			panic(fmt.Errorf("add controller method to interface error: %w", err))
+		}
+		serviceInterfaceName := fmt.Sprintf("%sSvc", receiverTypePascalName)
+		if err := gast.AddMethodToInterface(serviceFilepath, receiverTypeName+"Svc", cfg.FunctionName, serviceInterfaceName); err != nil {
+			panic(fmt.Errorf("add service method to interface error: %w", err))
+		}
 	}
 
 	// 	注册路由

@@ -44,9 +44,9 @@ code_gen:
     package_name: platform
     target_filename: platform.go
     http_method: POST
-    function_name: Test1
+    function_name: Test2
     api_doc_tag: 平台管理
     api_group: platform
     api_prefix: /demo/platform/
-    api_suffix: test1
+    api_suffix: test
     routerGroup: platformGroup
