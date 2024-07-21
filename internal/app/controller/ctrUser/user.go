@@ -1,8 +1,8 @@
 package ctrUser
 
 import (
-	"go-gin-web/internal/demo/dto/dtoUser"
-	"go-gin-web/internal/demo/service/svcUser"
+	"go-gin-web/internal/app/dto/dtoUser"
+	"go-gin-web/internal/app/service/svcUser"
 
 	"github.com/gin-gonic/gin"
 	"github.com/morehao/go-tools/gcontext/ginRender"

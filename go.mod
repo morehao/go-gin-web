@@ -5,7 +5,7 @@ go 1.21
 require (
 	github.com/gin-gonic/gin v1.10.0
 	github.com/json-iterator/go v1.1.12
-	github.com/morehao/go-tools v1.1.1-0.20240618003802-1ea568eebbe8
+	github.com/morehao/go-tools v1.2.0
 	go.opentelemetry.io/otel v1.27.0
 	go.opentelemetry.io/otel/exporters/stdout/stdouttrace v1.27.0
 	go.opentelemetry.io/otel/sdk v1.27.0
@@ -13,7 +13,7 @@ require (
 	gorm.io/gorm v1.25.10
 )
 
-replace github.com/morehao/go-tools => /Users/morehao/Documents/practice/go/go-tools
+//replace github.com/morehao/go-tools => /Users/morehao/Documents/practice/go/go-tools
 
 require (
 	github.com/bytedance/sonic v1.11.6 // indirect

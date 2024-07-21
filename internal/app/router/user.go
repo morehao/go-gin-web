@@ -1,12 +1,12 @@
 package router
 
 import (
-	"go-gin-web/internal/demo/controller/ctrUser"
+	"go-gin-web/internal/app/controller/ctrUser"
 
 	"github.com/gin-gonic/gin"
 )
 
-func registerUserRouter(routerGroup *gin.RouterGroup) {
+func userRouter(routerGroup *gin.RouterGroup) {
 	userCtr := ctrUser.NewUserCtr()
 	userGroup := routerGroup.Group("/user")
 	{

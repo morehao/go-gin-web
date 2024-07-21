@@ -1,7 +1,7 @@
 package helper
 
 import (
-	"go-gin-web/internal/demo/config"
+	"go-gin-web/internal/app/config"
 	"os"
 	"path/filepath"
 

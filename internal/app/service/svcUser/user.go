@@ -1,8 +1,8 @@
 package svcUser
 
 import (
-	"go-gin-web/internal/demo/dto/dtoUser"
-	"go-gin-web/internal/demo/helper"
+	"go-gin-web/internal/app/dto/dtoUser"
+	"go-gin-web/internal/app/helper"
 
 	"github.com/gin-gonic/gin"
 )

@@ -80,7 +80,7 @@ func genModule(workDir string) {
 	// 注册路由
 	routerCallContent := fmt.Sprintf("%sRouter(routerGroup)", gutils.FirstLetterToLower(analysisRes.StructName))
 	routerEnterFilepath := filepath.Join(rootDir, "/router/enter.go")
-	if err := gast.AddContentToFunc(routerCallContent, "RegisterRouter", routerEnterFilepath); err != nil {
+	if err := gast.AddContentToFunc(routerEnterFilepath, "RegisterRouter", routerCallContent); err != nil {
 		panic(fmt.Errorf("appendContentToFunc error: %v", err))
 	}
 }
