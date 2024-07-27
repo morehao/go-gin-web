@@ -18,7 +18,7 @@ RUN go mod download
 COPY . .
 
 # 编译 Go 源代码，并将输出的可执行文件命名为 webserver
-RUN go build -o webserver .
+RUN go build -o webserver /app/cmd/app/main.go
 
 # Final stage
 # 使用 Alpine:3.20 镜像作为基础镜像
