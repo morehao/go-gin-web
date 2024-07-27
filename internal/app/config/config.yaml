@@ -1,6 +1,6 @@
 server:
   name: app
-  port: 8080
+  port: 8099
   env: dev
 
 log:
