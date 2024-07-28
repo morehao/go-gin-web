@@ -57,6 +57,17 @@ GinRender 组件用于统一处理 HTTP 响应，确保响应格式一致。
 - Dockerfile文件
 - 如何基于本项目快速生成一个新的项目
 
+## 项目部署
+### 构建镜像
+``` bash
+docker buildx build -t go-gin-web .
+```
+
+### 运行容器
+``` bash
+docker run -itd --name go-gin-web -p 8099:8099 go-gin-web
+```
+
 ## 相关组件
 相关组件均在[go-tools](https://github.com/morehao/go-tools)包中实现。
 

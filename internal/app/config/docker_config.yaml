@@ -13,7 +13,7 @@ log:
 
 mysql:
   service: app
-  addr: 127.0.0.1:3306
+  addr: 172.17.0.2:3306
   user: root
   password: 123456
   database: demo
@@ -24,7 +24,7 @@ mysql:
 
 redis:
   service: app
-  addr: 127.0.0.1:6379
+  addr: 172.17.0.3:6379
   password: 123456
   db: 0
   dial_timeout: 5s
