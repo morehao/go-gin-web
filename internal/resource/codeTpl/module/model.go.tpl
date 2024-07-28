@@ -2,14 +2,13 @@ package dao{{.PackagePascalName}}
 
 import (
 	"fmt"
-	"{{.ImportDirPrefix}}/model"
-	"go-gin-web/internal/pkg/errorCode"
+	"{{.ProjectRootDir}}/internal/app/model"
+	"{{.ProjectRootDir}}/internal/pkg/errorCode"
 	"time"
 
 	"github.com/gin-gonic/gin"
 	"github.com/morehao/go-tools/gutils"
 	"gorm.io/gorm"
-	"time"
 )
 
 // {{.StructName}}Entity {{.Description}}表结构体
@@ -17,6 +16,8 @@ type {{.StructName}}Entity struct {
 {{- range .ModelFields}}
 	{{- if .IsPrimaryKey}}
 	{{.FieldName}} uint64 `gorm:"column:{{.ColumnName}};comment:{{.Comment}};primarykey"`
+	{{- else if eq .FieldName "DeletedTime"}}
+	{{.FieldName}} gorm.DeletedAt `gorm:"column:{{.ColumnName}};comment:{{.Comment}}"`
 	{{- else}}
 	{{.FieldName}} {{.FieldType}} `gorm:"column:{{.ColumnName}};comment:{{.Comment}}"`
 	{{- end}}
@@ -94,7 +95,7 @@ func (dao *{{.StructName}}Dao) Delete(ctx *gin.Context, id, deletedBy uint64) er
 	db := dao.Db(ctx).Model(&{{.StructName}}Entity{})
 	db = db.Table(TblName{{.StructName}})
 	updatedField := map[string]interface{}{
-		"deleted_at": time.Now(),
+		"deleted_time": time.Now(),
 		"deleted_by": deletedBy,
 	}
 	if err := db.Where("id = ?", id).Updates(updatedField).Error; err != nil {

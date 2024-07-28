@@ -1,7 +1,7 @@
 package router
 
 import (
-	"{{.ImportDirPrefix}}/controller/ctr{{.PackagePascalName}}"
+	"{{.ProjectRootDir}}/internal/app/controller/ctr{{.PackagePascalName}}"
 
 	"github.com/gin-gonic/gin"
 )

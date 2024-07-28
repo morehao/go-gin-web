@@ -21,8 +21,8 @@ code_gen:
   mode: module
   module:
     tpl_dir: internal/resource/codeTpl/module
-    root_dir: internal/app
-    import_dir_prefix: go-gin-web/internal/app
+    internal_app_root_dir: internal/app
+    project_root_dir: go-gin-web
     description: 用户
     api_doc_tag: 用户管理
     api_group: user
@@ -31,15 +31,15 @@ code_gen:
     table_name: user
   model:
     tpl_dir: internal/resource/codeTpl/model
-    root_dir: internal/app
-    import_dir_prefix: go-gin-web/internal/app
+    internal_app_root_dir: internal/app
+    project_root_dir: go-gin-web
     description: 用户
     package_name: user
     table_name: user
   api:
     tpl_dir: internal/resource/codeTpl/api
-    root_dir: internal/app
-    import_dir_prefix: go-gin-web/internal/app
+    internal_app_root_dir: internal/app
+    project_root_dir: go-gin-web
     description: 禁用用户
     package_name: user
     target_filename: user.go

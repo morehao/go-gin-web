@@ -5,7 +5,7 @@ type {{.StructName}}BaseInfo struct {
 {{- if .IsPrimaryKey}}
     {{- continue}}
 {{- end}}
-{{- if or (eq .FieldName "deleted_at") (eq .FieldName "deleted_by") }}
+{{- if isSysField .FieldName}}
     {{- continue}}
 {{- end}}
 {{- if eq .FieldType "time.Time"}}

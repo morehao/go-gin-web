@@ -19,40 +19,40 @@ type CodeGen struct {
 }
 
 type ModuleConfig struct {
-	TplDir          string `yaml:"tpl_dir"`           // 模板目录
-	RootDir         string `yaml:"root_dir"`          // 项目内当前项目的根目录(如internal/genCode)
-	ImportDirPrefix string `yaml:"import_dir_prefix"` // import目录前缀
-	Description     string `yaml:"description"`       // 描述
-	ApiDocTag       string `yaml:"api_doc_tag"`       // api文档tag
-	ApiGroup        string `yaml:"api_group"`         // api分组
-	ApiPrefix       string `yaml:"api_prefix"`        // api前缀
-	PackageName     string `yaml:"package_name"`      // 包名
-	TableName       string `yaml:"table_name"`        // 表名
+	TplDir             string `yaml:"tpl_dir"`               // 模板目录
+	InternalAppRootDir string `yaml:"internal_app_root_dir"` // 项目内当前项目的根目录，如internal/genCode
+	ProjectRootDir     string `yaml:"project_root_dir"`      // 项目根目录，如go-gin-web
+	Description        string `yaml:"description"`           // 描述
+	ApiDocTag          string `yaml:"api_doc_tag"`           // api文档tag
+	ApiGroup           string `yaml:"api_group"`             // api分组
+	ApiPrefix          string `yaml:"api_prefix"`            // api前缀
+	PackageName        string `yaml:"package_name"`          // 包名
+	TableName          string `yaml:"table_name"`            // 表名
 }
 
 type ModelConfig struct {
-	TplDir          string `yaml:"tpl_dir"`           // 模板目录
-	RootDir         string `yaml:"root_dir"`          // 项目内当前项目的根目录(如internal/genCode)
-	ImportDirPrefix string `yaml:"import_dir_prefix"` // import目录前缀
-	Description     string `yaml:"description"`       // 描述
-	PackageName     string `yaml:"package_name"`      // 包名
-	TableName       string `yaml:"table_name"`        // 表名
+	TplDir         string `yaml:"tpl_dir"`          // 模板目录
+	RootDir        string `yaml:"root_dir"`         // 项目内当前项目的根目录，如internal/genCode
+	ProjectRootDir string `yaml:"project_root_dir"` // import目录前缀
+	Description    string `yaml:"description"`      // 描述
+	PackageName    string `yaml:"package_name"`     // 包名
+	TableName      string `yaml:"table_name"`       // 表名
 }
 
 type ApiConfig struct {
-	TplDir          string `yaml:"tpl_dir"`           // 模板目录
-	RootDir         string `yaml:"root_dir"`          // 项目内当前项目的根目录(如internal/genCode)
-	ImportDirPrefix string `yaml:"import_dir_prefix"` // import目录前缀
-	Description     string `yaml:"description"`       // 描述
-	PackageName     string `yaml:"package_name"`      // 包名
-	TargetFilename  string `yaml:"target_filename"`   // 目标文件名，生成的代码写入的目标文件名
-	HttpMethod      string `yaml:"http_method"`       // http方法
-	FunctionName    string `yaml:"function_name"`     // 函数名
-	ApiDocTag       string `yaml:"api_doc_tag"`       // api文档tag
-	ApiGroup        string `yaml:"api_group"`         // api组，RouterGroup对应的接口路径
-	ApiPrefix       string `yaml:"api_prefix"`        // api前缀
-	ApiSuffix       string `yaml:"api_suffix"`        // api后缀
-	RouterGroup     string `yaml:"router_group"`      // 路由组
+	TplDir         string `yaml:"tpl_dir"`          // 模板目录
+	RootDir        string `yaml:"root_dir"`         // 项目内当前项目的根目录，如internal/genCode
+	ProjectRootDir string `yaml:"project_root_dir"` // import目录前缀
+	Description    string `yaml:"description"`      // 描述
+	PackageName    string `yaml:"package_name"`     // 包名
+	TargetFilename string `yaml:"target_filename"`  // 目标文件名，生成的代码写入的目标文件名
+	HttpMethod     string `yaml:"http_method"`      // http方法
+	FunctionName   string `yaml:"function_name"`    // 函数名
+	ApiDocTag      string `yaml:"api_doc_tag"`      // api文档tag
+	ApiGroup       string `yaml:"api_group"`        // api组，RouterGroup对应的接口路径
+	ApiPrefix      string `yaml:"api_prefix"`       // api前缀
+	ApiSuffix      string `yaml:"api_suffix"`       // api后缀
+	RouterGroup    string `yaml:"router_group"`     // 路由组
 }
 
 const (

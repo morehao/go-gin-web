@@ -1,6 +1,9 @@
 package dto{{.PackagePascalName}}
 
-import "{{.ImportDirPrefix}}/object/objCommon"
+import (
+	"{{.ProjectRootDir}}/internal/app/object/objCommon"
+	"{{.ProjectRootDir}}/internal/app/object/obj{{.PackagePascalName}}"
+)
 
 type {{.StructName}}CreateReq struct {
 	obj{{.PackagePascalName}}.{{.StructName}}BaseInfo

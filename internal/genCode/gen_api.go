@@ -17,7 +17,7 @@ func genApi(workDir string) {
 	tplDir := filepath.Join(workDir, cfg.TplDir)
 	rootDir := filepath.Join(workDir, cfg.RootDir)
 	layerDirMap := map[codeGen.LayerName]string{
-		codeGen.LayerNameErrorCode: filepath.Join(rootDir, "/pkg"),
+		codeGen.LayerNameErrorCode: filepath.Join(filepath.Dir(rootDir), "/pkg"),
 	}
 	analysisCfg := &codeGen.ApiCfg{
 		CommonConfig: codeGen.CommonConfig{
@@ -59,7 +59,7 @@ func genApi(workDir string) {
 			ExtraParams: ApiExtraParams{
 				PackageName:            analysisRes.PackageName,
 				PackagePascalName:      analysisRes.PackagePascalName,
-				ImportDirPrefix:        cfg.ImportDirPrefix,
+				ImportDirPrefix:        cfg.ProjectRootDir,
 				TargetFileExist:        v.TargetFileExist,
 				Description:            cfg.Description,
 				ReceiverTypeName:       receiverTypeName,
