@@ -53,7 +53,7 @@ func genModel(workDir string) {
 			ExtraParams: ModelExtraParams{
 				PackageName:       analysisRes.PackageName,
 				PackagePascalName: analysisRes.PackagePascalName,
-				ImportDirPrefix:   cfg.ProjectRootDir,
+				ProjectRootDir:    cfg.ProjectRootDir,
 				TableName:         analysisRes.TableName,
 				Description:       cfg.Description,
 				StructName:        analysisRes.StructName,
@@ -82,7 +82,7 @@ type ModelField struct {
 }
 
 type ModelExtraParams struct {
-	ImportDirPrefix   string
+	ProjectRootDir    string
 	PackageName       string
 	PackagePascalName string
 	TableName         string

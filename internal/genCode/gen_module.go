@@ -59,7 +59,7 @@ func genModule(workDir string) {
 			ExtraParams: ModuleExtraParams{
 				PackageName:            analysisRes.PackageName,
 				PackagePascalName:      analysisRes.PackagePascalName,
-				RootDir:                cfg.ProjectRootDir,
+				ProjectRootDir:         cfg.ProjectRootDir,
 				TableName:              analysisRes.TableName,
 				Description:            cfg.Description,
 				StructName:             analysisRes.StructName,
@@ -90,7 +90,7 @@ func genModule(workDir string) {
 }
 
 type ModuleExtraParams struct {
-	RootDir                string
+	ProjectRootDir         string
 	PackageName            string
 	PackagePascalName      string
 	TableName              string

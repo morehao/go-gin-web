@@ -23,7 +23,9 @@ func Run() {
 
 	engine := gin.Default()
 	routerGroup := engine.Group(fmt.Sprintf("/%s", helper.Config.Server.Name))
-	routerGroup.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
+	if helper.Config.Server.Env == "dev" {
+		routerGroup.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
+	}
 	routerGroup.Use(middleware.AccessLog())
 	router.RegisterRouter(routerGroup)
 	if err := engine.Run(fmt.Sprintf(":%s", helper.Config.Server.Port)); err != nil {

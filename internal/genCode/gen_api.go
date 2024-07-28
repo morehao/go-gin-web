@@ -59,7 +59,7 @@ func genApi(workDir string) {
 			ExtraParams: ApiExtraParams{
 				PackageName:            analysisRes.PackageName,
 				PackagePascalName:      analysisRes.PackagePascalName,
-				ImportDirPrefix:        cfg.ProjectRootDir,
+				ProjectRootDir:         cfg.ProjectRootDir,
 				TargetFileExist:        v.TargetFileExist,
 				Description:            cfg.Description,
 				ReceiverTypeName:       receiverTypeName,
@@ -111,7 +111,7 @@ func genApi(workDir string) {
 }
 
 type ApiExtraParams struct {
-	ImportDirPrefix        string
+	ProjectRootDir         string
 	PackageName            string
 	PackagePascalName      string
 	Description            string

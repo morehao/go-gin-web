@@ -1,6 +1,9 @@
 package dto{{.PackagePascalName}}
 
-import "{{.ProjectRootDir}}/internal/app/object/obj{{.PackagePascalName}}"
+import (
+	"{{.ProjectRootDir}}/internal/app/object/objCommon"
+	"{{.ProjectRootDir}}/internal/app/object/obj{{.PackagePascalName}}"
+)
 
 type {{.StructName}}CreateResp struct {
 	Id uint64 `json:"id"` // 数据自增id
