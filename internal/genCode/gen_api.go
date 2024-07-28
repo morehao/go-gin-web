@@ -15,9 +15,9 @@ import (
 func genApi(workDir string) {
 	cfg := Config.CodeGen.Api
 	tplDir := filepath.Join(workDir, cfg.TplDir)
-	rootDir := filepath.Join(workDir, cfg.RootDir)
+	rootDir := filepath.Join(workDir, cfg.InternalAppRootDir)
 	layerDirMap := map[codeGen.LayerName]string{
-		codeGen.LayerNameErrorCode: filepath.Join(rootDir, "/pkg"),
+		codeGen.LayerNameErrorCode: filepath.Join(filepath.Dir(rootDir), "/pkg"),
 	}
 	analysisCfg := &codeGen.ApiCfg{
 		CommonConfig: codeGen.CommonConfig{
@@ -59,7 +59,7 @@ func genApi(workDir string) {
 			ExtraParams: ApiExtraParams{
 				PackageName:            analysisRes.PackageName,
 				PackagePascalName:      analysisRes.PackagePascalName,
-				ImportDirPrefix:        cfg.ImportDirPrefix,
+				ProjectRootDir:         cfg.ProjectRootDir,
 				TargetFileExist:        v.TargetFileExist,
 				Description:            cfg.Description,
 				ReceiverTypeName:       receiverTypeName,
@@ -99,7 +99,7 @@ func genApi(workDir string) {
 		routerCallContent := fmt.Sprintf("%sRouter(routerGroup)", receiverTypeName)
 		routerEnterFilepath := filepath.Join(rootDir, "/router/enter.go")
 		if err := gast.AddContentToFunc(routerEnterFilepath, "RegisterRouter", routerCallContent); err != nil {
-			panic(fmt.Errorf("appendContentToFunc error: %v", err))
+			panic(fmt.Errorf("new router appendContentToFunc error: %v", err))
 		}
 	} else {
 		routerCallContent := fmt.Sprintf(`routerGroup.%s("/%s", %sCtr.%s)`, cfg.HttpMethod, cfg.ApiSuffix, receiverTypeName, cfg.FunctionName)
@@ -111,7 +111,7 @@ func genApi(workDir string) {
 }
 
 type ApiExtraParams struct {
-	ImportDirPrefix        string
+	ProjectRootDir         string
 	PackageName            string
 	PackagePascalName      string
 	Description            string

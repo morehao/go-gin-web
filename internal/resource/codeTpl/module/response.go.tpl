@@ -1,17 +1,25 @@
 package dto{{.PackagePascalName}}
 
+import (
+	"{{.ProjectRootDir}}/internal/app/object/objCommon"
+	"{{.ProjectRootDir}}/internal/app/object/obj{{.PackagePascalName}}"
+)
+
 type {{.StructName}}CreateResp struct {
 	Id uint64 `json:"id"` // 数据自增id
 }
 
 type {{.StructName}}DetailResp struct {
 	Id        uint64 `json:"id" validate:"required"` // 数据自增id
-	CreatedAt int64  `json:"createdAt"`              // 系统创建时间
+	obj{{.PackagePascalName}}.{{.StructName}}BaseInfo
+	objCommon.OperatorBaseInfo
+
 }
 
 type {{.StructName}}PageListItem struct {
 	Id        uint64 `json:"id" validate:"required"` // 数据自增id
-	CreatedAt int64  `json:"createdAt"`              // 系统创建时间
+	obj{{.PackagePascalName}}.{{.StructName}}BaseInfo
+	objCommon.OperatorBaseInfo
 }
 
 type {{.StructName}}PageListResp struct {

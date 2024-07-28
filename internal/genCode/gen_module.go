@@ -15,9 +15,9 @@ import (
 func genModule(workDir string) {
 	cfg := Config.CodeGen.Module
 	tplDir := filepath.Join(workDir, cfg.TplDir)
-	rootDir := filepath.Join(workDir, cfg.RootDir)
+	rootDir := filepath.Join(workDir, cfg.InternalAppRootDir)
 	layerDirMap := map[codeGen.LayerName]string{
-		codeGen.LayerNameErrorCode: filepath.Join(rootDir, "/pkg"),
+		codeGen.LayerNameErrorCode: filepath.Join(filepath.Dir(rootDir), "/pkg"),
 	}
 	analysisCfg := &codeGen.ModuleCfg{
 		CommonConfig: codeGen.CommonConfig{
@@ -25,6 +25,9 @@ func genModule(workDir string) {
 			PackageName: cfg.PackageName,
 			RootDir:     rootDir,
 			LayerDirMap: layerDirMap,
+			TplFuncMap: template.FuncMap{
+				TplFuncIsSysField: IsSysField,
+			},
 		},
 		TableName: cfg.TableName,
 	}
@@ -39,12 +42,13 @@ func genModule(workDir string) {
 		var modelFields []ModelField
 		for _, field := range v.ModelFields {
 			modelFields = append(modelFields, ModelField{
-				FieldName:    field.FieldName,
-				FieldType:    field.FieldType,
-				ColumnName:   field.ColumnName,
-				ColumnType:   field.ColumnType,
-				Comment:      field.Comment,
-				IsPrimaryKey: field.ColumnKey == codeGen.ColumnKeyPRI,
+				FieldName:          field.FieldName,
+				FieldLowerCaseName: gutils.SnakeToLowerCamel(field.FieldName),
+				FieldType:          field.FieldType,
+				ColumnName:         field.ColumnName,
+				ColumnType:         field.ColumnType,
+				Comment:            field.Comment,
+				IsPrimaryKey:       field.ColumnKey == codeGen.ColumnKeyPRI,
 			})
 		}
 
@@ -55,7 +59,7 @@ func genModule(workDir string) {
 			ExtraParams: ModuleExtraParams{
 				PackageName:            analysisRes.PackageName,
 				PackagePascalName:      analysisRes.PackagePascalName,
-				ImportDirPrefix:        cfg.ImportDirPrefix,
+				ProjectRootDir:         cfg.ProjectRootDir,
 				TableName:              analysisRes.TableName,
 				Description:            cfg.Description,
 				StructName:             analysisRes.StructName,
@@ -86,7 +90,7 @@ func genModule(workDir string) {
 }
 
 type ModuleExtraParams struct {
-	ImportDirPrefix        string
+	ProjectRootDir         string
 	PackageName            string
 	PackagePascalName      string
 	TableName              string

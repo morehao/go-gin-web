@@ -1,14 +1,17 @@
 package svc{{.PackagePascalName}}
 
 import (
-	"{{.ImportDirPrefix}}/dto/dto{{.PackagePascalName}}"
-	"{{.ImportDirPrefix}}/model/dao{{.PackagePascalName}}"
-	"go-gin-web/internal/pkg/context"
-	"go-gin-web/internal/pkg/errorCode"
+	"{{.ProjectRootDir}}/internal/app/dto/dto{{.PackagePascalName}}"
+	"{{.ProjectRootDir}}/internal/app/model/dao{{.PackagePascalName}}"
+	"{{.ProjectRootDir}}/internal/app/object/objCommon"
+	"{{.ProjectRootDir}}/internal/app/object/obj{{.PackagePascalName}}"
+	"{{.ProjectRootDir}}/internal/pkg/context"
+	"{{.ProjectRootDir}}/internal/pkg/errorCode"
 
 	"github.com/gin-gonic/gin"
 	"github.com/morehao/go-tools/glog"
 	"github.com/morehao/go-tools/gutils"
+	"time"
 )
 
 type {{.ReceiverTypePascalName}}Svc interface {
@@ -30,7 +33,23 @@ func New{{.ReceiverTypePascalName}}Svc() {{.ReceiverTypePascalName}}Svc {
 
 // Create 创建{{.Description}}
 func (svc *{{.ReceiverTypeName}}Svc) Create(c *gin.Context, req *dto{{.PackagePascalName}}.{{.StructName}}CreateReq) (*dto{{.PackagePascalName}}.{{.StructName}}CreateResp, error) {
-	insertEntity := &dao{{.PackagePascalName}}.{{.StructName}}Entity{}
+	userId := context.GetUserId(c)
+	now := time.Now()
+	insertEntity := &dao{{.PackagePascalName}}.{{.StructName}}Entity{
+		{{- range .ModelFields}}
+		{{- if .IsPrimaryKey}}
+			{{- continue}}
+		{{- end}}
+		{{- if isSysField .FieldName}}
+			{{- continue}}
+		{{- end}}
+		{{.FieldName}}: req.{{.FieldName}},
+		{{- end}}
+		CreatedBy: userId,
+		CreatedTime: now,
+		UpdatedBy: userId,
+		UpdatedTime: now,
+	}
 	if err := dao{{.PackagePascalName}}.New{{.StructName}}Dao().Insert(c, insertEntity); err != nil {
 		glog.Errorf(c, "[svc{{.PackagePascalName}}.{{.StructName}}Create] dao{{.StructName}} Create fail, err:%v, req:%s", err, gutils.ToJsonString(req))
 		return nil, errorCode.{{.StructName}}CreateErr
@@ -76,6 +95,23 @@ func (svc *{{.ReceiverTypeName}}Svc) Detail(c *gin.Context, req *dto{{.PackagePa
     }
 	Resp := &dto{{.PackagePascalName}}.{{.StructName}}DetailResp{
 		Id:   detailEntity.Id,
+		{{.StructName}}BaseInfo: obj{{.PackagePascalName}}.{{.StructName}}BaseInfo{
+		{{- range .ModelFields}}
+			{{- if .IsPrimaryKey}}
+				{{- continue}}
+			{{- end}}
+			{{- if isSysField .FieldName}}
+				{{- continue}}
+			{{- end}}
+			{{.FieldName}}: detailEntity.{{.FieldName}},
+		{{- end}}
+		},
+		OperatorBaseInfo: objCommon.OperatorBaseInfo{
+        	CreatedBy:   detailEntity.CreatedBy,
+			CreatedTime: detailEntity.CreatedTime.Unix(),
+			UpdatedBy:   detailEntity.UpdatedBy,
+			UpdatedTime: detailEntity.UpdatedTime.Unix(),
+		},
 	}
 	return Resp, nil
 }
@@ -94,8 +130,24 @@ func (svc *{{.ReceiverTypeName}}Svc) PageList(c *gin.Context, req *dto{{.Package
 	list := make([]dto{{.PackagePascalName}}.{{.StructName}}PageListItem, 0, len(dataList))
 	for _, v := range dataList {
 		list = append(list, dto{{.PackagePascalName}}.{{.StructName}}PageListItem{
-			Id:        v.Id,
-			CreatedAt: v.CreatedAt.Unix(),
+			Id:   v.Id,
+			{{.StructName}}BaseInfo: obj{{.PackagePascalName}}.{{.StructName}}BaseInfo{
+			{{- range .ModelFields}}
+				{{- if .IsPrimaryKey}}
+					{{- continue}}
+				{{- end}}
+				{{- if isSysField .FieldName}}
+					{{- continue}}
+				{{- end}}
+				{{.FieldName}}: v.{{.FieldName}},
+			{{- end}}
+			},
+			OperatorBaseInfo: objCommon.OperatorBaseInfo{
+				CreatedBy:   v.CreatedBy,
+				CreatedTime: v.CreatedTime.Unix(),
+				UpdatedBy:   v.UpdatedBy,
+				UpdatedTime: v.UpdatedTime.Unix(),
+			},
 		})
 	}
 	return &dto{{.PackagePascalName}}.{{.StructName}}PageListResp{

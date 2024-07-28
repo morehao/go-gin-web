@@ -1,23 +1,27 @@
 package dtoUser
 
-type GetUserRes struct {
-	ID   uint64 `json:"id"`   // 用户ID
-	Name string `json:"name"` // 用户名
+import (
+	"go-gin-web/internal/app/object/objCommon"
+	"go-gin-web/internal/app/object/objUser"
+)
+
+type UserCreateResp struct {
+	Id uint64 `json:"id"` // 数据自增id
 }
 
-type FormatDataRes struct {
-	Items []Item `json:"items"`
-	Item
-	ItemMap   map[string]Item     `json:"itemMap"`
-	PriceList []float64           `json:"priceList" precision:"2"`
-	NameList  []string            `json:"nameList"`
-	NameMap   map[string][]string `json:"nameMap"`
-	PriceMap  map[string]float64  `json:"priceMap" precision:"2"`
+type UserDetailResp struct {
+	Id uint64 `json:"id" validate:"required"` // 数据自增id
+	objUser.UserBaseInfo
+	objCommon.OperatorBaseInfo
 }
 
-type Item struct {
-	Price     float64   `json:"price" precision:"2"`
-	PriceList []float64 `json:"priceList" precision:"2"`
-	DescList  []string  `json:"descList"`
-	Children  []Item    `json:"children"`
+type UserPageListItem struct {
+	Id uint64 `json:"id" validate:"required"` // 数据自增id
+	objUser.UserBaseInfo
+	objCommon.OperatorBaseInfo
+}
+
+type UserPageListResp struct {
+	List  []UserPageListItem `json:"list"`  // 数据列表
+	Total int64              `json:"total"` // 数据总条数
 }

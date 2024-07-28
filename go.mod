@@ -5,8 +5,8 @@ go 1.22
 require (
 	github.com/gin-gonic/gin v1.10.0
 	github.com/json-iterator/go v1.1.12
-	github.com/morehao/go-tools v1.2.0
-	github.com/redis/go-redis/v9 v9.5.3
+	github.com/morehao/go-tools v1.2.2
+	github.com/redis/go-redis/v9 v9.6.0
 	github.com/swaggo/files v1.0.1
 	github.com/swaggo/gin-swagger v1.6.0
 	github.com/swaggo/swag v1.16.3
