@@ -1,4 +1,7 @@
 .idea
-log/*
 .DS_Store
 .git
+
+internal/genCode/*
+internal/resource/*
+log/*
