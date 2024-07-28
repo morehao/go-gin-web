@@ -3,10 +3,12 @@ package dto{{.PackagePascalName}}
 import "{{.ImportDirPrefix}}/object/objCommon"
 
 type {{.StructName}}CreateReq struct {
+	obj{{.PackagePascalName}}.{{.StructName}}BaseInfo
 }
 
 type {{.StructName}}UpdateReq struct {
-	Id   uint64 `json:"id" validate:"required" label:"数据自增id"` // 数据自增id
+	Id uint64 `json:"id" validate:"required" label:"数据自增id"` // 数据自增id
+	obj{{.PackagePascalName}}.{{.StructName}}BaseInfo
 }
 
 type {{.StructName}}DetailReq struct {

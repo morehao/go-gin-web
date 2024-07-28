@@ -6,6 +6,7 @@ import (
 	"text/template"
 
 	"github.com/morehao/go-tools/codeGen"
+	"github.com/morehao/go-tools/gutils"
 )
 
 func genModel(workDir string) {
@@ -35,12 +36,13 @@ func genModel(workDir string) {
 		var modelFields []ModelField
 		for _, field := range v.ModelFields {
 			modelFields = append(modelFields, ModelField{
-				FieldName:    field.FieldName,
-				FieldType:    field.FieldType,
-				ColumnName:   field.ColumnName,
-				ColumnType:   field.ColumnType,
-				Comment:      field.Comment,
-				IsPrimaryKey: field.ColumnKey == codeGen.ColumnKeyPRI,
+				FieldName:          field.FieldName,
+				FieldLowerCaseName: gutils.SnakeToLowerCamel(field.FieldName),
+				FieldType:          field.FieldType,
+				ColumnName:         field.ColumnName,
+				ColumnType:         field.ColumnType,
+				Comment:            field.Comment,
+				IsPrimaryKey:       field.ColumnKey == codeGen.ColumnKeyPRI,
 			})
 		}
 
@@ -70,12 +72,13 @@ func genModel(workDir string) {
 }
 
 type ModelField struct {
-	FieldName    string // 字段名称
-	FieldType    string // 字段数据类型，如int、string
-	ColumnName   string // 列名
-	ColumnType   string // 列数据类型，如varchar(255)
-	Comment      string // 字段注释
-	IsPrimaryKey bool   // 是否是主键
+	FieldName          string // 字段名称
+	FieldLowerCaseName string // 字段名称小驼峰
+	FieldType          string // 字段数据类型，如int、string
+	ColumnName         string // 列名
+	ColumnType         string // 列数据类型，如varchar(255)
+	Comment            string // 字段注释
+	IsPrimaryKey       bool   // 是否是主键
 }
 
 type ModelExtraParams struct {

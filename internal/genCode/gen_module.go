@@ -39,12 +39,13 @@ func genModule(workDir string) {
 		var modelFields []ModelField
 		for _, field := range v.ModelFields {
 			modelFields = append(modelFields, ModelField{
-				FieldName:    field.FieldName,
-				FieldType:    field.FieldType,
-				ColumnName:   field.ColumnName,
-				ColumnType:   field.ColumnType,
-				Comment:      field.Comment,
-				IsPrimaryKey: field.ColumnKey == codeGen.ColumnKeyPRI,
+				FieldName:          field.FieldName,
+				FieldLowerCaseName: gutils.SnakeToLowerCamel(field.FieldName),
+				FieldType:          field.FieldType,
+				ColumnName:         field.ColumnName,
+				ColumnType:         field.ColumnType,
+				Comment:            field.Comment,
+				IsPrimaryKey:       field.ColumnKey == codeGen.ColumnKeyPRI,
 			})
 		}
 

@@ -18,35 +18,35 @@ log:
     - requestId
 
 code_gen:
-  mode: api
+  mode: module
   module:
     tpl_dir: internal/resource/codeTpl/module
     root_dir: internal/app
     import_dir_prefix: go-gin-web/internal/app
-    description: 平台
-    api_doc_tag: 平台管理
-    api_group: platform
-    api_prefix: /app/platform/
-    package_name: platform
-    table_name: platform
+    description: 用户
+    api_doc_tag: 用户管理
+    api_group: user
+    api_prefix: /app/user/
+    package_name: user
+    table_name: user
   model:
     tpl_dir: internal/resource/codeTpl/model
     root_dir: internal/app
     import_dir_prefix: go-gin-web/internal/app
-    description: 平台
-    package_name: platform
-    table_name: platform_application
+    description: 用户
+    package_name: user
+    table_name: user
   api:
     tpl_dir: internal/resource/codeTpl/api
     root_dir: internal/app
     import_dir_prefix: go-gin-web/internal/app
-    description: 平台测试
-    package_name: platform
-    target_filename: platform.go
+    description: 禁用用户
+    package_name: user
+    target_filename: user.go
     http_method: POST
-    function_name: Test2
-    api_doc_tag: 平台管理
-    api_group: platform
-    api_prefix: /app/platform/
-    api_suffix: test
-    routerGroup: platformGroup
+    function_name: Disable
+    api_doc_tag: 用户管理
+    api_group: user
+    api_prefix: /app/user/
+    api_suffix: disable
+    routerGroup: userGroup

@@ -30,7 +30,17 @@ func New{{.ReceiverTypePascalName}}Svc() {{.ReceiverTypePascalName}}Svc {
 
 // Create 创建{{.Description}}
 func (svc *{{.ReceiverTypeName}}Svc) Create(c *gin.Context, req *dto{{.PackagePascalName}}.{{.StructName}}CreateReq) (*dto{{.PackagePascalName}}.{{.StructName}}CreateResp, error) {
-	insertEntity := &dao{{.PackagePascalName}}.{{.StructName}}Entity{}
+	insertEntity := &dao{{.PackagePascalName}}.{{.StructName}}Entity{
+	{{- range .ModelFields}}
+	{{- if .IsPrimaryKey}}
+		{{- continue}}
+	{{- end}}
+	{{- if in .FieldName "created_at" "updated_at" "deleted_at"}}
+		{{- continue}}
+	{{- end}}
+	{{.FieldName}}: req.{{.FieldName}},
+	{{-end}}
+	}
 	if err := dao{{.PackagePascalName}}.New{{.StructName}}Dao().Insert(c, insertEntity); err != nil {
 		glog.Errorf(c, "[svc{{.PackagePascalName}}.{{.StructName}}Create] dao{{.StructName}} Create fail, err:%v, req:%s", err, gutils.ToJsonString(req))
 		return nil, errorCode.{{.StructName}}CreateErr

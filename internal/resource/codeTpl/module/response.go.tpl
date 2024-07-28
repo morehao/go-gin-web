@@ -6,12 +6,12 @@ type {{.StructName}}CreateResp struct {
 
 type {{.StructName}}DetailResp struct {
 	Id        uint64 `json:"id" validate:"required"` // 数据自增id
-	CreatedAt int64  `json:"createdAt"`              // 系统创建时间
+	obj{{.PackagePascalName}}.{{.StructName}}BaseInfo
 }
 
 type {{.StructName}}PageListItem struct {
 	Id        uint64 `json:"id" validate:"required"` // 数据自增id
-	CreatedAt int64  `json:"createdAt"`              // 系统创建时间
+	obj{{.PackagePascalName}}.{{.StructName}}BaseInfo
 }
 
 type {{.StructName}}PageListResp struct {
