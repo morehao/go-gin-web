@@ -12,7 +12,7 @@ import (
 func genModel(workDir string) {
 	cfg := Config.CodeGen.Model
 	tplDir := filepath.Join(workDir, cfg.TplDir)
-	rootDir := filepath.Join(workDir, cfg.RootDir)
+	rootDir := filepath.Join(workDir, cfg.InternalAppRootDir)
 	layerDirMap := map[codeGen.LayerName]string{
 		codeGen.LayerNameErrorCode: filepath.Join(rootDir, "/pkg"),
 	}
@@ -22,6 +22,9 @@ func genModel(workDir string) {
 			PackageName: cfg.PackageName,
 			RootDir:     rootDir,
 			LayerDirMap: layerDirMap,
+			TplFuncMap: template.FuncMap{
+				TplFuncIsSysField: IsSysField,
+			},
 		},
 		TableName: cfg.TableName,
 	}
