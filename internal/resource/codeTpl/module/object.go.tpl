@@ -5,6 +5,9 @@ type {{.StructName}}BaseInfo struct {
 {{- if .IsPrimaryKey}}
     {{- continue}}
 {{- end}}
+{{- if or (eq .FieldName "deleted_at") (eq .FieldName "deleted_by") }}
+    {{- continue}}
+{{- end}}
 {{- if eq .FieldType "time.Time"}}
     {{.FieldName}} int64 `json:"{{.FieldLowerCaseName}}" form:"{{.FieldLowerCaseName}}"` // {{.Comment}}
 {{- else}}

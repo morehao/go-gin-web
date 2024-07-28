@@ -9,6 +9,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/morehao/go-tools/glog"
 	"github.com/morehao/go-tools/gutils"
+	"time"
 )
 
 type {{.ReceiverTypePascalName}}Svc interface {
@@ -30,16 +31,23 @@ func New{{.ReceiverTypePascalName}}Svc() {{.ReceiverTypePascalName}}Svc {
 
 // Create 创建{{.Description}}
 func (svc *{{.ReceiverTypeName}}Svc) Create(c *gin.Context, req *dto{{.PackagePascalName}}.{{.StructName}}CreateReq) (*dto{{.PackagePascalName}}.{{.StructName}}CreateResp, error) {
+	userId := context.GetUserId(c)
+	now := time.Now()
 	insertEntity := &dao{{.PackagePascalName}}.{{.StructName}}Entity{
 	{{- range .ModelFields}}
 	{{- if .IsPrimaryKey}}
 		{{- continue}}
 	{{- end}}
-	{{- if in .FieldName "created_at" "updated_at" "deleted_at"}}
+	{{- if or (eq .FieldName "created_at") (eq .FieldName "created_by") (eq .FieldName "updated_at") (eq .FieldName "updated_by") (eq .FieldName "deleted_at") (eq .FieldName "deleted_by") }}
 		{{- continue}}
-	{{- end}}
+	{{- else}}
 	{{.FieldName}}: req.{{.FieldName}},
-	{{-end}}
+	{{- end}}
+	{{- end}}
+	CreatedBy: userId,
+	CreatedAt: now,
+	UpdatedBy: userId,
+	UpdatedAt: now,
 	}
 	if err := dao{{.PackagePascalName}}.New{{.StructName}}Dao().Insert(c, insertEntity); err != nil {
 		glog.Errorf(c, "[svc{{.PackagePascalName}}.{{.StructName}}Create] dao{{.StructName}} Create fail, err:%v, req:%s", err, gutils.ToJsonString(req))

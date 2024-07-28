@@ -1,9 +1,4 @@
-package dtoUser
-
-type GetUserRes struct {
-	ID   uint64 `json:"id"`   // 用户ID
-	Name string `json:"name"` // 用户名
-}
+package dtoExample
 
 type FormatDataRes struct {
 	Items []Item `json:"items"`
