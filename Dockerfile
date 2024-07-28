@@ -1,6 +1,6 @@
 # Build stage
-# 使用 Golang 1.22 的 Alpine 镜像作为基础镜像，并命名为 builder
-FROM golang:1.22-alpine AS builder
+# 使用 Golang 的 alpine 镜像作为基础镜像，并命名为 builder
+FROM golang:alpine AS builder
 
 # 设置工作目录为 /opt/server
 WORKDIR /opt/server
@@ -8,18 +8,21 @@ WORKDIR /opt/server
 # 设置 Go 包代理
 ENV GOPROXY=https://goproxy.cn,direct
 
-# 将当前构建上下文的所有文件复制到工作目录
-COPY . .
+# 将 go.mod 和 go.sum 文件复制到工作目录
+COPY go.mod go.sum ./
 
 # 下载所有依赖
 RUN go mod download
+
+# 将当前构建上下文的所有文件复制到工作目录
+COPY . .
 
 # 编译 Go 源代码，并将输出的可执行文件命名为 webserver
 RUN go build -o webserver /opt/server/cmd/app/main.go
 
 # Final stage
-# 使用 Alpine:3.20 镜像作为基础镜像
-FROM alpine:3.20
+# 使用 alpine 镜像作为基础镜像
+FROM alpine
 
 # 设置工作目录为 /opt/server
 WORKDIR /opt/server
