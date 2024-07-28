@@ -1,0 +1,39 @@
+definitions:
+  dto.DefaultRender:
+    properties:
+      code:
+        type: integer
+      data: {}
+      msg:
+        type: string
+    type: object
+info:
+  contact: {}
+paths:
+  /user/get:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: token
+        in: header
+        name: x-token
+        required: true
+        type: string
+      - description: 用户ID
+        in: query
+        name: id
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.DefaultRender'
+      security:
+      - ApiKeyAuth: []
+      summary: 获取用户详情
+      tags:
+      - 用户管理
+swagger: "2.0"

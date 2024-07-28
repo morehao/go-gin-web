@@ -48,25 +48,51 @@ GinRender 组件用于统一处理 HTTP 响应，确保响应格式一致。
 
 支持按模块生成、只生成Model层代码、按API接口生成等。
 
-开发者可以通过调整配置文件来生成代码，生成后各层级代码自动补全，只需关心业务代码。 
+开发者可以通过调整配置文件来生成代码，生成后各层级代码自动补全，只需关心业务代码。
+
+## 接口文档
+
+安装swag工具
+```shell
+go install github.com/swaggo/swag/cmd/swag@latest
+```
+生成接口文档
+``` shell
+swag init -g ./cmd/app/main.go
+```
+访问接口文档
+访问 `http://localhost:8099/app/swagger/index.html` 即可查看接口文档。
+
+## 项目部署
+构建镜像
+``` bash
+docker buildx build -t go-gin-web .
+```
+运行容器
+``` bash
+docker run -itd --name go-gin-web -p 8099:8099 go-gin-web
+```
+
+## 快速生成新项目
+安装`go-cutter`
+```shell
+go install github.com/morehao/go-cutter@latest
+```
+在 **当前项目根目录下（即`./`）** 执行命令
+```shell
+go-cutter /goProject/yourAppName
+```
+执行后，会以当前项目为模板项目，在`/goProject`目录下生成一个名为`yourAppName`的项目。
+
+`go-cutter`是我实现的一个快速生成项目代码的命令行工具，可以基于本项目快速生成一个新的项目，具体使用方法请参考 [https://github.com/morehao/go-cutter](https://github.com/morehao/go-cutter)。
+
 
 ## 后续功能
 
 - httpClient封装（支持日志链路追踪）
 - Makefile文件
-- Dockerfile文件
-- 如何基于本项目快速生成一个新的项目
 
-## 项目部署
-### 构建镜像
-``` bash
-docker buildx build -t go-gin-web .
-```
 
-### 运行容器
-``` bash
-docker run -itd --name go-gin-web -p 8099:8099 go-gin-web
-```
 
 ## 相关组件
 相关组件均在[go-tools](https://github.com/morehao/go-tools)包中实现。
