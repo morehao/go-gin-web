@@ -15,8 +15,8 @@ import (
 type {{.StructName}}Entity struct {
 {{- range .ModelFields}}
 	{{- if .IsPrimaryKey}}
-	{{.FieldName}} uint64 `gorm:"column:{{.ColumnName}};comment:{{.Comment}};primarykey"`
-	{{- else if eq .FieldName "DeletedTime"}}
+	{{.FieldName}} uint64 `gorm:"column:{{.ColumnName}};comment:{{.Comment}};primaryKey"`
+	{{- else if eq .FieldName "DeletedAt"}}
 	{{.FieldName}} gorm.DeletedAt `gorm:"column:{{.ColumnName}};comment:{{.Comment}}"`
 	{{- else}}
 	{{.FieldName}} {{.FieldType}} `gorm:"column:{{.ColumnName}};comment:{{.Comment}}"`
@@ -33,8 +33,8 @@ func ({{.StructName}}Entity ) TableName() string {
 }
 
 type {{.StructName}}Cond struct {
-	Id             uint64
-	Ids            []uint64
+	ID             uint64
+	IDs            []uint64
 	IsDelete       bool
 	Page           int
 	PageSize       int
@@ -76,7 +76,7 @@ func (dao *{{.StructName}}Dao) BatchInsert(ctx *gin.Context, entityList {{.Struc
 func (dao *{{.StructName}}Dao) Update(ctx *gin.Context, entity *{{.StructName}}Entity) error {
 	db := dao.Db(ctx).Model(&{{.StructName}}Entity{})
 	db = db.Table(TblName{{.StructName}})
-	if err := db.Where("id = ?", entity.Id).Updates(entity).Error; err != nil {
+	if err := db.Where("id = ?", entity.ID).Updates(entity).Error; err != nil {
 		return errorCode.ErrorDbUpdate.Wrapf(err, "[{{.StructName}}Dao] Update fail, entity:%s", gutils.ToJsonString(entity))
 	}
 	return nil
@@ -163,20 +163,20 @@ func (dao *{{.StructName}}Dao) GetPageListByCond(ctx *gin.Context, cond *{{.Stru
 func (l {{.StructName}}EntityList) ToMap() map[uint64]{{.StructName}}Entity {
 	m := make(map[uint64]{{.StructName}}Entity)
 	for _, v := range l {
-		m[v.Id] = v
+		m[v.ID] = v
 	}
 	return m
 }
 
 
 func (dao *{{.StructName}}Dao) BuildCondition(db *gorm.DB, cond *{{.StructName}}Cond) {
-	if cond.Id > 0 {
+	if cond.ID > 0 {
         query := fmt.Sprintf("%s.id = ?", TblName{{.StructName}})
-		db.Where(query, cond.Id)
+		db.Where(query, cond.ID)
 	}
-	if len(cond.Ids) > 0 {
+	if len(cond.IDs) > 0 {
 	    query := fmt.Sprintf("%s.id in (?)", TblName{{.StructName}})
-		db.Where(query, cond.Ids)
+		db.Where(query, cond.IDs)
 	}
     if cond.CreatedAtStart > 0 {
         query := fmt.Sprintf("%s.created_at >= ?", TblName{{.StructName}})

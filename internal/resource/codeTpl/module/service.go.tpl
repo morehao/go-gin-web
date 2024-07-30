@@ -46,16 +46,16 @@ func (svc *{{.ReceiverTypeName}}Svc) Create(c *gin.Context, req *dto{{.PackagePa
 		{{.FieldName}}: req.{{.FieldName}},
 		{{- end}}
 		CreatedBy: userId,
-		CreatedTime: now,
+		CreatedAt: now,
 		UpdatedBy: userId,
-		UpdatedTime: now,
+		UpdatedAt: now,
 	}
 	if err := dao{{.PackagePascalName}}.New{{.StructName}}Dao().Insert(c, insertEntity); err != nil {
 		glog.Errorf(c, "[svc{{.PackagePascalName}}.{{.StructName}}Create] dao{{.StructName}} Create fail, err:%v, req:%s", err, gutils.ToJsonString(req))
 		return nil, errorCode.{{.StructName}}CreateErr
 	}
 	return &dto{{.PackagePascalName}}.{{.StructName}}CreateResp{
-		Id: insertEntity.Id,
+		ID: insertEntity.ID,
 	}, nil
 }
 
@@ -63,7 +63,7 @@ func (svc *{{.ReceiverTypeName}}Svc) Create(c *gin.Context, req *dto{{.PackagePa
 func (svc *{{.ReceiverTypeName}}Svc) Delete(c *gin.Context, req *dto{{.PackagePascalName}}.{{.StructName}}DeleteReq) error {
 	deletedBy := context.GetUserId(c)
 
-	if err := dao{{.PackagePascalName}}.New{{.StructName}}Dao().Delete(c, req.Id, deletedBy); err != nil {
+	if err := dao{{.PackagePascalName}}.New{{.StructName}}Dao().Delete(c, req.ID, deletedBy); err != nil {
 		glog.Errorf(c, "[svc{{.PackagePascalName}}.Delete] dao{{.StructName}} Delete fail, err:%v, req:%s", err, gutils.ToJsonString(req))
 		return errorCode.{{.StructName}}DeleteErr
 	}
@@ -73,7 +73,7 @@ func (svc *{{.ReceiverTypeName}}Svc) Delete(c *gin.Context, req *dto{{.PackagePa
 // Update 更新{{.Description}}
 func (svc *{{.ReceiverTypeName}}Svc) Update(c *gin.Context, req *dto{{.PackagePascalName}}.{{.StructName}}UpdateReq) error {
 	updateEntity := &dao{{.PackagePascalName}}.{{.StructName}}Entity{
-        Id:   req.Id,
+        ID:   req.ID,
     }
     if err := dao{{.PackagePascalName}}.New{{.StructName}}Dao().Update(c, updateEntity); err != nil {
         glog.Errorf(c, "[svc{{.PackagePascalName}}.{{.StructName}}Update] dao{{.StructName}} Update fail, err:%v, req:%s", err, gutils.ToJsonString(req))
@@ -84,17 +84,17 @@ func (svc *{{.ReceiverTypeName}}Svc) Update(c *gin.Context, req *dto{{.PackagePa
 
 // Detail 根据id获取{{.Description}}
 func (svc *{{.ReceiverTypeName}}Svc) Detail(c *gin.Context, req *dto{{.PackagePascalName}}.{{.StructName}}DetailReq) (*dto{{.PackagePascalName}}.{{.StructName}}DetailResp, error) {
-	detailEntity, err := dao{{.PackagePascalName}}.New{{.StructName}}Dao().GetById(c, req.Id)
+	detailEntity, err := dao{{.PackagePascalName}}.New{{.StructName}}Dao().GetById(c, req.ID)
 	if err != nil {
 		glog.Errorf(c, "[svc{{.PackagePascalName}}.{{.StructName}}Detail] dao{{.StructName}} GetById fail, err:%v, req:%s", err, gutils.ToJsonString(req))
 		return nil, errorCode.{{.StructName}}GetDetailErr
 	}
     // 判断是否存在
-    if detailEntity == nil || detailEntity.Id == 0 {
+    if detailEntity == nil || detailEntity.ID == 0 {
         return nil, errorCode.{{.StructName}}NotExistErr
     }
 	Resp := &dto{{.PackagePascalName}}.{{.StructName}}DetailResp{
-		Id:   detailEntity.Id,
+		ID:   detailEntity.ID,
 		{{.StructName}}BaseInfo: obj{{.PackagePascalName}}.{{.StructName}}BaseInfo{
 		{{- range .ModelFields}}
 			{{- if .IsPrimaryKey}}
@@ -107,10 +107,10 @@ func (svc *{{.ReceiverTypeName}}Svc) Detail(c *gin.Context, req *dto{{.PackagePa
 		{{- end}}
 		},
 		OperatorBaseInfo: objCommon.OperatorBaseInfo{
-        	CreatedBy:   detailEntity.CreatedBy,
-			CreatedTime: detailEntity.CreatedTime.Unix(),
-			UpdatedBy:   detailEntity.UpdatedBy,
-			UpdatedTime: detailEntity.UpdatedTime.Unix(),
+        	CreatedBy: detailEntity.CreatedBy,
+			CreatedAt: detailEntity.CreatedAt.Unix(),
+			UpdatedBy: detailEntity.UpdatedBy,
+			UpdatedAt: detailEntity.UpdatedAt.Unix(),
 		},
 	}
 	return Resp, nil
@@ -130,7 +130,7 @@ func (svc *{{.ReceiverTypeName}}Svc) PageList(c *gin.Context, req *dto{{.Package
 	list := make([]dto{{.PackagePascalName}}.{{.StructName}}PageListItem, 0, len(dataList))
 	for _, v := range dataList {
 		list = append(list, dto{{.PackagePascalName}}.{{.StructName}}PageListItem{
-			Id:   v.Id,
+			ID:   v.ID,
 			{{.StructName}}BaseInfo: obj{{.PackagePascalName}}.{{.StructName}}BaseInfo{
 			{{- range .ModelFields}}
 				{{- if .IsPrimaryKey}}
@@ -143,10 +143,10 @@ func (svc *{{.ReceiverTypeName}}Svc) PageList(c *gin.Context, req *dto{{.Package
 			{{- end}}
 			},
 			OperatorBaseInfo: objCommon.OperatorBaseInfo{
-				CreatedBy:   v.CreatedBy,
-				CreatedTime: v.CreatedTime.Unix(),
-				UpdatedBy:   v.UpdatedBy,
-				UpdatedTime: v.UpdatedTime.Unix(),
+				CreatedBy: v.CreatedBy,
+				CreatedAt: v.CreatedAt.Unix(),
+				UpdatedBy: v.UpdatedBy,
+				UpdatedAt: v.UpdatedAt.Unix(),
 			},
 		})
 	}

@@ -13,16 +13,16 @@ import (
 
 // UserEntity 用户表结构体
 type UserEntity struct {
-	CompanyId uint64 `gorm:"column:company_id;comment:公司id"`
-	CreatedBy uint64 `gorm:"column:created_by;comment:创建人id"`
-	CreatedTime time.Time `gorm:"column:created_time;comment:创建时间"`
-	DeletedBy uint64 `gorm:"column:deleted_by;comment:删除人id"`
-	DeletedTime gorm.DeletedAt `gorm:"column:deleted_time;comment:删除时间"`
-	DepartmentId uint64 `gorm:"column:department_id;comment:部门id"`
-	Id uint64 `gorm:"column:id;comment:自增ID;primarykey"`
+	ID uint64 `gorm:"column:id;comment:自增ID;primaryKey"`
+	CompanyID uint64 `gorm:"column:company_id;comment:公司id"`
+	DepartmentID uint64 `gorm:"column:department_id;comment:部门id"`
 	Name string `gorm:"column:name;comment:姓名"`
+	CreatedAt time.Time `gorm:"column:created_at;comment:创建时间"`
+	UpdatedAt time.Time `gorm:"column:updated_at;comment:更新时间"`
+	DeletedAt gorm.DeletedAt `gorm:"column:deleted_at;comment:删除时间"`
+	CreatedBy uint64 `gorm:"column:created_by;comment:创建人id"`
 	UpdatedBy uint64 `gorm:"column:updated_by;comment:更新人id"`
-	UpdatedTime time.Time `gorm:"column:updated_time;comment:更新时间"`
+	DeletedBy uint64 `gorm:"column:deleted_by;comment:删除人id"`
 }
 
 type UserEntityList []UserEntity
@@ -34,8 +34,8 @@ func (UserEntity ) TableName() string {
 }
 
 type UserCond struct {
-	Id             uint64
-	Ids            []uint64
+	ID             uint64
+	IDs            []uint64
 	IsDelete       bool
 	Page           int
 	PageSize       int
@@ -77,7 +77,7 @@ func (dao *UserDao) BatchInsert(ctx *gin.Context, entityList UserEntityList) err
 func (dao *UserDao) Update(ctx *gin.Context, entity *UserEntity) error {
 	db := dao.Db(ctx).Model(&UserEntity{})
 	db = db.Table(TblNameUser)
-	if err := db.Where("id = ?", entity.Id).Updates(entity).Error; err != nil {
+	if err := db.Where("id = ?", entity.ID).Updates(entity).Error; err != nil {
 		return errorCode.ErrorDbUpdate.Wrapf(err, "[UserDao] Update fail, entity:%s", gutils.ToJsonString(entity))
 	}
 	return nil
@@ -164,20 +164,20 @@ func (dao *UserDao) GetPageListByCond(ctx *gin.Context, cond *UserCond) (UserEnt
 func (l UserEntityList) ToMap() map[uint64]UserEntity {
 	m := make(map[uint64]UserEntity)
 	for _, v := range l {
-		m[v.Id] = v
+		m[v.ID] = v
 	}
 	return m
 }
 
 
 func (dao *UserDao) BuildCondition(db *gorm.DB, cond *UserCond) {
-	if cond.Id > 0 {
+	if cond.ID > 0 {
         query := fmt.Sprintf("%s.id = ?", TblNameUser)
-		db.Where(query, cond.Id)
+		db.Where(query, cond.ID)
 	}
-	if len(cond.Ids) > 0 {
+	if len(cond.IDs) > 0 {
 	    query := fmt.Sprintf("%s.id in (?)", TblNameUser)
-		db.Where(query, cond.Ids)
+		db.Where(query, cond.IDs)
 	}
     if cond.CreatedAtStart > 0 {
         query := fmt.Sprintf("%s.created_at >= ?", TblNameUser)

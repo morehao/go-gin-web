@@ -36,20 +36,20 @@ func (svc *userSvc) Create(c *gin.Context, req *dtoUser.UserCreateReq) (*dtoUser
 	userId := context.GetUserId(c)
 	now := time.Now()
 	insertEntity := &daoUser.UserEntity{
-		CompanyId: req.CompanyId,
-		DepartmentId: req.DepartmentId,
+		CompanyID: req.CompanyID,
+		DepartmentID: req.DepartmentID,
 		Name: req.Name,
 		CreatedBy: userId,
-		CreatedTime: now,
+		CreatedAt: now,
 		UpdatedBy: userId,
-		UpdatedTime: now,
+		UpdatedAt: now,
 	}
 	if err := daoUser.NewUserDao().Insert(c, insertEntity); err != nil {
 		glog.Errorf(c, "[svcUser.UserCreate] daoUser Create fail, err:%v, req:%s", err, gutils.ToJsonString(req))
 		return nil, errorCode.UserCreateErr
 	}
 	return &dtoUser.UserCreateResp{
-		Id: insertEntity.Id,
+		ID: insertEntity.ID,
 	}, nil
 }
 
@@ -57,7 +57,7 @@ func (svc *userSvc) Create(c *gin.Context, req *dtoUser.UserCreateReq) (*dtoUser
 func (svc *userSvc) Delete(c *gin.Context, req *dtoUser.UserDeleteReq) error {
 	deletedBy := context.GetUserId(c)
 
-	if err := daoUser.NewUserDao().Delete(c, req.Id, deletedBy); err != nil {
+	if err := daoUser.NewUserDao().Delete(c, req.ID, deletedBy); err != nil {
 		glog.Errorf(c, "[svcUser.Delete] daoUser Delete fail, err:%v, req:%s", err, gutils.ToJsonString(req))
 		return errorCode.UserDeleteErr
 	}
@@ -67,7 +67,7 @@ func (svc *userSvc) Delete(c *gin.Context, req *dtoUser.UserDeleteReq) error {
 // Update 更新用户
 func (svc *userSvc) Update(c *gin.Context, req *dtoUser.UserUpdateReq) error {
 	updateEntity := &daoUser.UserEntity{
-        Id:   req.Id,
+        ID:   req.ID,
     }
     if err := daoUser.NewUserDao().Update(c, updateEntity); err != nil {
         glog.Errorf(c, "[svcUser.UserUpdate] daoUser Update fail, err:%v, req:%s", err, gutils.ToJsonString(req))
@@ -78,27 +78,27 @@ func (svc *userSvc) Update(c *gin.Context, req *dtoUser.UserUpdateReq) error {
 
 // Detail 根据id获取用户
 func (svc *userSvc) Detail(c *gin.Context, req *dtoUser.UserDetailReq) (*dtoUser.UserDetailResp, error) {
-	detailEntity, err := daoUser.NewUserDao().GetById(c, req.Id)
+	detailEntity, err := daoUser.NewUserDao().GetById(c, req.ID)
 	if err != nil {
 		glog.Errorf(c, "[svcUser.UserDetail] daoUser GetById fail, err:%v, req:%s", err, gutils.ToJsonString(req))
 		return nil, errorCode.UserGetDetailErr
 	}
     // 判断是否存在
-    if detailEntity == nil || detailEntity.Id == 0 {
+    if detailEntity == nil || detailEntity.ID == 0 {
         return nil, errorCode.UserNotExistErr
     }
 	Resp := &dtoUser.UserDetailResp{
-		Id:   detailEntity.Id,
+		ID:   detailEntity.ID,
 		UserBaseInfo: objUser.UserBaseInfo{
-			CompanyId: detailEntity.CompanyId,
-			DepartmentId: detailEntity.DepartmentId,
+			CompanyID: detailEntity.CompanyID,
+			DepartmentID: detailEntity.DepartmentID,
 			Name: detailEntity.Name,
 		},
 		OperatorBaseInfo: objCommon.OperatorBaseInfo{
-        	CreatedBy:   detailEntity.CreatedBy,
-			CreatedTime: detailEntity.CreatedTime.Unix(),
-			UpdatedBy:   detailEntity.UpdatedBy,
-			UpdatedTime: detailEntity.UpdatedTime.Unix(),
+        	CreatedBy: detailEntity.CreatedBy,
+			CreatedAt: detailEntity.CreatedAt.Unix(),
+			UpdatedBy: detailEntity.UpdatedBy,
+			UpdatedAt: detailEntity.UpdatedAt.Unix(),
 		},
 	}
 	return Resp, nil
@@ -118,17 +118,17 @@ func (svc *userSvc) PageList(c *gin.Context, req *dtoUser.UserPageListReq) (*dto
 	list := make([]dtoUser.UserPageListItem, 0, len(dataList))
 	for _, v := range dataList {
 		list = append(list, dtoUser.UserPageListItem{
-			Id:   v.Id,
+			ID:   v.ID,
 			UserBaseInfo: objUser.UserBaseInfo{
-				CompanyId: v.CompanyId,
-				DepartmentId: v.DepartmentId,
+				CompanyID: v.CompanyID,
+				DepartmentID: v.DepartmentID,
 				Name: v.Name,
 			},
 			OperatorBaseInfo: objCommon.OperatorBaseInfo{
-				CreatedBy:   v.CreatedBy,
-				CreatedTime: v.CreatedTime.Unix(),
-				UpdatedBy:   v.UpdatedBy,
-				UpdatedTime: v.UpdatedTime.Unix(),
+				CreatedBy: v.CreatedBy,
+				CreatedAt: v.CreatedAt.Unix(),
+				UpdatedBy: v.UpdatedBy,
+				UpdatedAt: v.UpdatedAt.Unix(),
 			},
 		})
 	}

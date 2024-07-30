@@ -39,7 +39,7 @@ func genModel(workDir string) {
 		var modelFields []ModelField
 		for _, field := range v.ModelFields {
 			modelFields = append(modelFields, ModelField{
-				FieldName:          field.FieldName,
+				FieldName:          gutils.ReplaceIdToID(field.FieldName),
 				FieldLowerCaseName: gutils.SnakeToLowerCamel(field.FieldName),
 				FieldType:          field.FieldType,
 				ColumnName:         field.ColumnName,
