@@ -54,6 +54,7 @@ func genModel(workDir string) {
 			TargetFileName: v.TargetFilename,
 			Template:       v.Template,
 			ExtraParams: ModelExtraParams{
+				ServiceName:       Config.CodeGen.ServiceName,
 				PackageName:       analysisRes.PackageName,
 				PackagePascalName: analysisRes.PackagePascalName,
 				ProjectRootDir:    cfg.ProjectRootDir,
@@ -85,6 +86,7 @@ type ModelField struct {
 }
 
 type ModelExtraParams struct {
+	ServiceName       string
 	ProjectRootDir    string
 	PackageName       string
 	PackagePascalName string

@@ -1,10 +1,10 @@
 package svc{{.PackagePascalName}}
 
 import (
-	"{{.ProjectRootDir}}/internal/app/dto/dto{{.PackagePascalName}}"
-	"{{.ProjectRootDir}}/internal/app/model/dao{{.PackagePascalName}}"
-	"{{.ProjectRootDir}}/internal/app/object/objCommon"
-	"{{.ProjectRootDir}}/internal/app/object/obj{{.PackagePascalName}}"
+	"{{.ProjectRootDir}}/internal/{{.ServiceName}}/dto/dto{{.PackagePascalName}}"
+	"{{.ProjectRootDir}}/internal/{{.ServiceName}}/model/dao{{.PackagePascalName}}"
+	"{{.ProjectRootDir}}/internal/{{.ServiceName}}/object/objCommon"
+	"{{.ProjectRootDir}}/internal/{{.ServiceName}}/object/obj{{.PackagePascalName}}"
 	"{{.ProjectRootDir}}/internal/pkg/context"
 	"{{.ProjectRootDir}}/internal/pkg/errorCode"
 
@@ -33,7 +33,7 @@ func New{{.ReceiverTypePascalName}}Svc() {{.ReceiverTypePascalName}}Svc {
 
 // Create 创建{{.Description}}
 func (svc *{{.ReceiverTypeName}}Svc) Create(c *gin.Context, req *dto{{.PackagePascalName}}.{{.StructName}}CreateReq) (*dto{{.PackagePascalName}}.{{.StructName}}CreateResp, error) {
-	userId := context.GetUserId(c)
+	userId := context.GetUserID(c)
 	now := time.Now()
 	insertEntity := &dao{{.PackagePascalName}}.{{.StructName}}Entity{
 		{{- range .ModelFields}}
@@ -61,7 +61,7 @@ func (svc *{{.ReceiverTypeName}}Svc) Create(c *gin.Context, req *dto{{.PackagePa
 
 // Delete 删除{{.Description}}
 func (svc *{{.ReceiverTypeName}}Svc) Delete(c *gin.Context, req *dto{{.PackagePascalName}}.{{.StructName}}DeleteReq) error {
-	deletedBy := context.GetUserId(c)
+	deletedBy := context.GetUserID(c)
 
 	if err := dao{{.PackagePascalName}}.New{{.StructName}}Dao().Delete(c, req.ID, deletedBy); err != nil {
 		glog.Errorf(c, "[svc{{.PackagePascalName}}.Delete] dao{{.StructName}} Delete fail, err:%v, req:%s", err, gutils.ToJsonString(req))

@@ -56,6 +56,7 @@ func genModule(workDir string) {
 			TargetFileName: v.TargetFilename,
 			Template:       v.Template,
 			ExtraParams: ModuleExtraParams{
+				ServiceName:            Config.CodeGen.ServiceName,
 				PackageName:            analysisRes.PackageName,
 				PackagePascalName:      analysisRes.PackagePascalName,
 				ProjectRootDir:         cfg.ProjectRootDir,
@@ -89,6 +90,7 @@ func genModule(workDir string) {
 }
 
 type ModuleExtraParams struct {
+	ServiceName            string
 	ProjectRootDir         string
 	PackageName            string
 	PackagePascalName      string

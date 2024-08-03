@@ -19,6 +19,7 @@ log:
 
 code_gen:
   mode: module
+  service_name: app
   module:
     tpl_dir: internal/resource/codeTpl/module
     internal_app_root_dir: internal/app

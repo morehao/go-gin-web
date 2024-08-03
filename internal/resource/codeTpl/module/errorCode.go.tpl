@@ -29,5 +29,5 @@ var {{.StructName}}GetPageListErr = gerror.Error{
 
 var {{.StructName}}NotExistErr = gerror.Error{
 	Code: 100105,
-	Msg:  "{{.Description}}已存在",
+	Msg:  "{{.Description}}不存在",
 }
