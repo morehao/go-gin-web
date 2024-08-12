@@ -88,6 +88,8 @@ github.com/morehao/go-tools v1.2.2 h1:8nX9CZc3CRlJlhQt3cXgT78VVciERA9ch9pJJHZAbC
 github.com/morehao/go-tools v1.2.2/go.mod h1:577uqIRglstX6idake7y83JqxSqFrNy2LSxefOxpGYQ=
 github.com/morehao/go-tools v1.2.3-0.20240731024333-9636fddf1e5c h1:BfsJKs6z5f0fCl621DUlYHCq/zAfWrUy9NWVHFAy/y4=
 github.com/morehao/go-tools v1.2.3-0.20240731024333-9636fddf1e5c/go.mod h1:577uqIRglstX6idake7y83JqxSqFrNy2LSxefOxpGYQ=
+github.com/morehao/go-tools v1.2.3-0.20240812140218-35d9823c85a1 h1:2cODsLtP/FFBSLxbnldH6Yx7B/yzizes22g4tbYSoZA=
+github.com/morehao/go-tools v1.2.3-0.20240812140218-35d9823c85a1/go.mod h1:577uqIRglstX6idake7y83JqxSqFrNy2LSxefOxpGYQ=
 github.com/pelletier/go-toml/v2 v2.2.2 h1:aYUidT7k73Pcl9nb2gScu7NSrKCSHIDE89b3+6Wq+LM=
 github.com/pelletier/go-toml/v2 v2.2.2/go.mod h1:1t835xjRzz80PqgE6HHgN2JOsmgYu/h4qDAS4n929Rs=
 github.com/pkg/errors v0.9.1 h1:FEBLx1zS214owpjy7qsBeixbURkuhQAwrK5UwLGTwt4=

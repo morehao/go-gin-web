@@ -168,6 +168,18 @@ func (l {{.StructName}}EntityList) ToMap() map[uint64]{{.StructName}}Entity {
 	return m
 }
 
+func (dao *{{.StructName}}Dao) CountByCond(c *gin.Context, cond *{{.StructName}}Cond) (int64, error) {
+	db := dao.Db(c).Model(&{{.StructName}}Entity{})
+	db = db.Table(TblName{{.StructName}})
+
+	dao.BuildCondition(db, cond)
+	var count int64
+	if err := db.Count(&count).Error; err != nil {
+		return 0, errorCode.ErrorDbFind.Wrapf(err, "[{{.StructName}}Dao] CountByCond fail, cond:%s", gutils.ToJsonString(cond))
+	}
+	return count, nil
+}
+
 
 func (dao *{{.StructName}}Dao) BuildCondition(db *gorm.DB, cond *{{.StructName}}Cond) {
 	if cond.ID > 0 {

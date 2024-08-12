@@ -48,7 +48,7 @@ func (ctr *{{.ReceiverTypeName}}Ctr) {{.FunctionName}}(c *gin.Context) {
 	}
 }
 {{else if eq .HttpMethod "GET"}}
-// Create {{.Description}}
+// {{.FunctionName}} {{.Description}}
 // @Tags {{.ApiDocTag}}
 // @Summary {{.Description}}
 // @accept application/json
