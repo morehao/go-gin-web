@@ -6,9 +6,8 @@ import (
 	"strings"
 	"text/template"
 
-	"github.com/morehao/go-tools/gast"
-
 	"github.com/morehao/go-tools/codeGen"
+	"github.com/morehao/go-tools/gast"
 	"github.com/morehao/go-tools/gutils"
 )
 
@@ -42,7 +41,7 @@ func genModule(workDir string) {
 		var modelFields []ModelField
 		for _, field := range v.ModelFields {
 			modelFields = append(modelFields, ModelField{
-				FieldName:          field.FieldName,
+				FieldName:          gutils.ReplaceIdToID(field.FieldName),
 				FieldLowerCaseName: gutils.SnakeToLowerCamel(field.FieldName),
 				FieldType:          field.FieldType,
 				ColumnName:         field.ColumnName,
@@ -57,6 +56,7 @@ func genModule(workDir string) {
 			TargetFileName: v.TargetFilename,
 			Template:       v.Template,
 			ExtraParams: ModuleExtraParams{
+				ServiceName:            Config.CodeGen.ServiceName,
 				PackageName:            analysisRes.PackageName,
 				PackagePascalName:      analysisRes.PackagePascalName,
 				ProjectRootDir:         cfg.ProjectRootDir,
@@ -90,6 +90,7 @@ func genModule(workDir string) {
 }
 
 type ModuleExtraParams struct {
+	ServiceName            string
 	ProjectRootDir         string
 	PackageName            string
 	PackagePascalName      string

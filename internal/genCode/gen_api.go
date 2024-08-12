@@ -57,6 +57,7 @@ func genApi(workDir string) {
 			TargetFileName: v.TargetFilename,
 			Template:       v.Template,
 			ExtraParams: ApiExtraParams{
+				ServiceName:            Config.CodeGen.ServiceName,
 				PackageName:            analysisRes.PackageName,
 				PackagePascalName:      analysisRes.PackagePascalName,
 				ProjectRootDir:         cfg.ProjectRootDir,
@@ -111,6 +112,7 @@ func genApi(workDir string) {
 }
 
 type ApiExtraParams struct {
+	ServiceName            string
 	ProjectRootDir         string
 	PackageName            string
 	PackagePascalName      string

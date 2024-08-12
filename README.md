@@ -80,7 +80,7 @@ go install github.com/morehao/go-cutter@latest
 ```
 在 **当前项目根目录下（即`./`）** 执行命令
 ```shell
-go-cutter /goProject/yourAppName
+go-cutter -d /goProject/yourAppName
 ```
 执行后，会以当前项目为模板项目，在`/goProject`目录下生成一个名为`yourAppName`的项目。
 

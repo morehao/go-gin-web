@@ -18,7 +18,8 @@ log:
     - requestId
 
 code_gen:
-  mode: api
+  mode: module
+  service_name: app
   module:
     tpl_dir: internal/resource/codeTpl/module
     internal_app_root_dir: internal/app

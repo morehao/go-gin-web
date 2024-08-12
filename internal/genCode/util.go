@@ -6,13 +6,13 @@ const (
 
 func IsSysField(name string) bool {
 	sysFieldMap := map[string]struct{}{
-		"Id":          {},
-		"CreatedTime": {},
-		"CreatedBy":   {},
-		"UpdatedTime": {},
-		"UpdatedBy":   {},
-		"DeletedTime": {},
-		"DeletedBy":   {},
+		"Id":        {},
+		"CreatedAt": {},
+		"CreatedBy": {},
+		"UpdatedAt": {},
+		"UpdatedBy": {},
+		"DeletedAt": {},
+		"DeletedBy": {},
 	}
 	_, ok := sysFieldMap[name]
 	return ok

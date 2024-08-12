@@ -1,8 +1,8 @@
 package ctr{{.PackagePascalName}}
 
 import (
-	"{{.ProjectRootDir}}/internal/app/dto/dto{{.PackagePascalName}}"
-	"{{.ProjectRootDir}}/internal/app/service/svc{{.PackagePascalName}}"
+	"{{.ProjectRootDir}}/internal/{{.ServiceName}}/dto/dto{{.PackagePascalName}}"
+	"{{.ProjectRootDir}}/internal/{{.ServiceName}}/service/svc{{.PackagePascalName}}"
 
 	"github.com/gin-gonic/gin"
 	"github.com/morehao/go-tools/gcontext/ginRender"
@@ -48,7 +48,7 @@ func (ctr *{{.ReceiverTypeName}}Ctr) {{.FunctionName}}(c *gin.Context) {
 	}
 }
 {{else if eq .HttpMethod "GET"}}
-// Create {{.Description}}
+// {{.FunctionName}} {{.Description}}
 // @Tags {{.ApiDocTag}}
 // @Summary {{.Description}}
 // @accept application/json

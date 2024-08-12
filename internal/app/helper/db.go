@@ -1,6 +1,8 @@
 package helper
 
 import (
+	"fmt"
+
 	"github.com/morehao/go-tools/dbClient"
 	"github.com/redis/go-redis/v9"
 	"gorm.io/gorm"
@@ -15,5 +17,12 @@ func InitDbClient() {
 		panic("get mysql client error")
 	}
 	MysqlClient = mysqlClient
-	RedisClient = dbClient.InitRedis(Config.Redis)
+	redisClient, getRedisClientErr := dbClient.InitRedis(Config.Redis)
+	if getRedisClientErr != nil {
+		panic(fmt.Sprintf("get redis client error: %v", getRedisClientErr))
+	}
+	if redisClient == nil {
+		panic(fmt.Sprintf("get redis client error: %v", getRedisClientErr))
+	}
+	RedisClient = redisClient
 }

@@ -8,10 +8,11 @@ import (
 	"go-gin-web/internal/pkg/context"
 	"go-gin-web/internal/pkg/errorCode"
 
+	"time"
+
 	"github.com/gin-gonic/gin"
 	"github.com/morehao/go-tools/glog"
 	"github.com/morehao/go-tools/gutils"
-	"time"
 )
 
 type UserSvc interface {
@@ -33,31 +34,31 @@ func NewUserSvc() UserSvc {
 
 // Create 创建用户
 func (svc *userSvc) Create(c *gin.Context, req *dtoUser.UserCreateReq) (*dtoUser.UserCreateResp, error) {
-	userId := context.GetUserId(c)
+	userId := context.GetUserID(c)
 	now := time.Now()
 	insertEntity := &daoUser.UserEntity{
-		CompanyId: req.CompanyId,
-		DepartmentId: req.DepartmentId,
-		Name: req.Name,
-		CreatedBy: userId,
-		CreatedTime: now,
-		UpdatedBy: userId,
-		UpdatedTime: now,
+		CompanyID:    req.CompanyID,
+		DepartmentID: req.DepartmentID,
+		Name:         req.Name,
+		CreatedBy:    userId,
+		CreatedAt:    now,
+		UpdatedBy:    userId,
+		UpdatedAt:    now,
 	}
 	if err := daoUser.NewUserDao().Insert(c, insertEntity); err != nil {
 		glog.Errorf(c, "[svcUser.UserCreate] daoUser Create fail, err:%v, req:%s", err, gutils.ToJsonString(req))
 		return nil, errorCode.UserCreateErr
 	}
 	return &dtoUser.UserCreateResp{
-		Id: insertEntity.Id,
+		ID: insertEntity.ID,
 	}, nil
 }
 
 // Delete 删除用户
 func (svc *userSvc) Delete(c *gin.Context, req *dtoUser.UserDeleteReq) error {
-	deletedBy := context.GetUserId(c)
+	deletedBy := context.GetUserID(c)
 
-	if err := daoUser.NewUserDao().Delete(c, req.Id, deletedBy); err != nil {
+	if err := daoUser.NewUserDao().Delete(c, req.ID, deletedBy); err != nil {
 		glog.Errorf(c, "[svcUser.Delete] daoUser Delete fail, err:%v, req:%s", err, gutils.ToJsonString(req))
 		return errorCode.UserDeleteErr
 	}
@@ -67,38 +68,38 @@ func (svc *userSvc) Delete(c *gin.Context, req *dtoUser.UserDeleteReq) error {
 // Update 更新用户
 func (svc *userSvc) Update(c *gin.Context, req *dtoUser.UserUpdateReq) error {
 	updateEntity := &daoUser.UserEntity{
-        Id:   req.Id,
-    }
-    if err := daoUser.NewUserDao().Update(c, updateEntity); err != nil {
-        glog.Errorf(c, "[svcUser.UserUpdate] daoUser Update fail, err:%v, req:%s", err, gutils.ToJsonString(req))
-        return errorCode.UserUpdateErr
-    }
-    return nil
+		ID: req.ID,
+	}
+	if err := daoUser.NewUserDao().Update(c, updateEntity); err != nil {
+		glog.Errorf(c, "[svcUser.UserUpdate] daoUser Update fail, err:%v, req:%s", err, gutils.ToJsonString(req))
+		return errorCode.UserUpdateErr
+	}
+	return nil
 }
 
 // Detail 根据id获取用户
 func (svc *userSvc) Detail(c *gin.Context, req *dtoUser.UserDetailReq) (*dtoUser.UserDetailResp, error) {
-	detailEntity, err := daoUser.NewUserDao().GetById(c, req.Id)
+	detailEntity, err := daoUser.NewUserDao().GetById(c, req.ID)
 	if err != nil {
 		glog.Errorf(c, "[svcUser.UserDetail] daoUser GetById fail, err:%v, req:%s", err, gutils.ToJsonString(req))
 		return nil, errorCode.UserGetDetailErr
 	}
-    // 判断是否存在
-    if detailEntity == nil || detailEntity.Id == 0 {
-        return nil, errorCode.UserNotExistErr
-    }
+	// 判断是否存在
+	if detailEntity == nil || detailEntity.ID == 0 {
+		return nil, errorCode.UserNotExistErr
+	}
 	Resp := &dtoUser.UserDetailResp{
-		Id:   detailEntity.Id,
+		ID: detailEntity.ID,
 		UserBaseInfo: objUser.UserBaseInfo{
-			CompanyId: detailEntity.CompanyId,
-			DepartmentId: detailEntity.DepartmentId,
-			Name: detailEntity.Name,
+			CompanyID:    detailEntity.CompanyID,
+			DepartmentID: detailEntity.DepartmentID,
+			Name:         detailEntity.Name,
 		},
 		OperatorBaseInfo: objCommon.OperatorBaseInfo{
-        	CreatedBy:   detailEntity.CreatedBy,
-			CreatedTime: detailEntity.CreatedTime.Unix(),
-			UpdatedBy:   detailEntity.UpdatedBy,
-			UpdatedTime: detailEntity.UpdatedTime.Unix(),
+			CreatedBy: detailEntity.CreatedBy,
+			CreatedAt: detailEntity.CreatedAt.Unix(),
+			UpdatedBy: detailEntity.UpdatedBy,
+			UpdatedAt: detailEntity.UpdatedAt.Unix(),
 		},
 	}
 	return Resp, nil
@@ -118,17 +119,17 @@ func (svc *userSvc) PageList(c *gin.Context, req *dtoUser.UserPageListReq) (*dto
 	list := make([]dtoUser.UserPageListItem, 0, len(dataList))
 	for _, v := range dataList {
 		list = append(list, dtoUser.UserPageListItem{
-			Id:   v.Id,
+			ID: v.ID,
 			UserBaseInfo: objUser.UserBaseInfo{
-				CompanyId: v.CompanyId,
-				DepartmentId: v.DepartmentId,
-				Name: v.Name,
+				CompanyID:    v.CompanyID,
+				DepartmentID: v.DepartmentID,
+				Name:         v.Name,
 			},
 			OperatorBaseInfo: objCommon.OperatorBaseInfo{
-				CreatedBy:   v.CreatedBy,
-				CreatedTime: v.CreatedTime.Unix(),
-				UpdatedBy:   v.UpdatedBy,
-				UpdatedTime: v.UpdatedTime.Unix(),
+				CreatedBy: v.CreatedBy,
+				CreatedAt: v.CreatedAt.Unix(),
+				UpdatedBy: v.UpdatedBy,
+				UpdatedAt: v.UpdatedAt.Unix(),
 			},
 		})
 	}
@@ -137,5 +138,3 @@ func (svc *userSvc) PageList(c *gin.Context, req *dtoUser.UserPageListReq) (*dto
 		Total: total,
 	}, nil
 }
-
-
