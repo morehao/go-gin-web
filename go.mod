@@ -16,7 +16,7 @@ require (
 	gorm.io/gorm v1.25.10
 )
 
-//replace github.com/morehao/go-tools => /Users/morehao/Documents/practice/go/go-tools
+replace github.com/morehao/go-tools => /Users/morehao/Documents/practice/go/go-tools
 
 require (
 	github.com/KyleBanks/depth v1.2.1 // indirect

@@ -2,7 +2,7 @@ package errorCode
 
 import "github.com/morehao/go-tools/gerror"
 
-var {{.FunctionName}}Err = gerror.Error{
-	Code: 50000,
+var {{.ReceiverTypePascalName}}{{.FunctionName}}Err = gerror.Error{
+	Code: 100100,
 	Msg:  "{{.Description}}失败",
 }
