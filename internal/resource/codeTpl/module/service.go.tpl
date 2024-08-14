@@ -149,9 +149,9 @@ func (svc *{{.ReceiverTypeName}}Svc) PageList(c *gin.Context, req *dto{{.Package
 				{{- continue}}
 			{{- end}}
 			{{- if eq .FieldType "time.Time"}}
-				{{.FieldName}}: detailEntity.{{.FieldName}}.Unix(),
+				{{.FieldName}}: v.{{.FieldName}}.Unix(),
 			{{- else}}
-				{{.FieldName}}: detailEntity.{{.FieldName}},
+				{{.FieldName}}: v.{{.FieldName}},
 			{{- end}}
 		{{- end}}
 			},

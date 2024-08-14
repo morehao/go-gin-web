@@ -33,7 +33,7 @@ func genApi(workDir string) {
 	if analysisErr != nil {
 		panic(fmt.Errorf("analysis api tpl error: %v", analysisErr))
 	}
-	receiverTypePascalName := gutils.SnakeToPascal(gutils.TrimFileExtension(cfg.TargetFilename))
+	receiverTypePascalName := gutils.SnakeToPascal(cfg.SubModuleName)
 	receiverTypeName := gutils.FirstLetterToLower(receiverTypePascalName)
 	var genParamsList []codeGen.GenParamsItem
 	var isNewRouter, isNewController bool
