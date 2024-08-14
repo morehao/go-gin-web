@@ -16,6 +16,5 @@ func userRouter(routerGroup *gin.RouterGroup) {
 		userGroup.POST("update", userCtr.Update)    // 更新用户
 		userGroup.GET("detail", userCtr.Detail)     // 根据ID获取用户
 		userGroup.GET("pageList", userCtr.PageList) // 获取用户列表
-
 	}
 }

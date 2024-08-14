@@ -44,11 +44,10 @@ code_gen:
     description: 禁用用户
     package_name: user
     sub_module_name: userAccount
-    target_filename: user.go
+    target_filename: user_account.go
     http_method: POST
     function_name: Disable
     api_doc_tag: 用户管理
     api_group: user
-    api_prefix: /app/user/
+    api_prefix: /app/userAccount/
     api_suffix: disable
-    routerGroup: userGroup

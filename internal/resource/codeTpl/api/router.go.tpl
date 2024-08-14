@@ -5,7 +5,7 @@ import (
 
 	"github.com/gin-gonic/gin"
 )
-{{if not .TargetFileExist}}
+{{if .IsNewRouter}}
 // {{.ReceiverTypeName}}Router 初始化{{.Description}}路由信息
 func {{.ReceiverTypeName}}Router(routerGroup *gin.RouterGroup) {
 	{{.ReceiverTypeName}}Ctr := ctr{{.PackagePascalName}}.New{{.ReceiverTypePascalName}}Ctr()

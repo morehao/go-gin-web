@@ -13,14 +13,14 @@ type {{.ReceiverTypePascalName}}Ctr interface {
 }
 
 type {{.ReceiverTypeName}}Ctr struct {
-	{{.ReceiverTypeName}}Svc svc{{.ReceiverTypePascalName}}.{{.ReceiverTypePascalName}}Svc
+	{{.ReceiverTypeName}}Svc svc{{.PackagePascalName}}.{{.ReceiverTypePascalName}}Svc
 }
 
 var _ {{.ReceiverTypePascalName}}Ctr = (*{{.ReceiverTypeName}}Ctr)(nil)
 
 func New{{.ReceiverTypePascalName}}Ctr() {{.ReceiverTypePascalName}}Ctr {
 	return &{{.ReceiverTypeName}}Ctr{
-		{{.ReceiverTypeName}}Svc: svc{{.ReceiverTypePascalName}}.New{{.ReceiverTypePascalName}}Svc(),
+		{{.ReceiverTypeName}}Svc: svc{{.PackagePascalName}}.New{{.ReceiverTypePascalName}}Svc(),
 	}
 }
 {{end}}
