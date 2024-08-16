@@ -2,6 +2,7 @@ package genCode
 
 import (
 	"go-gin-web/internal/genCode/config"
+	"go.uber.org/zap"
 	"os"
 	"path/filepath"
 
@@ -27,7 +28,7 @@ func init() {
 	Config = &cfg
 
 	// 初始化日志组件
-	if err := glog.InitZapLogger(&Config.Log); err != nil {
+	if err := glog.NewLogger(&Config.Log, glog.WithZapOptions(zap.AddCallerSkip(3))); err != nil {
 		panic("glog initZapLogger error")
 	}
 	mysqlClient, getMysqlClientErr := dbClient.InitMysql(Config.Mysql)

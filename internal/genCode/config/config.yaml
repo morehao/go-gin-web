@@ -18,18 +18,18 @@ log:
     - requestId
 
 code_gen:
-  mode: module
+  mode: api
   service_name: app
   module:
     tpl_dir: internal/resource/codeTpl/module
     internal_app_root_dir: internal/app
     project_root_dir: go-gin-web
-    description: 用户
-    api_doc_tag: 用户管理
-    api_group: user
-    api_prefix: /app/user/
-    package_name: user
-    table_name: user
+    description: 平台应用
+    api_doc_tag: 平台应用管理
+    api_group: platform
+    api_prefix: /app/platform
+    package_name: platform
+    table_name: platform
   model:
     tpl_dir: internal/resource/codeTpl/model
     internal_app_root_dir: internal/app
@@ -43,11 +43,11 @@ code_gen:
     project_root_dir: go-gin-web
     description: 禁用用户
     package_name: user
-    target_filename: user.go
+    sub_module_name: userAccount
+    target_filename: user_account.go
     http_method: POST
     function_name: Disable
     api_doc_tag: 用户管理
     api_group: user
-    api_prefix: /app/user/
+    api_prefix: /app/userAccount/
     api_suffix: disable
-    routerGroup: userGroup

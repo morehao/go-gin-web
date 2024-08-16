@@ -33,7 +33,7 @@ func genApi(workDir string) {
 	if analysisErr != nil {
 		panic(fmt.Errorf("analysis api tpl error: %v", analysisErr))
 	}
-	receiverTypePascalName := gutils.SnakeToPascal(gutils.TrimFileExtension(cfg.TargetFilename))
+	receiverTypePascalName := gutils.SnakeToPascal(cfg.SubModuleName)
 	receiverTypeName := gutils.FirstLetterToLower(receiverTypePascalName)
 	var genParamsList []codeGen.GenParamsItem
 	var isNewRouter, isNewController bool
@@ -41,15 +41,22 @@ func genApi(workDir string) {
 	for _, v := range analysisRes.TplAnalysisList {
 		switch v.LayerName {
 		case codeGen.LayerNameRouter:
-			isNewRouter = !v.TargetFileExist
+			if v.TargetFileExist {
+				goFilepath := filepath.Join(v.TargetDir, v.TargetFilename)
+				funcName := fmt.Sprintf("%sRouter", gutils.FirstLetterToLower(cfg.SubModuleName))
+				_, hasFunc, findFuncErr := gast.FindFunction(goFilepath, funcName)
+				if findFuncErr != nil {
+					panic(fmt.Errorf("find function error: %v", findFuncErr))
+				}
+				isNewRouter = !hasFunc
+			} else {
+				isNewRouter = true
+			}
 		case codeGen.LayerNameController:
 			controllerFilepath = filepath.Join(v.TargetDir, v.TargetFilename)
 			isNewController = !v.TargetFileExist
 		case codeGen.LayerNameService:
 			serviceFilepath = filepath.Join(v.TargetDir, v.TargetFilename)
-		}
-		if v.LayerName == codeGen.LayerNameRouter {
-			isNewRouter = !v.TargetFileExist
 		}
 
 		genParamsList = append(genParamsList, codeGen.GenParamsItem{
@@ -62,6 +69,7 @@ func genApi(workDir string) {
 				PackagePascalName:      analysisRes.PackagePascalName,
 				ProjectRootDir:         cfg.ProjectRootDir,
 				TargetFileExist:        v.TargetFileExist,
+				IsNewRouter:            isNewRouter,
 				Description:            cfg.Description,
 				ReceiverTypeName:       receiverTypeName,
 				ReceiverTypePascalName: receiverTypePascalName,
@@ -103,7 +111,7 @@ func genApi(workDir string) {
 			panic(fmt.Errorf("new router appendContentToFunc error: %v", err))
 		}
 	} else {
-		routerCallContent := fmt.Sprintf(`routerGroup.%s("/%s", %sCtr.%s)`, cfg.HttpMethod, cfg.ApiSuffix, receiverTypeName, cfg.FunctionName)
+		routerCallContent := fmt.Sprintf(`routerGroup.%s("/%s", %sCtr.%s) // %s`, cfg.HttpMethod, cfg.ApiSuffix, receiverTypeName, cfg.FunctionName, cfg.Description)
 		routerEnterFilepath := filepath.Join(rootDir, fmt.Sprintf("/router/%s.go", gutils.TrimFileExtension(cfg.TargetFilename)))
 		if err := gast.AddContentToFuncWithLineNumber(routerEnterFilepath, fmt.Sprintf("%sRouter", receiverTypeName), routerCallContent, -2); err != nil {
 			panic(fmt.Errorf("appendContentToFunc error: %v", err))
@@ -118,6 +126,7 @@ type ApiExtraParams struct {
 	PackagePascalName      string
 	Description            string
 	TargetFileExist        bool
+	IsNewRouter            bool
 	HttpMethod             string
 	FunctionName           string
 	ReceiverTypeName       string

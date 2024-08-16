@@ -36,20 +36,25 @@ func (svc *{{.ReceiverTypeName}}Svc) Create(c *gin.Context, req *dto{{.PackagePa
 	userId := context.GetUserID(c)
 	now := time.Now()
 	insertEntity := &dao{{.PackagePascalName}}.{{.StructName}}Entity{
-		{{- range .ModelFields}}
-		{{- if .IsPrimaryKey}}
-			{{- continue}}
-		{{- end}}
-		{{- if isSysField .FieldName}}
-			{{- continue}}
-		{{- end}}
+{{- range .ModelFields}}
+	{{- if .IsPrimaryKey}}
+		{{- continue}}
+	{{- end}}
+	{{- if isSysField .FieldName}}
+		{{- continue}}
+	{{- end}}
+	{{- if eq .FieldType "time.Time"}}
+		{{.FieldName}}: time.Unix(req.{{.FieldName}}, 0),
+	{{- else}}
 		{{.FieldName}}: req.{{.FieldName}},
-		{{- end}}
+	{{- end}}
+{{- end}}
 		CreatedBy: userId,
 		CreatedAt: now,
 		UpdatedBy: userId,
 		UpdatedAt: now,
 	}
+
 	if err := dao{{.PackagePascalName}}.New{{.StructName}}Dao().Insert(c, insertEntity); err != nil {
 		glog.Errorf(c, "[svc{{.PackagePascalName}}.{{.StructName}}Create] dao{{.StructName}} Create fail, err:%v, req:%s", err, gutils.ToJsonString(req))
 		return nil, errorCode.{{.StructName}}CreateErr
@@ -96,15 +101,19 @@ func (svc *{{.ReceiverTypeName}}Svc) Detail(c *gin.Context, req *dto{{.PackagePa
 	Resp := &dto{{.PackagePascalName}}.{{.StructName}}DetailResp{
 		ID:   detailEntity.ID,
 		{{.StructName}}BaseInfo: obj{{.PackagePascalName}}.{{.StructName}}BaseInfo{
-		{{- range .ModelFields}}
-			{{- if .IsPrimaryKey}}
-				{{- continue}}
-			{{- end}}
-			{{- if isSysField .FieldName}}
-				{{- continue}}
-			{{- end}}
+	{{- range .ModelFields}}
+		{{- if .IsPrimaryKey}}
+			{{- continue}}
+		{{- end}}
+		{{- if isSysField .FieldName}}
+			{{- continue}}
+		{{- end}}
+		{{- if eq .FieldType "time.Time"}}
+			{{.FieldName}}: detailEntity.{{.FieldName}}.Unix(),
+		{{- else}}
 			{{.FieldName}}: detailEntity.{{.FieldName}},
 		{{- end}}
+	{{- end}}
 		},
 		OperatorBaseInfo: objCommon.OperatorBaseInfo{
         	CreatedBy: detailEntity.CreatedBy,
@@ -132,15 +141,19 @@ func (svc *{{.ReceiverTypeName}}Svc) PageList(c *gin.Context, req *dto{{.Package
 		list = append(list, dto{{.PackagePascalName}}.{{.StructName}}PageListItem{
 			ID:   v.ID,
 			{{.StructName}}BaseInfo: obj{{.PackagePascalName}}.{{.StructName}}BaseInfo{
-			{{- range .ModelFields}}
-				{{- if .IsPrimaryKey}}
-					{{- continue}}
-				{{- end}}
-				{{- if isSysField .FieldName}}
-					{{- continue}}
-				{{- end}}
+		{{- range .ModelFields}}
+			{{- if .IsPrimaryKey}}
+				{{- continue}}
+			{{- end}}
+			{{- if isSysField .FieldName}}
+				{{- continue}}
+			{{- end}}
+			{{- if eq .FieldType "time.Time"}}
+				{{.FieldName}}: v.{{.FieldName}}.Unix(),
+			{{- else}}
 				{{.FieldName}}: v.{{.FieldName}},
 			{{- end}}
+		{{- end}}
 			},
 			OperatorBaseInfo: objCommon.OperatorBaseInfo{
 				CreatedBy: v.CreatedBy,
