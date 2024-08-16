@@ -6,6 +6,8 @@ import (
 	"go-gin-web/internal/app/helper"
 	"go-gin-web/internal/app/router"
 	"go-gin-web/internal/pkg/middleware"
+	"os"
+	"path/filepath"
 
 	"github.com/gin-gonic/gin"
 	swaggerFiles "github.com/swaggo/files"
@@ -13,9 +15,13 @@ import (
 )
 
 func Run() {
-	helper.SetRootDir("/internal/app")
+	if workDir, err := os.Getwd(); err != nil {
+		panic("get work dir error")
+	} else {
+		helper.SetRootDir(filepath.Join(workDir, "/internal/app"))
+	}
 	helper.PreInit()
-	helper.InitDbClient()
+	helper.ResourceInit()
 	defer helper.Close()
 	if helper.Config.Server.Env == "prod" {
 		gin.SetMode(gin.ReleaseMode)
