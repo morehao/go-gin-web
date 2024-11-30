@@ -8,22 +8,28 @@
 
 采用标准的Go项目结构，包含cmd、internal、pkg、log等目录。目录结构如下：
 ``` bash
-go-gin-web
-├── cmd
-│   ├── app
-│   └── genCode
+.
+├── config
+├── docs
 ├── internal
-│   ├── app
-│   ├── genCode
-│   ├── pkg
-│   └── resource
+│   ├── app
+│   │   ├── controller
+│   │   ├── dto
+│   │   ├── helper
+│   │   ├── model
+│   │   ├── object
+│   │   ├── pkg
+│   │   │   └── errorCode
+│   │   ├── router
+│   │   └── service
+│   └── pkg
+│       ├── context
+│       ├── errorCode
+│       └── middleware
 ├── log
 ├── pkg
-├── .gitignore
-├── Dockerfile
-├── go.mod
-├── LICENSE
-└── README.md
+│   └── utils
+└── sql
 ```
 
 
@@ -46,9 +52,19 @@ GinRender 组件用于统一处理 HTTP 响应，确保响应格式一致。
 
 ## 代码生成
 
-支持按模块生成、只生成Model层代码、按API接口生成等。
-
-开发者可以通过调整配置文件来生成代码，生成后各层级代码自动补全，只需关心业务代码。
+安装命令行终端
+```bash
+go install github.com/morehao/gcli@latest
+```
+确保配置文件有中有代码生成所需要的配置项`code_gen`，在`项目根目录下`使用`gcli`生成代码，示例如下：
+```bash
+# 基于表生成整个功能模块
+gcli generate -m module
+# 生成model代码
+gcli generate -m model
+# 生成单个接口代码
+gcli generate -m api
+```
 
 ## 接口文档
 
