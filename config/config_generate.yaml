@@ -1,0 +1,53 @@
+mysql:
+  service: genCode
+  addr: 127.0.0.1:3306
+  user: root
+  password: ServBay.dev
+  database: demo
+  charset: utf8mb4
+  timeout: 5s
+  read_timeout: 3s
+  write_timeout: 3s
+
+log:
+  service: genCode
+  level: info
+  stdout: true
+  dir: log
+  extra_keys:
+    - requestId
+
+code_gen:
+  mode: module
+  service_name: app
+  module:
+    tpl_dir: internal/resource/codeTpl/module
+    internal_app_root_dir: internal/app
+    project_root_dir: go-gin-web
+    description: 账户管理
+    api_doc_tag: 账户管理
+    api_group: account
+    api_prefix: /app/account
+    package_name: account
+    table_name: account
+  model:
+    tpl_dir: internal/resource/codeTpl/model
+    internal_app_root_dir: internal/app
+    project_root_dir: go-gin-web
+    description: 用户
+    package_name: user
+    table_name: user
+  api:
+    tpl_dir: internal/resource/codeTpl/api
+    internal_app_root_dir: internal/app
+    project_root_dir: go-gin-web
+    description: 禁用用户
+    package_name: user
+    sub_module_name: userAccount
+    target_filename: user_account.go
+    http_method: POST
+    function_name: Disable
+    api_doc_tag: 用户管理
+    api_group: user
+    api_prefix: /app/userAccount/
+    api_suffix: disable

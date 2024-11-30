@@ -1,24 +1,23 @@
-package app
+package main
 
 import (
 	"fmt"
-	_ "go-gin-web/docs"
+	"os"
+
 	"go-gin-web/internal/app/helper"
 	"go-gin-web/internal/app/router"
 	"go-gin-web/internal/pkg/middleware"
-	"os"
-	"path/filepath"
 
 	"github.com/gin-gonic/gin"
 	swaggerFiles "github.com/swaggo/files"
 	ginSwagger "github.com/swaggo/gin-swagger"
 )
 
-func Run() {
+func main() {
 	if workDir, err := os.Getwd(); err != nil {
 		panic("get work dir error")
 	} else {
-		helper.SetRootDir(filepath.Join(workDir, "/internal/app"))
+		helper.SetRootDir(workDir)
 	}
 	helper.PreInit()
 	helper.ResourceInit()

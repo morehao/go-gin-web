@@ -1,45 +1,59 @@
-mysql:
-  service: genCode
-  addr: 127.0.0.1:3306
-  user: root
-  password: 123456
-  database: demo
-  charset: utf8mb4
-  timeout: 5s
-  read_timeout: 3s
-  write_timeout: 3s
+server:
+  name: go-gin-web
+  port: 8099
+  env: dev
 
 log:
-  service: genCode
+  service: go-gin-web
   level: info
   stdout: true
   dir: log
   extra_keys:
     - requestId
 
+mysql:
+  service: go-gin-web
+  addr: 127.0.0.1:3306
+  user: root
+  password: ServBay.dev
+  database: demo
+  charset: utf8mb4
+  timeout: 5s
+  read_timeout: 3s
+  write_timeout: 3s
+
+redis:
+  service: go-gin-web
+  addr: 127.0.0.1:6379
+  password: 123456
+  db: 0
+  dial_timeout: 5s
+  read_timeout: 3s
+  write_timeout: 3s
+
+
 code_gen:
-  mode: api
-  service_name: app
+  service_name: go-gin-web
   module:
     tpl_dir: internal/resource/codeTpl/module
-    internal_app_root_dir: internal/app
+    internal_app_root_dir: internal/go-gin-web
     project_root_dir: go-gin-web
-    description: 平台应用
-    api_doc_tag: 平台应用管理
-    api_group: platform
-    api_prefix: /app/platform
-    package_name: platform
-    table_name: platform
+    description: 账户管理
+    api_doc_tag: 账户管理
+    api_group: account
+    api_prefix: /go-gin-web/account
+    package_name: account
+    table_name: account
   model:
     tpl_dir: internal/resource/codeTpl/model
-    internal_app_root_dir: internal/app
+    internal_app_root_dir: internal/go-gin-web
     project_root_dir: go-gin-web
     description: 用户
     package_name: user
     table_name: user
   api:
     tpl_dir: internal/resource/codeTpl/api
-    internal_app_root_dir: internal/app
+    internal_app_root_dir: internal/go-gin-web
     project_root_dir: go-gin-web
     description: 禁用用户
     package_name: user
@@ -49,5 +63,7 @@ code_gen:
     function_name: Disable
     api_doc_tag: 用户管理
     api_group: user
-    api_prefix: /app/userAccount/
+    api_prefix: /go-gin-web/userAccount/
     api_suffix: disable
+
+
