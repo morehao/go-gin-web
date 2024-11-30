@@ -33,37 +33,33 @@ redis:
 
 
 code_gen:
-  service_name: go-gin-web
   module:
-    tpl_dir: internal/resource/codeTpl/module
-    internal_app_root_dir: internal/go-gin-web
+    internal_app_root_dir: internal/app
     project_root_dir: go-gin-web
-    description: 账户管理
-    api_doc_tag: 账户管理
-    api_group: account
-    api_prefix: /go-gin-web/account
-    package_name: account
-    table_name: account
+    description: 公司账户管理
+    api_doc_tag: 公司账户管理
+    api_group: companyAccount
+    api_prefix: /go-gin-web/companyAccount
+    package_name: companyAccount
+    table_name: company_account
   model:
-    tpl_dir: internal/resource/codeTpl/model
-    internal_app_root_dir: internal/go-gin-web
+    internal_app_root_dir: internal/app
     project_root_dir: go-gin-web
-    description: 用户
-    package_name: user
-    table_name: user
+    description: 公司
+    package_name: company
+    table_name: company
   api:
-    tpl_dir: internal/resource/codeTpl/api
-    internal_app_root_dir: internal/go-gin-web
+    internal_app_root_dir: internal/app
     project_root_dir: go-gin-web
-    description: 禁用用户
-    package_name: user
-    sub_module_name: userAccount
-    target_filename: user_account.go
+    description: 禁用公司账户
+    package_name: companyAccount
+    sub_module_name: companyAccount
+    target_filename: company_account.go
     http_method: POST
     function_name: Disable
-    api_doc_tag: 用户管理
-    api_group: user
-    api_prefix: /go-gin-web/userAccount/
+    api_doc_tag: 公司账户管理
+    api_group:  companyAccount
+    api_prefix: /go-gin-web/companyAccount/
     api_suffix: disable
 
 
