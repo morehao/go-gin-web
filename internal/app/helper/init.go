@@ -2,7 +2,8 @@ package helper
 
 import (
 	"fmt"
-	"go-gin-web/internal/app/config"
+
+	"go-gin-web/config"
 
 	"github.com/morehao/go-tools/dbClient"
 	"github.com/redis/go-redis/v9"
