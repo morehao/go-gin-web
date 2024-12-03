@@ -29,5 +29,5 @@ var UserGetPageListErr = gerror.Error{
 
 var UserNotExistErr = gerror.Error{
 	Code: 100105,
-	Msg:  "用户已存在",
+	Msg:  "用户不存在",
 }

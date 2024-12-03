@@ -5,14 +5,12 @@ import (
 
 	"go-gin-web/config"
 
-	"github.com/morehao/go-tools/dbClient"
-	"github.com/redis/go-redis/v9"
-	"gorm.io/gorm"
-
-	"github.com/morehao/go-tools/glog"
-	"go.uber.org/zap"
-
 	"github.com/morehao/go-tools/conf"
+	"github.com/morehao/go-tools/dbClient"
+	"github.com/morehao/go-tools/glog"
+	"github.com/redis/go-redis/v9"
+	"go.uber.org/zap"
+	"gorm.io/gorm"
 )
 
 var Config *config.Config

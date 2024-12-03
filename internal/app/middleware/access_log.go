@@ -3,13 +3,13 @@ package middleware
 import (
 	"bytes"
 	"encoding/hex"
-	"go-gin-web/internal/pkg/context"
 	"time"
 
-	jsoniter "github.com/json-iterator/go"
-	"github.com/morehao/go-tools/gerror"
+	"go-gin-web/internal/pkg/context"
 
 	"github.com/gin-gonic/gin"
+	jsoniter "github.com/json-iterator/go"
+	"github.com/morehao/go-tools/gerror"
 	"github.com/morehao/go-tools/glog"
 	"go.opentelemetry.io/otel"
 	"go.opentelemetry.io/otel/sdk/trace"
