@@ -15,17 +15,16 @@
 │   ├── app
 │   │   ├── controller
 │   │   ├── dto
-│   │   ├── helper
+│   │   ├── middleware
 │   │   ├── model
 │   │   ├── object
-│   │   ├── pkg
-│   │   │   └── errorCode
 │   │   ├── router
 │   │   └── service
 │   └── pkg
 │       ├── context
 │       ├── errorCode
-│       └── middleware
+│       ├── helper
+│       └── test
 ├── log
 ├── pkg
 │   └── utils

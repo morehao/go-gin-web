@@ -4,9 +4,9 @@ import (
 	"fmt"
 	"os"
 
-	"go-gin-web/internal/app/helper"
+	"go-gin-web/internal/app/middleware"
 	"go-gin-web/internal/app/router"
-	"go-gin-web/internal/pkg/middleware"
+	"go-gin-web/internal/pkg/helper"
 
 	"github.com/gin-gonic/gin"
 	swaggerFiles "github.com/swaggo/files"
