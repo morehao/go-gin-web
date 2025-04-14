@@ -2,9 +2,10 @@ package daoUser
 
 import (
 	"fmt"
+	"time"
+
 	"go-gin-web/internal/app/model"
 	"go-gin-web/internal/pkg/errorCode"
-	"time"
 
 	"github.com/gin-gonic/gin"
 	"github.com/morehao/go-tools/gutils"
@@ -52,14 +53,19 @@ func NewUserDao() *UserDao {
 	return &UserDao{}
 }
 
+func (dao *UserDao) TableName() string {
+	return TblNameUser
+}
+
 func (dao *UserDao) WithTx(db *gorm.DB) *UserDao {
-	dao.Tx = db
-	return dao
+	return &UserDao{
+		Base: model.Base{Tx: db},
+	}
 }
 
 func (dao *UserDao) Insert(c *gin.Context, entity *UserEntity) error {
 	db := dao.Db(c).Model(&UserEntity{})
-	db = db.Table(TblNameUser)
+	db = db.Table(dao.TableName())
 	if err := db.Create(entity).Error; err != nil {
 		return errorCode.ErrorDbInsert.Wrapf(err, "[UserDao] Insert fail, entity:%s", gutils.ToJsonString(entity))
 	}
@@ -67,7 +73,7 @@ func (dao *UserDao) Insert(c *gin.Context, entity *UserEntity) error {
 }
 
 func (dao *UserDao) BatchInsert(c *gin.Context, entityList UserEntityList) error {
-	db := dao.Db(c).Table(TblNameUser)
+	db := dao.Db(c).Table(dao.TableName())
 	if err := db.Create(entityList).Error; err != nil {
 		return errorCode.ErrorDbInsert.Wrapf(err, "[UserDao] BatchInsert fail, entityList:%s", gutils.ToJsonString(entityList))
 	}
@@ -76,7 +82,7 @@ func (dao *UserDao) BatchInsert(c *gin.Context, entityList UserEntityList) error
 
 func (dao *UserDao) Update(c *gin.Context, entity *UserEntity) error {
 	db := dao.Db(c).Model(&UserEntity{})
-	db = db.Table(TblNameUser)
+	db = db.Table(dao.TableName())
 	if err := db.Where("id = ?", entity.ID).Updates(entity).Error; err != nil {
 		return errorCode.ErrorDbUpdate.Wrapf(err, "[UserDao] Update fail, entity:%s", gutils.ToJsonString(entity))
 	}
@@ -85,7 +91,7 @@ func (dao *UserDao) Update(c *gin.Context, entity *UserEntity) error {
 
 func (dao *UserDao) UpdateMap(c *gin.Context, id uint64, updateMap map[string]interface{}) error {
 	db := dao.Db(c).Model(&UserEntity{})
-	db = db.Table(TblNameUser)
+	db = db.Table(dao.TableName())
 	if err := db.Where("id = ?", id).Updates(updateMap).Error; err != nil {
 		return errorCode.ErrorDbUpdate.Wrapf(err, "[UserDao] UpdateMap fail, id:%d, updateMap:%s", id, gutils.ToJsonString(updateMap))
 	}
@@ -94,7 +100,7 @@ func (dao *UserDao) UpdateMap(c *gin.Context, id uint64, updateMap map[string]in
 
 func (dao *UserDao) Delete(c *gin.Context, id, deletedBy uint64) error {
 	db := dao.Db(c).Model(&UserEntity{})
-	db = db.Table(TblNameUser)
+	db = db.Table(dao.TableName())
 	updatedField := map[string]interface{}{
 		"deleted_time": time.Now(),
 		"deleted_by":   deletedBy,
@@ -108,7 +114,7 @@ func (dao *UserDao) Delete(c *gin.Context, id, deletedBy uint64) error {
 func (dao *UserDao) GetById(c *gin.Context, id uint64) (*UserEntity, error) {
 	var entity UserEntity
 	db := dao.Db(c).Model(&UserEntity{})
-	db = db.Table(TblNameUser)
+	db = db.Table(dao.TableName())
 	if err := db.Where("id = ?", id).Find(&entity).Error; err != nil {
 		return nil, errorCode.ErrorDbFind.Wrapf(err, "[UserDao] GetById fail, id:%d", id)
 	}
@@ -118,7 +124,7 @@ func (dao *UserDao) GetById(c *gin.Context, id uint64) (*UserEntity, error) {
 func (dao *UserDao) GetByCond(c *gin.Context, cond *UserCond) (*UserEntity, error) {
 	var entity UserEntity
 	db := dao.Db(c).Model(&UserEntity{})
-	db = db.Table(TblNameUser)
+	db = db.Table(dao.TableName())
 
 	dao.BuildCondition(db, cond)
 
@@ -131,7 +137,7 @@ func (dao *UserDao) GetByCond(c *gin.Context, cond *UserCond) (*UserEntity, erro
 func (dao *UserDao) GetListByCond(c *gin.Context, cond *UserCond) (UserEntityList, error) {
 	var entityList UserEntityList
 	db := dao.Db(c).Model(&UserEntity{})
-	db = db.Table(TblNameUser)
+	db = db.Table(dao.TableName())
 
 	dao.BuildCondition(db, cond)
 
@@ -143,7 +149,7 @@ func (dao *UserDao) GetListByCond(c *gin.Context, cond *UserCond) (UserEntityLis
 
 func (dao *UserDao) GetPageListByCond(c *gin.Context, cond *UserCond) (UserEntityList, int64, error) {
 	db := dao.Db(c).Model(&UserEntity{})
-	db = db.Table(TblNameUser)
+	db = db.Table(dao.TableName())
 
 	dao.BuildCondition(db, cond)
 
