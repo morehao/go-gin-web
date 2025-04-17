@@ -38,11 +38,11 @@ definitions:
       companyId:
         description: 公司id
         type: integer
+      createdAt:
+        description: 创建时间
+        type: integer
       createdBy:
         description: 创建人id
-        type: integer
-      createdTime:
-        description: 创建时间
         type: integer
       departmentId:
         description: 部门id
@@ -53,11 +53,11 @@ definitions:
       name:
         description: 姓名
         type: string
+      updatedAt:
+        description: 更新时间
+        type: integer
       updatedBy:
         description: 更新人id
-        type: integer
-      updatedTime:
-        description: 更新时间
         type: integer
     required:
     - id
@@ -67,11 +67,11 @@ definitions:
       companyId:
         description: 公司id
         type: integer
+      createdAt:
+        description: 创建时间
+        type: integer
       createdBy:
         description: 创建人id
-        type: integer
-      createdTime:
-        description: 创建时间
         type: integer
       departmentId:
         description: 部门id
@@ -82,11 +82,11 @@ definitions:
       name:
         description: 姓名
         type: string
+      updatedAt:
+        description: 更新时间
+        type: integer
       updatedBy:
         description: 更新人id
-        type: integer
-      updatedTime:
-        description: 更新时间
         type: integer
     required:
     - id

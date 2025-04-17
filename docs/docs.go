@@ -304,12 +304,12 @@ const docTemplate = `{
                     "description": "公司id",
                     "type": "integer"
                 },
-                "createdBy": {
-                    "description": "创建人id",
+                "createdAt": {
+                    "description": "创建时间",
                     "type": "integer"
                 },
-                "createdTime": {
-                    "description": "创建时间",
+                "createdBy": {
+                    "description": "创建人id",
                     "type": "integer"
                 },
                 "departmentId": {
@@ -324,12 +324,12 @@ const docTemplate = `{
                     "description": "姓名",
                     "type": "string"
                 },
-                "updatedBy": {
-                    "description": "更新人id",
+                "updatedAt": {
+                    "description": "更新时间",
                     "type": "integer"
                 },
-                "updatedTime": {
-                    "description": "更新时间",
+                "updatedBy": {
+                    "description": "更新人id",
                     "type": "integer"
                 }
             }
@@ -344,12 +344,12 @@ const docTemplate = `{
                     "description": "公司id",
                     "type": "integer"
                 },
-                "createdBy": {
-                    "description": "创建人id",
+                "createdAt": {
+                    "description": "创建时间",
                     "type": "integer"
                 },
-                "createdTime": {
-                    "description": "创建时间",
+                "createdBy": {
+                    "description": "创建人id",
                     "type": "integer"
                 },
                 "departmentId": {
@@ -364,12 +364,12 @@ const docTemplate = `{
                     "description": "姓名",
                     "type": "string"
                 },
-                "updatedBy": {
-                    "description": "更新人id",
+                "updatedAt": {
+                    "description": "更新时间",
                     "type": "integer"
                 },
-                "updatedTime": {
-                    "description": "更新时间",
+                "updatedBy": {
+                    "description": "更新人id",
                     "type": "integer"
                 }
             }

@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"os"
 
+	_ "go-gin-web/docs"
 	"go-gin-web/internal/app/middleware"
 	"go-gin-web/internal/app/router"
 	"go-gin-web/internal/pkg/helper"

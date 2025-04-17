@@ -15,8 +15,8 @@ mysql:
   service: go-gin-web
   addr: 127.0.0.1:3306
   user: root
-  password: ServBay.dev
-  database: demo
+  password: 123456
+  database: practice
   charset: utf8mb4
   timeout: 5s
   read_timeout: 3s
