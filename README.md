@@ -73,7 +73,7 @@ go install github.com/swaggo/swag/cmd/swag@latest
 ```
 生成接口文档
 ``` shell
-swag init -g ./cmd/app/main.go
+swag init
 ```
 访问接口文档
 访问 `http://localhost:8099/app/swagger/index.html` 即可查看接口文档。
