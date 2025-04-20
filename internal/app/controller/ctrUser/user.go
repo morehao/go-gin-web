@@ -5,7 +5,7 @@ import (
 	"go-gin-web/internal/app/service/svcUser"
 
 	"github.com/gin-gonic/gin"
-	"github.com/morehao/go-tools/gcontext/ginRender"
+	"github.com/morehao/go-tools/gcontext/ginrender"
 )
 
 type UserCtr interface {
@@ -28,7 +28,6 @@ func NewUserCtr() UserCtr {
 	}
 }
 
-
 // Create 创建用户
 // @Tags 用户管理
 // @Summary 创建用户
@@ -40,15 +39,15 @@ func NewUserCtr() UserCtr {
 func (ctr *userCtr) Create(c *gin.Context) {
 	var req dtoUser.UserCreateReq
 	if err := c.ShouldBindJSON(&req); err != nil {
-		ginRender.Fail(c, err)
+		ginrender.Fail(c, err)
 		return
 	}
 	res, err := ctr.userSvc.Create(c, &req)
 	if err != nil {
-		ginRender.Fail(c, err)
+		ginrender.Fail(c, err)
 		return
 	} else {
-		ginRender.Success(c, res)
+		ginrender.Success(c, res)
 	}
 }
 
@@ -63,15 +62,15 @@ func (ctr *userCtr) Create(c *gin.Context) {
 func (ctr *userCtr) Delete(c *gin.Context) {
 	var req dtoUser.UserDeleteReq
 	if err := c.ShouldBindJSON(&req); err != nil {
-		ginRender.Fail(c, err)
+		ginrender.Fail(c, err)
 		return
 	}
 
 	if err := ctr.userSvc.Delete(c, &req); err != nil {
-		ginRender.Fail(c, err)
+		ginrender.Fail(c, err)
 		return
 	} else {
-		ginRender.Success(c, "删除成功")
+		ginrender.Success(c, "删除成功")
 	}
 }
 
@@ -86,14 +85,14 @@ func (ctr *userCtr) Delete(c *gin.Context) {
 func (ctr *userCtr) Update(c *gin.Context) {
 	var req dtoUser.UserUpdateReq
 	if err := c.ShouldBindJSON(&req); err != nil {
-		ginRender.Fail(c, err)
+		ginrender.Fail(c, err)
 		return
 	}
 	if err := ctr.userSvc.Update(c, &req); err != nil {
-		ginRender.Fail(c, err)
+		ginrender.Fail(c, err)
 		return
 	} else {
-		ginRender.Success(c, "修改成功")
+		ginrender.Success(c, "修改成功")
 	}
 }
 
@@ -108,15 +107,15 @@ func (ctr *userCtr) Update(c *gin.Context) {
 func (ctr *userCtr) Detail(c *gin.Context) {
 	var req dtoUser.UserDetailReq
 	if err := c.ShouldBindQuery(&req); err != nil {
-		ginRender.Fail(c, err)
+		ginrender.Fail(c, err)
 		return
 	}
 	res, err := ctr.userSvc.Detail(c, &req)
 	if err != nil {
-		ginRender.Fail(c, err)
+		ginrender.Fail(c, err)
 		return
 	} else {
-		ginRender.Success(c, res)
+		ginrender.Success(c, res)
 	}
 }
 
@@ -131,14 +130,14 @@ func (ctr *userCtr) Detail(c *gin.Context) {
 func (ctr *userCtr) PageList(c *gin.Context) {
 	var req dtoUser.UserPageListReq
 	if err := c.ShouldBindQuery(&req); err != nil {
-		ginRender.Fail(c, err)
+		ginrender.Fail(c, err)
 		return
 	}
 	res, err := ctr.userSvc.PageList(c, &req)
 	if err != nil {
-		ginRender.Fail(c, err)
+		ginrender.Fail(c, err)
 		return
 	} else {
-		ginRender.Success(c, res)
+		ginrender.Success(c, res)
 	}
 }

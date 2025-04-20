@@ -4,7 +4,7 @@ import (
 	"go-gin-web/internal/app/service/svcExample"
 
 	"github.com/gin-gonic/gin"
-	"github.com/morehao/go-tools/gcontext/ginRender"
+	"github.com/morehao/go-tools/gcontext/ginrender"
 )
 
 type ExampleCtr interface {
@@ -26,5 +26,5 @@ func NewExampleCtr() ExampleCtr {
 func (ctr *exampleCtr) FormatData(c *gin.Context) {
 	res := ctr.exampleSvc.FormatData(c)
 
-	ginRender.SuccessWithFormat(c, res)
+	ginrender.SuccessWithFormat(c, res)
 }
