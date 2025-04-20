@@ -6,7 +6,7 @@ import (
 	"go-gin-web/config"
 
 	"github.com/morehao/go-tools/conf"
-	"github.com/morehao/go-tools/dbClient"
+	"github.com/morehao/go-tools/dbclient"
 	"github.com/morehao/go-tools/glog"
 	"github.com/redis/go-redis/v9"
 	"go.uber.org/zap"
@@ -43,12 +43,12 @@ func LogInit() {
 }
 
 func ResourceInit() {
-	mysqlClient, getMysqlClientErr := dbClient.InitMysql(Config.Mysql)
+	mysqlClient, getMysqlClientErr := dbclient.InitMysql(Config.Mysql)
 	if getMysqlClientErr != nil {
 		panic("get mysql client error")
 	}
 	MysqlClient = mysqlClient
-	redisClient, getRedisClientErr := dbClient.InitRedis(Config.Redis)
+	redisClient, getRedisClientErr := dbclient.InitRedis(Config.Redis)
 	if getRedisClientErr != nil {
 		panic(fmt.Sprintf("get redis client error: %v", getRedisClientErr))
 	}
