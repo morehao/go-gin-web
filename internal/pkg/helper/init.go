@@ -6,10 +6,10 @@ import (
 	"go-gin-web/config"
 
 	"github.com/morehao/go-tools/conf"
-	"github.com/morehao/go-tools/dbclient"
 	"github.com/morehao/go-tools/glog"
+	"github.com/morehao/go-tools/stores/dbmysql"
+	"github.com/morehao/go-tools/stores/dbredis"
 	"github.com/redis/go-redis/v9"
-	"go.uber.org/zap"
 	"gorm.io/gorm"
 )
 
@@ -37,18 +37,18 @@ func ConfInit() {
 
 func LogInit() {
 	// 初始化日志
-	if err := glog.NewLogger(&Config.Log, glog.WithZapOptions(zap.AddCallerSkip(3))); err != nil {
+	if err := glog.InitLogger(&Config.Log, glog.WithCallerSkip(3)); err != nil {
 		panic("init zap logger error")
 	}
 }
 
 func ResourceInit() {
-	mysqlClient, getMysqlClientErr := dbclient.InitMysql(Config.Mysql)
+	mysqlClient, getMysqlClientErr := dbmysql.InitMysql(Config.Mysql)
 	if getMysqlClientErr != nil {
 		panic("get mysql client error")
 	}
 	MysqlClient = mysqlClient
-	redisClient, getRedisClientErr := dbclient.InitRedis(Config.Redis)
+	redisClient, getRedisClientErr := dbredis.InitRedis(Config.Redis)
 	if getRedisClientErr != nil {
 		panic(fmt.Sprintf("get redis client error: %v", getRedisClientErr))
 	}

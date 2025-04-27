@@ -1,15 +1,16 @@
 package config
 
 import (
-	"github.com/morehao/go-tools/dbclient"
 	"github.com/morehao/go-tools/glog"
+	"github.com/morehao/go-tools/stores/dbmysql"
+	"github.com/morehao/go-tools/stores/dbredis"
 )
 
 type Config struct {
-	Server Server               `yaml:"server"`
-	Log    glog.LoggerConfig    `yaml:"log"`
-	Mysql  dbclient.MysqlConfig `yaml:"mysql"`
-	Redis  dbclient.RedisConfig `yaml:"redis"`
+	Server Server              `yaml:"server"`
+	Log    glog.LogConfig      `yaml:"log"`
+	Mysql  dbmysql.MysqlConfig `yaml:"mysql"`
+	Redis  dbredis.RedisConfig `yaml:"redis"`
 }
 
 type Server struct {

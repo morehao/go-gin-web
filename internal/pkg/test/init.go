@@ -1,7 +1,6 @@
 package test
 
 import (
-	"fmt"
 	"path"
 	"runtime"
 	"sync"
@@ -19,7 +18,6 @@ func Init() {
 		rootDir := path.Dir(path.Dir(path.Dir(path.Dir(file))))
 		helper.SetRootDir(rootDir)
 		helper.ConfInit()
-		helper.Config.Log.Dir = fmt.Sprintf("%s/log", rootDir)
 		helper.LogInit()
 		helper.ResourceInit()
 	})

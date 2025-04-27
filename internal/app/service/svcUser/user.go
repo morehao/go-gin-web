@@ -107,6 +107,7 @@ func (svc *userSvc) Detail(c *gin.Context, req *dtoUser.UserDetailReq) (*dtoUser
 
 // PageList 分页获取用户列表
 func (svc *userSvc) PageList(c *gin.Context, req *dtoUser.UserPageListReq) (*dtoUser.UserPageListResp, error) {
+	glog.Infof(c, "[svcUser.UserPageList] req:%s", glog.ToJsonString(req))
 	cond := &daoUser.UserCond{
 		Page:     req.Page,
 		PageSize: req.PageSize,
