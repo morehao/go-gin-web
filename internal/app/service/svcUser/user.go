@@ -1,12 +1,15 @@
 package svcUser
 
 import (
+	"strings"
+
 	"go-gin-web/internal/app/dto/dtoUser"
 	"go-gin-web/internal/app/model/daoUser"
 	"go-gin-web/internal/app/object/objCommon"
 	"go-gin-web/internal/app/object/objUser"
 	"go-gin-web/internal/pkg/context"
 	"go-gin-web/internal/pkg/errorCode"
+	"go-gin-web/internal/pkg/helper"
 
 	"time"
 
@@ -107,7 +110,15 @@ func (svc *userSvc) Detail(c *gin.Context, req *dtoUser.UserDetailReq) (*dtoUser
 
 // PageList 分页获取用户列表
 func (svc *userSvc) PageList(c *gin.Context, req *dtoUser.UserPageListReq) (*dtoUser.UserPageListResp, error) {
+	// 为了测试各组件的日志
 	glog.Infof(c, "[svcUser.UserPageList] req:%s", glog.ToJsonString(req))
+	_, _ = helper.RedisClient.Get(c, "test").Result()
+	_, _ = helper.EsClient.Search(
+		helper.EsClient.Search.WithContext(c),
+		helper.EsClient.Search.WithIndex("accounts"),
+		helper.EsClient.Search.WithBody(strings.NewReader(`{"query":{"match_all":{}}}`)),
+	)
+
 	cond := &daoUser.UserCond{
 		Page:     req.Page,
 		PageSize: req.PageSize,

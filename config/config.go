@@ -2,6 +2,7 @@ package config
 
 import (
 	"github.com/morehao/go-tools/glog"
+	"github.com/morehao/go-tools/stores/dbes"
 	"github.com/morehao/go-tools/stores/dbmysql"
 	"github.com/morehao/go-tools/stores/dbredis"
 )
@@ -11,6 +12,7 @@ type Config struct {
 	Log    glog.LogConfig      `yaml:"log"`
 	Mysql  dbmysql.MysqlConfig `yaml:"mysql"`
 	Redis  dbredis.RedisConfig `yaml:"redis"`
+	ES     dbes.ESConfig       `yaml:"es"`
 }
 
 type Server struct {

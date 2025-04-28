@@ -5,24 +5,32 @@ server:
 
 log:
   service: go-gin-web
-  default:
-    level: info
-    writer: file
-    dir: log
-    extra_keys:
-      - requestId
-  gorm:
-    level: debug
-    writer: file
-    dir: log
-    extra_keys:
-      - requestId
-  redis:
-    level: info
-    writer: file
-    dir: log
-    extra_keys:
-      - requestId
+  modules:
+    default:
+      level: info
+      writer: file
+      dir: log
+      extra_keys:
+        - requestId
+    gorm:
+      level: debug
+      writer: file
+      dir: log
+      extra_keys:
+        - requestId
+    redis:
+      level: debug
+      writer: file
+      dir: log
+      extra_keys:
+        - requestId
+    es:
+      level: debug
+      writer: file
+      dir: log
+      extra_keys:
+        - requestId
+
 
 mysql:
   service: go-gin-web
@@ -43,6 +51,10 @@ redis:
   dial_timeout: 5s
   read_timeout: 3s
   write_timeout: 3s
+
+es:
+  service: go-gin-web
+  addr: http://127.0.0.1:9200
 
 
 code_gen:

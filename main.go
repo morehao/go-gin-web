@@ -27,7 +27,8 @@ func main() {
 		gin.SetMode(gin.ReleaseMode)
 	}
 
-	engine := gin.Default()
+	engine := gin.New()
+	engine.Use(gin.Recovery())
 	routerGroup := engine.Group(fmt.Sprintf("/%s", helper.Config.Server.Name))
 	if helper.Config.Server.Env == "dev" {
 		routerGroup.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
