@@ -15,7 +15,7 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
-        "/app/user/create": {
+        "/demo/user/create": {
             "post": {
                 "consumes": [
                     "application/json"
@@ -60,7 +60,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/app/user/delete": {
+        "/demo/user/delete": {
             "post": {
                 "consumes": [
                     "application/json"
@@ -105,7 +105,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/app/user/detail": {
+        "/demo/user/detail": {
             "get": {
                 "consumes": [
                     "application/json"
@@ -148,7 +148,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/app/user/pageList": {
+        "/demo/user/pageList": {
             "get": {
                 "consumes": [
                     "application/json"
@@ -197,7 +197,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/app/user/update": {
+        "/demo/user/update": {
             "post": {
                 "consumes": [
                     "application/json"
