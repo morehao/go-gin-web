@@ -1,5 +1,5 @@
 # 项目简介
-`go-gin-web`项目展示了如何从零开始搭建一个基于Go和Gin框架的工程化实践，包含项目结构、日志组件、数据库连接、错误码设计、代码生成等内容。
+`demo`项目展示了如何从零开始搭建一个基于Go和Gin框架的工程化实践，包含项目结构、日志组件、数据库连接、错误码设计、代码生成等内容。
 
 
 
@@ -73,19 +73,20 @@ go install github.com/swaggo/swag/cmd/swag@latest
 ```
 生成接口文档
 ``` shell
-swag init
+chmod +x scripts/swag.sh
+scripts/swag.sh demo
 ```
 访问接口文档
-访问 `http://localhost:8099/app/swagger/index.html` 即可查看接口文档。
+访问 `http://localhost:8099/demo/swagger/index.html` 即可查看接口文档。
 
 ## 项目部署
 构建镜像
 ``` bash
-docker buildx build -t go-gin-web .
+docker buildx build -t demo .
 ```
 运行容器
 ``` bash
-docker run -itd --name go-gin-web -p 8099:8099 go-gin-web
+docker run -itd --name demo -p 8099:8099 demo
 ```
 
 ## 快速生成新项目

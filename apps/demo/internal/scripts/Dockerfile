@@ -9,13 +9,13 @@ WORKDIR /opt/server
 ENV GOPROXY=https://goproxy.cn,direct
 
 # 将 go.mod 和 go.sum 文件复制到工作目录
-COPY go.mod go.sum ./
+COPY ../../../../go.mod go.sum ./
 
 # 下载所有依赖
 RUN go mod download
 
 # 将当前构建上下文的所有文件复制到工作目录
-COPY . .
+COPY ../../../.. .
 
 # 编译 Go 源代码，并将输出的可执行文件命名为 webserver
 RUN go build -o webserver /opt/server/cmd/demo/main.go

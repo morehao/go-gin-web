@@ -6,9 +6,9 @@ import (
 	"runtime"
 
 	"go-gin-web/apps/demo/config"
+	_ "go-gin-web/apps/demo/internal/docs"
 	"go-gin-web/apps/demo/internal/middleware"
 	"go-gin-web/apps/demo/internal/router"
-	_ "go-gin-web/docs"
 
 	"github.com/gin-gonic/gin"
 	"github.com/morehao/go-tools/glog"

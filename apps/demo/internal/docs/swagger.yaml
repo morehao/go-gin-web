@@ -7,7 +7,7 @@ definitions:
       msg:
         type: string
     type: object
-  dtoUser.UserCreateReq:
+  go-gin-web_apps_demo_internal_dto_dtoUser.UserCreateReq:
     properties:
       companyId:
         description: 公司id
@@ -19,13 +19,13 @@ definitions:
         description: 姓名
         type: string
     type: object
-  dtoUser.UserCreateResp:
+  go-gin-web_apps_demo_internal_dto_dtoUser.UserCreateResp:
     properties:
       id:
         description: 数据自增id
         type: integer
     type: object
-  dtoUser.UserDeleteReq:
+  go-gin-web_apps_demo_internal_dto_dtoUser.UserDeleteReq:
     properties:
       id:
         description: 数据自增id
@@ -33,36 +33,7 @@ definitions:
     required:
     - id
     type: object
-  dtoUser.UserDetailResp:
-    properties:
-      companyId:
-        description: 公司id
-        type: integer
-      createdAt:
-        description: 创建时间
-        type: integer
-      createdBy:
-        description: 创建人id
-        type: integer
-      departmentId:
-        description: 部门id
-        type: integer
-      id:
-        description: 数据自增id
-        type: integer
-      name:
-        description: 姓名
-        type: string
-      updatedAt:
-        description: 更新时间
-        type: integer
-      updatedBy:
-        description: 更新人id
-        type: integer
-    required:
-    - id
-    type: object
-  dtoUser.UserPageListItem:
+  go-gin-web_apps_demo_internal_dto_dtoUser.UserDetailResp:
     properties:
       companyId:
         description: 公司id
@@ -91,18 +62,47 @@ definitions:
     required:
     - id
     type: object
-  dtoUser.UserPageListResp:
+  go-gin-web_apps_demo_internal_dto_dtoUser.UserPageListItem:
+    properties:
+      companyId:
+        description: 公司id
+        type: integer
+      createdAt:
+        description: 创建时间
+        type: integer
+      createdBy:
+        description: 创建人id
+        type: integer
+      departmentId:
+        description: 部门id
+        type: integer
+      id:
+        description: 数据自增id
+        type: integer
+      name:
+        description: 姓名
+        type: string
+      updatedAt:
+        description: 更新时间
+        type: integer
+      updatedBy:
+        description: 更新人id
+        type: integer
+    required:
+    - id
+    type: object
+  go-gin-web_apps_demo_internal_dto_dtoUser.UserPageListResp:
     properties:
       list:
         description: 数据列表
         items:
-          $ref: '#/definitions/dtoUser.UserPageListItem'
+          $ref: '#/definitions/go-gin-web_apps_demo_internal_dto_dtoUser.UserPageListItem'
         type: array
       total:
         description: 数据总条数
         type: integer
     type: object
-  dtoUser.UserUpdateReq:
+  go-gin-web_apps_demo_internal_dto_dtoUser.UserUpdateReq:
     properties:
       companyId:
         description: 公司id
@@ -122,7 +122,7 @@ definitions:
 info:
   contact: {}
 paths:
-  /app/user/create:
+  /demo/user/create:
     post:
       consumes:
       - application/json
@@ -132,7 +132,7 @@ paths:
         name: req
         required: true
         schema:
-          $ref: '#/definitions/dtoUser.UserCreateReq'
+          $ref: '#/definitions/go-gin-web_apps_demo_internal_dto_dtoUser.UserCreateReq'
       produces:
       - application/json
       responses:
@@ -143,12 +143,12 @@ paths:
             - $ref: '#/definitions/dto.DefaultRender'
             - properties:
                 data:
-                  $ref: '#/definitions/dtoUser.UserCreateResp'
+                  $ref: '#/definitions/go-gin-web_apps_demo_internal_dto_dtoUser.UserCreateResp'
               type: object
       summary: 创建用户
       tags:
       - 用户管理
-  /app/user/delete:
+  /demo/user/delete:
     post:
       consumes:
       - application/json
@@ -158,7 +158,7 @@ paths:
         name: req
         required: true
         schema:
-          $ref: '#/definitions/dtoUser.UserDeleteReq'
+          $ref: '#/definitions/go-gin-web_apps_demo_internal_dto_dtoUser.UserDeleteReq'
       produces:
       - application/json
       responses:
@@ -174,7 +174,7 @@ paths:
       summary: 删除用户
       tags:
       - 用户管理
-  /app/user/detail:
+  /demo/user/detail:
     get:
       consumes:
       - application/json
@@ -194,12 +194,12 @@ paths:
             - $ref: '#/definitions/dto.DefaultRender'
             - properties:
                 data:
-                  $ref: '#/definitions/dtoUser.UserDetailResp'
+                  $ref: '#/definitions/go-gin-web_apps_demo_internal_dto_dtoUser.UserDetailResp'
               type: object
       summary: 用户详情
       tags:
       - 用户管理
-  /app/user/pageList:
+  /demo/user/pageList:
     get:
       consumes:
       - application/json
@@ -223,12 +223,12 @@ paths:
             - $ref: '#/definitions/dto.DefaultRender'
             - properties:
                 data:
-                  $ref: '#/definitions/dtoUser.UserPageListResp'
+                  $ref: '#/definitions/go-gin-web_apps_demo_internal_dto_dtoUser.UserPageListResp'
               type: object
       summary: 用户列表分页
       tags:
       - 用户管理
-  /app/user/update:
+  /demo/user/update:
     post:
       consumes:
       - application/json
@@ -238,7 +238,7 @@ paths:
         name: req
         required: true
         schema:
-          $ref: '#/definitions/dtoUser.UserUpdateReq'
+          $ref: '#/definitions/go-gin-web_apps_demo_internal_dto_dtoUser.UserUpdateReq'
       produces:
       - application/json
       responses:
