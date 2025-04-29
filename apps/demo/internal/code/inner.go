@@ -1,4 +1,4 @@
-package errorCode
+package code
 
 import "github.com/morehao/go-tools/gerror"
 

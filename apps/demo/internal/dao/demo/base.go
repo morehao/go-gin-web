@@ -1,4 +1,4 @@
-package repoDemo
+package demo
 
 import (
 	"go-gin-web/pkg/storages"

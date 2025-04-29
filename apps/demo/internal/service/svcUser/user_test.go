@@ -12,7 +12,7 @@ import (
 )
 
 func TestUserCreate(t *testing.T) {
-	test.Init()
+	test.Init(test.AppNameDemo)
 	defer test.Done()
 	ctx := test.NewCtx(test.OptUid(1))
 	req := &dtoUser.UserCreateReq{
@@ -26,7 +26,7 @@ func TestUserCreate(t *testing.T) {
 }
 
 func TestUserDetail(t *testing.T) {
-	test.Init()
+	test.Init(test.AppNameDemo)
 	defer test.Done()
 	ctx := test.NewCtx(test.OptUid(1))
 	req := &dtoUser.UserDetailReq{
