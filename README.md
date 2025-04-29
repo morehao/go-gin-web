@@ -82,11 +82,11 @@ scripts/swag.sh demo
 ## 项目部署
 构建镜像
 ``` bash
-docker buildx build -t demo .
+make APP=demo docker-build
 ```
 运行容器
 ``` bash
-docker run -itd --name demo -p 8099:8099 demo
+ make APP=demo docker-run
 ```
 
 ## 快速生成新项目

@@ -11,9 +11,14 @@ BUILD_FLAGS = -ldflags="-X 'main.BuildVersion=$(BUILD_VERSION)'"
 
 # go命令的环境变量（交叉编译用）
 GO_ENV = CGO_ENABLED=0 GOOS=linux GOARCH=amd64
+GO_PROXY = GOPROXY=https://goproxy.cn,direct
+
+# Docker 相关变量
+DOCKER_IMAGE = $(APP)
+DOCKER_TAG = $(BUILD_VERSION)
 
 # 伪目标
-.PHONY: all build clean run lint test swag docker help list-apps deps tidy
+.PHONY: all build clean run lint test swag docker docker-run docker-stop docker-logs help list-apps deps tidy
 
 # 通用入口：清理、依赖、构建并运行
 all: clean deps build run
@@ -67,8 +72,8 @@ test:
 # 下载依赖项
 deps:
 	@echo "📦 正在下载依赖项..."
-	@go mod download
-	@go mod tidy
+	@$(GO_PROXY) go mod download
+	@$(GO_PROXY) go mod tidy
 	@echo "✅ 依赖项已更新"
 
 # 生成 Swagger 文档
@@ -80,11 +85,22 @@ swag:
 	@echo "✅ Swagger 文档已生成"
 
 # 构建 Docker 镜像
-docker:
+docker-build:
 	$(call validate_app)
 	@echo "🐳 正在构建 $(APP) 的 Docker 镜像..."
-	@docker build -t $(APP):$(BUILD_VERSION) -f ./apps/$(APP)/internal/scripts/Dockerfile .
-	@echo "✅ Docker 镜像 $(APP):$(BUILD_VERSION) 已构建完成"
+	@docker build -t $(DOCKER_IMAGE):$(DOCKER_TAG) -t $(DOCKER_IMAGE):latest -f ./apps/$(APP)/internal/scripts/Dockerfile .
+	@echo "✅ Docker 镜像 $(DOCKER_IMAGE):$(DOCKER_TAG) 和 $(DOCKER_IMAGE):latest 已构建完成"
+
+# 运行 Docker 容器
+docker-run:
+	$(call validate_app)
+	@echo "🚀 正在运行 $(APP) 容器..."
+	@docker run -d \
+		--name $(APP) \
+		--add-host=host.docker.internal:host-gateway \
+		-p 8099:8099 \
+		$(DOCKER_IMAGE):latest
+	@echo "✅ 容器 $(APP) 已启动，服务地址：http://localhost:8099"
 
 # 列出所有可用的应用程序
 list-apps:
@@ -107,6 +123,7 @@ help:
 	@echo "  make run APP=<名称>     - 运行指定的应用程序"
 	@echo "  make test APP=<名称>    - 运行测试"
 	@echo "  make swag APP=<名称>    - 生成 Swagger 文档"
-	@echo "  make docker APP=<名称>  - 构建 Docker 镜像"
+	@echo "  make docker-build APP=<名称>  - 构建 Docker 镜像"
+	@echo "  make docker-run APP=<名称> - 运行 Docker 容器"
 	@echo "  make list-apps          - 列出所有可用的应用程序"
 	@echo "  make lint               - 运行代码检查工具"
