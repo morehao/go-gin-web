@@ -1,4 +1,4 @@
-package contextUtils
+package cuctx
 
 import (
 	"github.com/gin-gonic/gin"

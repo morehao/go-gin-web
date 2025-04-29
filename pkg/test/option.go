@@ -1,7 +1,7 @@
 package test
 
 import (
-	"go-gin-web/pkg/contextUtils"
+	"go-gin-web/pkg/cuctx"
 
 	"github.com/gin-gonic/gin"
 )

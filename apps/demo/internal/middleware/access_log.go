@@ -5,7 +5,7 @@ import (
 	"encoding/hex"
 	"time"
 
-	"go-gin-web/pkg/contextUtils"
+	"go-gin-web/pkg/cuctx"
 
 	"github.com/gin-gonic/gin"
 	jsoniter "github.com/json-iterator/go"
@@ -32,13 +32,13 @@ func AccessLog() gin.HandlerFunc {
 		path := c.Request.URL.Path
 		c.Set(glog.KeyUri, path)
 
-		reqQuery := contextUtils.GetReqQuery(c)
+		reqQuery := cuctx.GetReqQuery(c)
 		// 截断参数
 		if len(reqQuery) > reqQueryMaxLen {
 			reqQuery = reqQuery[:reqQueryMaxLen]
 		}
 
-		reqBody, getBodyErr := contextUtils.GetReqBody(c)
+		reqBody, getBodyErr := cuctx.GetReqBody(c)
 		if getBodyErr != nil {
 			c.Error(getBodyErr)
 		}
@@ -48,7 +48,7 @@ func AccessLog() gin.HandlerFunc {
 		}
 
 		// Body writer
-		respBodyWriter := &contextUtils.RespWriter{Body: bytes.NewBufferString(""), ResponseWriter: c.Writer}
+		respBodyWriter := &cuctx.RespWriter{Body: bytes.NewBufferString(""), ResponseWriter: c.Writer}
 		c.Writer = respBodyWriter
 
 		c.Next()
@@ -74,13 +74,13 @@ func AccessLog() gin.HandlerFunc {
 
 		keysAndValues := []interface{}{
 			glog.KeyHost, c.Request.Host,
-			glog.KeyClientIp, contextUtils.GetClientIp(c),
+			glog.KeyClientIp, cuctx.GetClientIp(c),
 			glog.KeyHandle, c.HandlerName(),
 			glog.KeyProto, c.Request.Proto,
 			glog.KeyRefer, c.Request.Referer(),
 			glog.KeyUserAgent, c.Request.UserAgent(),
-			glog.KeyHeader, contextUtils.GetHeader(c),
-			glog.KeyCookie, contextUtils.GetCookie(c),
+			glog.KeyHeader, cuctx.GetHeader(c),
+			glog.KeyCookie, cuctx.GetCookie(c),
 			glog.KeyUri, path,
 			glog.KeyMethod, c.Request.Method,
 			glog.KeyHttpStatusCode, c.Writer.Status(),

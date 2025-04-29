@@ -1,10 +1,10 @@
 server:
-  name: go-gin-web
+  name: demo
   port: 8099
   env: dev
 
 log:
-  service: go-gin-web
+  service: demo
   modules:
     default:
       level: info
@@ -35,7 +35,7 @@ log:
 mysql_configs:
   - addr: 127.0.0.1:3306
     user: root
-    password: ServBay.dev
+    password: 123456
     database: practice
     charset: utf8mb4
     timeout: 5s
@@ -43,7 +43,7 @@ mysql_configs:
     write_timeout: 3s
 
 redis_configs:
-  - service: go-gin-web
+  - service: demo
     addr: 127.0.0.1:6379
     password: 123456
     db: 0
@@ -52,29 +52,29 @@ redis_configs:
     write_timeout: 3s
 
 es_configs:
-  - service: go-gin-web
+  - service: demo
     addr: http://127.0.0.1:9200
 
 
 code_gen:
   module:
     internal_app_root_dir: internal/demo
-    project_root_dir: go-gin-web
+    project_root_dir: demo
     description: 公司账户管理
     api_doc_tag: 公司账户管理
     api_group: companyAccount
-    api_prefix: /go-gin-web/companyAccount
+    api_prefix: /demo/companyAccount
     package_name: companyAccount
     table_name: company_account
   model:
     internal_app_root_dir: internal/demo
-    project_root_dir: go-gin-web
+    project_root_dir: demo
     description: 公司
     package_name: company
     table_name: company
   api:
     internal_app_root_dir: internal/demo
-    project_root_dir: go-gin-web
+    project_root_dir: demo
     description: 禁用公司账户
     package_name: companyAccount
     sub_module_name: companyAccount
@@ -83,7 +83,7 @@ code_gen:
     function_name: Disable
     api_doc_tag: 公司账户管理
     api_group:  companyAccount
-    api_prefix: /go-gin-web/companyAccount/
+    api_prefix: /demo/companyAccount/
     api_suffix: disable
 
 

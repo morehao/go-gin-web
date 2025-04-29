@@ -17,6 +17,6 @@ func (base *Base) Db(ctx *gin.Context) (db *gorm.DB) {
 		return base.Tx.WithContext(ctx)
 	}
 
-	db = storages.MysqlPracticeDB().WithContext(ctx)
+	db = storages.DBDemo.WithContext(ctx)
 	return
 }

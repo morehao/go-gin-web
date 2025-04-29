@@ -34,5 +34,8 @@ func resourceInit() error {
 	if err := storages.InitMultiRedis(config.Conf.RedisConfigs); err != nil {
 		return fmt.Errorf("init redis failed: " + err.Error())
 	}
+	if err := storages.InitMultiEs(config.Conf.ESConfigs); err != nil {
+		return fmt.Errorf("init es failed: " + err.Error())
+	}
 	return nil
 }
