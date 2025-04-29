@@ -1,0 +1,95 @@
+server:
+  name: demo
+  port: 8099
+  env: dev
+
+log:
+  default:
+    service: demo
+    module: default
+    level: info
+    writer: file
+    dir: log
+    extra_keys:
+      - requestId
+  gorm:
+    service: demo
+    module: gorm
+    level: debug
+    writer: file
+    dir: log
+    extra_keys:
+      - requestId
+  redis:
+    service: demo
+    module: redis
+    level: debug
+    writer: file
+    dir: log
+    extra_keys:
+      - requestId
+  es:
+    service: demo
+    module: redis
+    level: debug
+    writer: file
+    dir: log
+    extra_keys:
+      - requestId
+
+
+mysql_configs:
+  - addr: 127.0.0.1:3306
+    user: root
+    password: 123456
+    database: practice
+    charset: utf8mb4
+    timeout: 5s
+    read_timeout: 3s
+    write_timeout: 3s
+
+redis_configs:
+  - service: demo
+    addr: 127.0.0.1:6379
+    password: 123456
+    db: 0
+    dial_timeout: 5s
+    read_timeout: 3s
+    write_timeout: 3s
+
+es_configs:
+  - service: demo
+    addr: http://127.0.0.1:9200
+
+
+code_gen:
+  module:
+    internal_app_root_dir: internal/demo
+    project_root_dir: demo
+    description: 公司账户管理
+    api_doc_tag: 公司账户管理
+    api_group: companyAccount
+    api_prefix: /demo/companyAccount
+    package_name: companyAccount
+    table_name: company_account
+  model:
+    internal_app_root_dir: internal/demo
+    project_root_dir: demo
+    description: 公司
+    package_name: company
+    table_name: company
+  api:
+    internal_app_root_dir: internal/demo
+    project_root_dir: demo
+    description: 禁用公司账户
+    package_name: companyAccount
+    sub_module_name: companyAccount
+    target_filename: company_account.go
+    http_method: POST
+    function_name: Disable
+    api_doc_tag: 公司账户管理
+    api_group:  companyAccount
+    api_prefix: /demo/companyAccount/
+    api_suffix: disable
+
+
