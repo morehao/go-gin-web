@@ -21,7 +21,8 @@ func serverInit() error {
 
 func preInit() error {
 	config.InitConf()
-	if err := glog.InitLogger(&config.Conf.Log); err != nil {
+	defaultLogCfg := config.Conf.Log["default"]
+	if err := glog.InitLogger(&defaultLogCfg); err != nil {
 		return fmt.Errorf("init logger failed: " + err.Error())
 	}
 	return nil

@@ -4,32 +4,38 @@ server:
   env: dev
 
 log:
-  service: demo
-  modules:
-    default:
-      level: info
-      writer: file
-      dir: log
-      extra_keys:
-        - requestId
-    gorm:
-      level: debug
-      writer: file
-      dir: log
-      extra_keys:
-        - requestId
-    redis:
-      level: debug
-      writer: file
-      dir: log
-      extra_keys:
-        - requestId
-    es:
-      level: debug
-      writer: file
-      dir: log
-      extra_keys:
-        - requestId
+  default:
+    service: demo
+    module: default
+    level: info
+    writer: file
+    dir: log
+    extra_keys:
+      - requestId
+  gorm:
+    service: demo
+    module: gorm
+    level: debug
+    writer: file
+    dir: log
+    extra_keys:
+      - requestId
+  redis:
+    service: demo
+    module: redis
+    level: debug
+    writer: file
+    dir: log
+    extra_keys:
+      - requestId
+  es:
+    service: demo
+    module: redis
+    level: debug
+    writer: file
+    dir: log
+    extra_keys:
+      - requestId
 
 
 mysql_configs:

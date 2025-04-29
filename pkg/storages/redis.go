@@ -3,6 +3,8 @@ package storages
 import (
 	"fmt"
 
+	"go-gin-web/apps/demo/config"
+
 	"github.com/morehao/go-tools/storages/dbredis"
 	"github.com/redis/go-redis/v9"
 )
@@ -17,10 +19,15 @@ const (
 
 func InitMultiRedis(configs []dbredis.RedisConfig) error {
 	if len(configs) == 0 {
-		return nil
+		return fmt.Errorf("redis config is empty")
+	}
+	var opts []dbredis.Option
+	logCfg, ok := config.Conf.Log["redis"]
+	if ok {
+		opts = append(opts, dbredis.WithLogConfig(&logCfg))
 	}
 	for _, cfg := range configs {
-		client, err := dbredis.InitRedis(cfg)
+		client, err := dbredis.InitRedis(&cfg, opts...)
 		if err != nil {
 			return err
 		}

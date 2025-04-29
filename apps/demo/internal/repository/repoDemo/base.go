@@ -1,4 +1,4 @@
-package mysqlModel
+package repoDemo
 
 import (
 	"go-gin-web/pkg/storages"
