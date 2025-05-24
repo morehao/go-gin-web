@@ -1,0 +1,62 @@
+server:
+  name: demoapp
+  port: 8099
+  env: dev
+
+log:
+  default:
+    service: demoapp
+    module: default
+    level: info
+    writer: file
+    dir: log
+    extra_keys:
+      - requestId
+  gorm:
+    service: demoapp
+    module: gorm
+    level: debug
+    writer: file
+    dir: log
+    extra_keys:
+      - requestId
+  redis:
+    service: demoapp
+    module: redis
+    level: debug
+    writer: file
+    dir: log
+    extra_keys:
+      - requestId
+  es:
+    service: demoapp
+    module: redis
+    level: debug
+    writer: file
+    dir: log
+    extra_keys:
+      - requestId
+
+
+mysql_configs:
+  - addr: 127.0.0.1:3306
+    user: root
+    password: 123456
+    database: practice
+    charset: utf8mb4
+    timeout: 5s
+    read_timeout: 3s
+    write_timeout: 3s
+
+redis_configs:
+  - service: demoapp
+    addr: 127.0.0.1:6379
+    password: 123456
+    db: 0
+    dial_timeout: 5s
+    read_timeout: 3s
+    write_timeout: 3s
+
+es_configs:
+  - service: demoapp
+    addr: http://127.0.0.1:9200

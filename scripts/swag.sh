@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# 接收第一个参数作为模块名，比如 demo
+# 接收第一个参数作为模块名，比如 demoapp
 MODULE=$1
 
 # 检查是否传了模块名
@@ -10,8 +10,8 @@ if [ -z "$MODULE" ]; then
 fi
 
 # 切换到模块目录
-cd "apps/${MODULE}" || {
-  echo "模块目录 apps/${MODULE} 不存在!"
+cd "internal/apps/${MODULE}" || {
+  echo "模块目录 internal/apps/${MODULE} 不存在!"
   exit 1
 }
 

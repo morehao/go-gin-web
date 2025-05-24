@@ -109,5 +109,5 @@ go-cutter -d /goProject/yourAppName
 - Makefile文件
 
 ## 相关组件
-相关组件均在[go-tools](https://github.com/morehao/go-tools)包中实现。
+相关组件均在[golib](https://github.com/morehao/golib)包中实现。
 

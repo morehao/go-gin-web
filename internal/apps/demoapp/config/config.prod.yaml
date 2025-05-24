@@ -1,0 +1,61 @@
+server:
+  name: demoapp
+  port: 8099
+  env: prod
+
+log:
+  default:
+    service: demoapp
+    module: default
+    level: info
+    writer: file
+    dir: /var/log/demoapp
+    extra_keys:
+      - requestId
+  gorm:
+    service: demoapp
+    module: gorm
+    level: info
+    writer: file
+    dir: /var/log/demoapp
+    extra_keys:
+      - requestId
+  redis:
+    service: demoapp
+    module: redis
+    level: info
+    writer: file
+    dir: /var/log/demoapp
+    extra_keys:
+      - requestId
+  es:
+    service: demoapp
+    module: es
+    level: info
+    writer: file
+    dir: /var/log/demoapp
+    extra_keys:
+      - requestId
+
+mysql_configs:
+  - addr: host.docker.internal:3306
+    user: root
+    password: 123456
+    database: practice
+    charset: utf8mb4
+    timeout: 5s
+    read_timeout: 3s
+    write_timeout: 3s
+
+redis_configs:
+  - service: demoapp
+    addr: host.docker.internal:6379
+    password: 123456
+    db: 0
+    dial_timeout: 5s
+    read_timeout: 3s
+    write_timeout: 3s
+
+es_configs:
+  - service: demoapp
+    addr: http://host.docker.internal:9200

@@ -3,9 +3,9 @@ package storages
 import (
 	"fmt"
 
-	"go-gin-web/apps/demo/config"
+	"go-gin-web/internal/apps/demoapp/config"
 
-	"github.com/morehao/go-tools/storages/dbredis"
+	"github.com/morehao/golib/storages/dbredis"
 	"github.com/redis/go-redis/v9"
 )
 
@@ -14,7 +14,7 @@ var (
 )
 
 const (
-	RedisServiceNameDemo = "demo"
+	RedisServiceNameDemo = "demoapp"
 )
 
 func InitMultiRedis(configs []dbredis.RedisConfig) error {

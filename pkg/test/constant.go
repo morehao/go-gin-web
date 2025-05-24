@@ -1,5 +1,5 @@
 package test
 
 const (
-	AppNameDemo = "demo"
+	AppNameDemo = "demoapp"
 )

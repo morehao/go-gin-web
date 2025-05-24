@@ -6,16 +6,16 @@ import (
 )
 
 type NodeItem struct {
-	Id     uint64
+	Id     uint
 	Label  string
-	Pid    uint64
+	Pid    uint
 	Status bool
 }
 
 type NodeList []NodeItem
 
-func (l NodeList) ToMap() map[uint64]NodeItem {
-	m := make(map[uint64]NodeItem)
+func (l NodeList) ToMap() map[uint]NodeItem {
+	m := make(map[uint]NodeItem)
 	for _, v := range l {
 		m[v.Id] = v
 	}
@@ -27,11 +27,11 @@ type NodeTree struct {
 	Children []*NodeTree
 }
 
-// type NodeTreeMap map[uint64]*NodeTree
+// type NodeTreeMap map[uint]*NodeTree
 
 func BuildTree(nodes []NodeItem) []*NodeTree {
 	treeList := make([]*NodeTree, 0)
-	treeMap := make(map[uint64]*NodeTree)
+	treeMap := make(map[uint]*NodeTree)
 	for _, node := range nodes {
 		treeItem := NodeTree{
 			NodeItem: NodeItem{
@@ -60,7 +60,7 @@ func BuildTree(nodes []NodeItem) []*NodeTree {
 }
 
 func BuildValidTree(nodes []NodeItem) []*NodeTree {
-	nodeMap := make(map[uint64]*NodeTree)
+	nodeMap := make(map[uint]*NodeTree)
 	var roots []*NodeTree
 
 	// 创建所有节点
@@ -104,7 +104,7 @@ func BuildValidTree(nodes []NodeItem) []*NodeTree {
 }
 
 func BuildValidTreeWithOption(nodes, validNodes NodeList) []*NodeTree {
-	nodeMap := make(map[uint64]*NodeTree)
+	nodeMap := make(map[uint]*NodeTree)
 	var roots []*NodeTree
 	validNodeMap := validNodes.ToMap()
 	// 创建所有节点

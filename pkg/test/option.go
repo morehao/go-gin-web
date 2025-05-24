@@ -1,15 +1,14 @@
 package test
 
 import (
-	"go-gin-web/pkg/cuctx"
-
 	"github.com/gin-gonic/gin"
+	"github.com/morehao/golib/gcontext/gincontext"
 )
 
 type Option func(ctx *gin.Context)
 
-func OptUid(uid uint64) Option {
+func OptUid(uid uint) Option {
 	return func(ctx *gin.Context) {
-		ctx.Set(cuctx.UserId, uid)
+		ctx.Set(gincontext.UserID, uid)
 	}
 }
