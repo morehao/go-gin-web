@@ -6,6 +6,7 @@ import (
 	"runtime"
 
 	"go-gin-web/internal/apps/demoapp/config"
+	_ "go-gin-web/internal/apps/demoapp/docs"
 	"go-gin-web/internal/apps/demoapp/middleware"
 	"go-gin-web/internal/apps/demoapp/router"
 	"go-gin-web/pkg/storages"

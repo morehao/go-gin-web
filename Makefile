@@ -3,7 +3,7 @@
 # 构建相关变量
 APP =
 BINARY = $(APP)
-MAIN_DIR = ./apps/$(APP)/cmd
+MAIN_DIR = ./internal/apps/$(APP)
 BUILD_DIR = ./output/build
 VERSION = $(shell date +%Y%m%d%H%M%S)-$(shell git rev-parse --short HEAD 2>/dev/null || echo "unknown")
 
@@ -25,8 +25,8 @@ define validate_app
 		echo "❌ 请使用 APP=<名称> 指定要操作的应用程序，例如：make build APP=demo"; \
 		exit 1; \
 	fi
-	@if [ ! -d "./apps/$(APP)" ]; then \
-		echo "❌ 应用程序 '$(APP)' 不存在于 ./apps 目录下，请使用 make list-apps 查看可用应用"; \
+	@if [ ! -d "./internal/apps/$(APP)" ]; then \
+		echo "❌ 应用程序 '$(APP)' 不存在于 ./internal/apps 目录下"; \
 		exit 1; \
 	fi
 endef
@@ -84,7 +84,7 @@ swag:
 docker-build:
 	$(call validate_app)
 	@echo "🐳 正在构建 $(APP) 的 Docker 镜像..."
-	@docker build -t $(DOCKER_IMAGE):latest -f ./apps/$(APP)/internal/scripts/Dockerfile .
+	@docker build -t $(DOCKER_IMAGE):latest -f ./internal/apps/$(APP)/scripts/Dockerfile .
 	@echo "✅ Docker 镜像 $(DOCKER_IMAGE):latest 已构建完成"
 
 # 运行 Docker 容器
@@ -101,7 +101,7 @@ docker-run:
 # 列出所有可用的应用程序
 list-apps:
 	@echo "📂 可用的应用程序:"
-	@ls -1 ./apps
+	@ls -1 ./internal/apps
 
 # 运行代码检查工具
 lint:

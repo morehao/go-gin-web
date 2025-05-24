@@ -19,12 +19,12 @@ FROM scratch
 COPY --from=alpine:3.19 /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/
 
 # 从构建阶段复制二进制文件和配置文件
-COPY --from=builder /app/demo /app/demo
-COPY --from=builder /build/apps/demo/config/config.prod.yaml /build/apps/demo/config/config.yaml
+COPY --from=builder /app/demoapp /app/demoapp
+COPY --from=builder /build/internal/apps/demoapp/config/config.prod.yaml /build/internal/apps/demo/config/config.yaml
 
 # 设置工作目录
 WORKDIR /build
 
 EXPOSE 8099
 
-ENTRYPOINT ["/app/demo"]
+ENTRYPOINT ["/app/demoapp"]

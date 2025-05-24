@@ -34,7 +34,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/go-gin-web_apps_demo_internal_dto_dtoUser.UserCreateReq"
+                            "$ref": "#/definitions/go-gin-web_internal_apps_demoapp_dto_dtouser.UserCreateReq"
                         }
                     }
                 ],
@@ -50,7 +50,7 @@ const docTemplate = `{
                                     "type": "object",
                                     "properties": {
                                         "data": {
-                                            "$ref": "#/definitions/go-gin-web_apps_demo_internal_dto_dtoUser.UserCreateResp"
+                                            "$ref": "#/definitions/go-gin-web_internal_apps_demoapp_dto_dtouser.UserCreateResp"
                                         }
                                     }
                                 }
@@ -79,7 +79,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/go-gin-web_apps_demo_internal_dto_dtoUser.UserDeleteReq"
+                            "$ref": "#/definitions/go-gin-web_internal_apps_demoapp_dto_dtouser.UserDeleteReq"
                         }
                     }
                 ],
@@ -138,7 +138,7 @@ const docTemplate = `{
                                     "type": "object",
                                     "properties": {
                                         "data": {
-                                            "$ref": "#/definitions/go-gin-web_apps_demo_internal_dto_dtoUser.UserDetailResp"
+                                            "$ref": "#/definitions/go-gin-web_internal_apps_demoapp_dto_dtouser.UserDetailResp"
                                         }
                                     }
                                 }
@@ -187,7 +187,7 @@ const docTemplate = `{
                                     "type": "object",
                                     "properties": {
                                         "data": {
-                                            "$ref": "#/definitions/go-gin-web_apps_demo_internal_dto_dtoUser.UserPageListResp"
+                                            "$ref": "#/definitions/go-gin-web_internal_apps_demoapp_dto_dtouser.UserPageListResp"
                                         }
                                     }
                                 }
@@ -216,7 +216,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/go-gin-web_apps_demo_internal_dto_dtoUser.UserUpdateReq"
+                            "$ref": "#/definitions/go-gin-web_internal_apps_demoapp_dto_dtouser.UserUpdateReq"
                         }
                     }
                 ],
@@ -256,7 +256,7 @@ const docTemplate = `{
                 }
             }
         },
-        "go-gin-web_apps_demo_internal_dto_dtoUser.UserCreateReq": {
+        "go-gin-web_internal_apps_demoapp_dto_dtouser.UserCreateReq": {
             "type": "object",
             "properties": {
                 "companyId": {
@@ -273,7 +273,7 @@ const docTemplate = `{
                 }
             }
         },
-        "go-gin-web_apps_demo_internal_dto_dtoUser.UserCreateResp": {
+        "go-gin-web_internal_apps_demoapp_dto_dtouser.UserCreateResp": {
             "type": "object",
             "properties": {
                 "id": {
@@ -282,59 +282,19 @@ const docTemplate = `{
                 }
             }
         },
-        "go-gin-web_apps_demo_internal_dto_dtoUser.UserDeleteReq": {
-            "type": "object",
-            "required": [
-                "id"
-            ],
-            "properties": {
-                "id": {
-                    "description": "数据自增id",
-                    "type": "integer"
-                }
-            }
-        },
-        "go-gin-web_apps_demo_internal_dto_dtoUser.UserDetailResp": {
+        "go-gin-web_internal_apps_demoapp_dto_dtouser.UserDeleteReq": {
             "type": "object",
             "required": [
                 "id"
             ],
             "properties": {
-                "companyId": {
-                    "description": "公司id",
-                    "type": "integer"
-                },
-                "createdAt": {
-                    "description": "创建时间",
-                    "type": "integer"
-                },
-                "createdBy": {
-                    "description": "创建人id",
-                    "type": "integer"
-                },
-                "departmentId": {
-                    "description": "部门id",
-                    "type": "integer"
-                },
                 "id": {
                     "description": "数据自增id",
-                    "type": "integer"
-                },
-                "name": {
-                    "description": "姓名",
-                    "type": "string"
-                },
-                "updatedAt": {
-                    "description": "更新时间",
-                    "type": "integer"
-                },
-                "updatedBy": {
-                    "description": "更新人id",
                     "type": "integer"
                 }
             }
         },
-        "go-gin-web_apps_demo_internal_dto_dtoUser.UserPageListItem": {
+        "go-gin-web_internal_apps_demoapp_dto_dtouser.UserDetailResp": {
             "type": "object",
             "required": [
                 "id"
@@ -374,14 +334,54 @@ const docTemplate = `{
                 }
             }
         },
-        "go-gin-web_apps_demo_internal_dto_dtoUser.UserPageListResp": {
+        "go-gin-web_internal_apps_demoapp_dto_dtouser.UserPageListItem": {
+            "type": "object",
+            "required": [
+                "id"
+            ],
+            "properties": {
+                "companyId": {
+                    "description": "公司id",
+                    "type": "integer"
+                },
+                "createdAt": {
+                    "description": "创建时间",
+                    "type": "integer"
+                },
+                "createdBy": {
+                    "description": "创建人id",
+                    "type": "integer"
+                },
+                "departmentId": {
+                    "description": "部门id",
+                    "type": "integer"
+                },
+                "id": {
+                    "description": "数据自增id",
+                    "type": "integer"
+                },
+                "name": {
+                    "description": "姓名",
+                    "type": "string"
+                },
+                "updatedAt": {
+                    "description": "更新时间",
+                    "type": "integer"
+                },
+                "updatedBy": {
+                    "description": "更新人id",
+                    "type": "integer"
+                }
+            }
+        },
+        "go-gin-web_internal_apps_demoapp_dto_dtouser.UserPageListResp": {
             "type": "object",
             "properties": {
                 "list": {
                     "description": "数据列表",
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/go-gin-web_apps_demo_internal_dto_dtoUser.UserPageListItem"
+                        "$ref": "#/definitions/go-gin-web_internal_apps_demoapp_dto_dtouser.UserPageListItem"
                     }
                 },
                 "total": {
@@ -390,7 +390,7 @@ const docTemplate = `{
                 }
             }
         },
-        "go-gin-web_apps_demo_internal_dto_dtoUser.UserUpdateReq": {
+        "go-gin-web_internal_apps_demoapp_dto_dtouser.UserUpdateReq": {
             "type": "object",
             "required": [
                 "id"
