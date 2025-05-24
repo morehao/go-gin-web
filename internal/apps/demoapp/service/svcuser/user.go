@@ -43,7 +43,7 @@ func (svc *userSvc) Create(c *gin.Context, req *dtouser.UserCreateReq) (*dtouser
 	}
 	if err := daouser.NewUserDao().Insert(c, insertEntity); err != nil {
 		glog.Errorf(c, "[svcuser.UserCreate] daoUser Create fail, err:%v, req:%s", err, gutils.ToJsonString(req))
-		return nil, code.UserCreateErr
+		return nil, code.GetError(code.UserCreateErr)
 	}
 	return &dtouser.UserCreateResp{
 		ID: insertEntity.ID,
@@ -56,7 +56,7 @@ func (svc *userSvc) Delete(c *gin.Context, req *dtouser.UserDeleteReq) error {
 
 	if err := daouser.NewUserDao().Delete(c, req.ID, userID); err != nil {
 		glog.Errorf(c, "[svcuser.Delete] daoUser Delete fail, err:%v, req:%s", err, gutils.ToJsonString(req))
-		return code.UserDeleteErr
+		return code.GetError(code.UserDeleteErr)
 	}
 	return nil
 }
@@ -72,7 +72,7 @@ func (svc *userSvc) Update(c *gin.Context, req *dtouser.UserUpdateReq) error {
 	}
 	if err := daouser.NewUserDao().UpdateById(c, req.ID, updateEntity); err != nil {
 		glog.Errorf(c, "[svcuser.Update] daoUser UpdateById fail, err:%v, req:%s", err, gutils.ToJsonString(req))
-		return code.UserUpdateErr
+		return code.GetError(code.UserUpdateErr)
 	}
 	return nil
 }
@@ -82,11 +82,11 @@ func (svc *userSvc) Detail(c *gin.Context, req *dtouser.UserDetailReq) (*dtouser
 	detailEntity, err := daouser.NewUserDao().GetById(c, req.ID)
 	if err != nil {
 		glog.Errorf(c, "[svcuser.UserDetail] daoUser GetById fail, err:%v, req:%s", err, gutils.ToJsonString(req))
-		return nil, code.UserGetDetailErr
+		return nil, code.GetError(code.UserGetDetailErr)
 	}
 	// 判断是否存在
 	if detailEntity == nil || detailEntity.ID == 0 {
-		return nil, code.UserNotExistErr
+		return nil, code.GetError(code.UserNotExistErr)
 	}
 	Resp := &dtouser.UserDetailResp{
 		ID: detailEntity.ID,
@@ -114,7 +114,7 @@ func (svc *userSvc) PageList(c *gin.Context, req *dtouser.UserPageListReq) (*dto
 	dataList, total, err := daouser.NewUserDao().GetPageListByCond(c, cond)
 	if err != nil {
 		glog.Errorf(c, "[svcuser.UserPageList] daoUser GetPageListByCond fail, err:%v, req:%s", err, gutils.ToJsonString(req))
-		return nil, code.UserGetPageListErr
+		return nil, code.GetError(code.UserGetPageListErr)
 	}
 	list := make([]dtouser.UserPageListItem, 0, len(dataList))
 	for _, v := range dataList {

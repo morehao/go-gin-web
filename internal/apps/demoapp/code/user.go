@@ -2,32 +2,20 @@ package code
 
 import "github.com/morehao/golib/gerror"
 
-var UserCreateErr = gerror.Error{
-	Code: 100100,
-	Msg:  "创建用户失败",
-}
+const (
+	UserCreateErr      = 100100
+	UserDeleteErr      = 100101
+	UserUpdateErr      = 100102
+	UserGetDetailErr   = 100103
+	UserGetPageListErr = 100104
+	UserNotExistErr    = 100105
+)
 
-var UserDeleteErr = gerror.Error{
-	Code: 100101,
-	Msg:  "删除用户失败",
-}
-
-var UserUpdateErr = gerror.Error{
-	Code: 100102,
-	Msg:  "修改用户失败",
-}
-
-var UserGetDetailErr = gerror.Error{
-	Code: 100103,
-	Msg:  "查看用户失败",
-}
-
-var UserGetPageListErr = gerror.Error{
-	Code: 100104,
-	Msg:  "查看用户列表失败",
-}
-
-var UserNotExistErr = gerror.Error{
-	Code: 100105,
-	Msg:  "用户不存在",
+var userErrorMsgMap = gerror.CodeMsgMap{
+	UserCreateErr:      "创建用户失败",
+	UserDeleteErr:      "删除用户失败",
+	UserUpdateErr:      "修改用户失败",
+	UserGetDetailErr:   "查看用户失败",
+	UserGetPageListErr: "查看用户列表失败",
+	UserNotExistErr:    "用户不存在",
 }

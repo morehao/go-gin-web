@@ -1,0 +1,31 @@
+package code
+
+import (
+	"fmt"
+
+	"github.com/morehao/golib/gerror"
+)
+
+var errorMap = gerror.ErrorMap{}
+
+func registerError(codeMsgMap gerror.CodeMsgMap) {
+	for code, msg := range codeMsgMap {
+		// 判断是否已经存在
+		if _, ok := errorMap[code]; ok {
+			panic(fmt.Sprintf("error code %d already exists", code))
+		}
+		errorMap[code] = gerror.Error{
+			Code: code,
+			Msg:  msg,
+		}
+	}
+}
+
+func GetError(code int) gerror.Error {
+	return errorMap[code]
+}
+
+func init() {
+	registerError(dbErrorMsgMap)
+	registerError(userErrorMsgMap)
+}
