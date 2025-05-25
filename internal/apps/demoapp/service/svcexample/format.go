@@ -6,32 +6,32 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-type ExampleSvc interface {
-	FormatData(ctx *gin.Context) *dtoexample.FormatDataRes
+type FormatSvc interface {
+	FormatRes(ctx *gin.Context) *dtoexample.FormatResResp
 }
 
-var _ ExampleSvc = (*exampleSvc)(nil)
+var _ FormatSvc = (*formatSvc)(nil)
 
-type exampleSvc struct {
+type formatSvc struct {
 }
 
-func NewExampleSvc() ExampleSvc {
-	return &exampleSvc{}
+func NewFormatSvc() FormatSvc {
+	return &formatSvc{}
 }
 
-func (svc *exampleSvc) FormatData(ctx *gin.Context) *dtoexample.FormatDataRes {
-	return &dtoexample.FormatDataRes{
-		Items: []dtoexample.Item{
+func (svc *formatSvc) FormatRes(ctx *gin.Context) *dtoexample.FormatResResp {
+	return &dtoexample.FormatResResp{
+		Items: []dtoexample.FormatDataItem{
 			{
 				Price:     1.22245,
 				PriceList: []float64{1.22245, 1.22255},
 			},
 		},
-		Item: dtoexample.Item{
+		FormatDataItem: dtoexample.FormatDataItem{
 			Price:     1.22245,
 			PriceList: []float64{1.22245, 1.22255},
 		},
-		ItemMap: map[string]dtoexample.Item{
+		ItemMap: map[string]dtoexample.FormatDataItem{
 			"1": {
 				Price:     1.22245,
 				PriceList: []float64{1.22245, 1.22255},

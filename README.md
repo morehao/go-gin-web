@@ -133,7 +133,7 @@ make docker-run APP=demoapp
 
 ## Quickly Scaffold a New Project
 
-Install the `go-cutter` tool:
+Install the `cutter` tool:
 
 ```bash
 go install github.com/morehao/gocli@latest

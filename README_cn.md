@@ -98,7 +98,7 @@ make docker-build APP=demoapp
 ```
 
 ## 快速生成新项目
-安装`go-cutter`
+安装`cutter`
 ```shell
 go install github.com/morehao/gocli@latest
 ```
