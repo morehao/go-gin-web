@@ -155,6 +155,3 @@ See [cutter](https://github.com/morehao/gocli?tab=readme-ov-file#cutter) for mor
 
 All related components are implemented in the [golib](https://github.com/morehao/golib) package.
 
----
-
-如果你需要我再生成对应的 `README.md` 文件文本（包含 Markdown 标题格式），可以告诉我。
