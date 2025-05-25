@@ -7,6 +7,8 @@ MAIN_DIR = ./internal/apps/$(APP)
 BUILD_DIR = ./output/build
 VERSION = $(shell date +%Y%m%d%H%M%S)-$(shell git rev-parse --short HEAD 2>/dev/null || echo "unknown")
 
+APP_CONFIG_PATH = /app/config.yaml
+
 # go命令的环境变量
 GO_ENV = CGO_ENABLED=0 GOPROXY=https://goproxy.cn,direct
 
@@ -88,15 +90,23 @@ docker-build:
 	@echo "✅ Docker 镜像 $(DOCKER_IMAGE):latest 已构建完成"
 
 # 运行 Docker 容器
-docker-run:
-	$(call validate_app)
+docker-run: check-image
 	@echo "🚀 正在运行 $(APP) 容器..."
+	-@docker rm -f $(APP) 2>/dev/null || true
 	@docker run -d \
 		--name $(APP) \
-		--add-host=host.docker.internal:host-gateway \
+		-e APP_CONFIG_PATH=$(APP_CONFIG_PATH) \
 		-p 8099:8099 \
 		$(DOCKER_IMAGE):latest
 	@echo "✅ 容器 $(APP) 已启动，服务地址：http://localhost:8099"
+
+# 检查镜像是否存在，没有就构建
+check-image:
+	@if [ -n "$$(docker images -q $(DOCKER_IMAGE):latest)" ]; then \
+		echo "⚠️ 镜像 $(DOCKER_IMAGE):latest 已存在，准备删除重建..."; \
+		docker rmi -f $(DOCKER_IMAGE):latest; \
+	fi
+	$(MAKE) docker-build
 
 # 列出所有可用的应用程序
 list-apps:

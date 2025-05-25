@@ -1,6 +1,9 @@
 package config
 
 import (
+	"fmt"
+	"os"
+
 	"github.com/morehao/golib/conf"
 	"github.com/morehao/golib/glog"
 	"github.com/morehao/golib/storages/dbes"
@@ -29,9 +32,14 @@ func SetRootDir(rootDir string) {
 }
 
 func InitConf() {
-	// 加载配置
-	configFilepath := conf.GetAppRootDir() + "/config/config.yaml"
+	// 读取环境变量，如果没设置，则用默认路径
+	configPath := os.Getenv("APP_CONFIG_PATH")
+	if configPath == "" {
+		configPath = conf.GetAppRootDir() + "/config/config.yaml"
+	}
+	fmt.Println("Load config file:", configPath)
+
 	var cfg Config
-	conf.LoadConfig(configFilepath, &cfg)
+	conf.LoadConfig(configPath, &cfg)
 	Conf = &cfg
 }
