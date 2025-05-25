@@ -10,13 +10,13 @@ var errorMap = gerror.ErrorMap{}
 
 func registerError(codeMsgMap gerror.CodeMsgMap) {
 	for code, msg := range codeMsgMap {
-		// 判断是否已经存在
+
 		if _, ok := errorMap[code]; ok {
 			panic(fmt.Sprintf("error code %d already exists", code))
 		}
 		errorMap[code] = gerror.Error{
-			Code: code,
-			Msg:  msg,
+			Code:	code,
+			Msg:	msg,
 		}
 	}
 }

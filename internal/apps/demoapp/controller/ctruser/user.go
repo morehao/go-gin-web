@@ -9,11 +9,11 @@ import (
 )
 
 type UserCtr interface {
-	Create(c *gin.Context)
-	Delete(c *gin.Context)
-	Update(c *gin.Context)
-	Detail(c *gin.Context)
-	PageList(c *gin.Context)
+	Create(ctx *gin.Context)
+	Delete(ctx *gin.Context)
+	Update(ctx *gin.Context)
+	Detail(ctx *gin.Context)
+	PageList(ctx *gin.Context)
 }
 
 type userCtr struct {
@@ -28,116 +28,116 @@ func NewUserCtr() UserCtr {
 	}
 }
 
-// Create 创建用户
+// Create 创建用户管理
 // @Tags 用户管理
-// @Summary 创建用户
+// @Summary 创建用户管理
 // @accept application/json
 // @Produce application/json
-// @Param req body dtouser.UserCreateReq true "创建用户"
+// @Param req body dtouser.UserCreateReq true "创建用户管理"
 // @Success 200 {object} gincontext.DtoRender{data=dtouser.UserCreateResp} "{"code": 0,"data": "ok","msg": "success"}"
 // @Router /demoapp/user/create [post]
-func (ctr *userCtr) Create(c *gin.Context) {
+func (ctr *userCtr) Create(ctx *gin.Context) {
 	var req dtouser.UserCreateReq
-	if err := c.ShouldBindJSON(&req); err != nil {
-		gincontext.Fail(c, err)
+	if err := ctx.ShouldBindJSON(&req); err != nil {
+		gincontext.Fail(ctx, err)
 		return
 	}
-	res, err := ctr.userSvc.Create(c, &req)
+	res, err := ctr.userSvc.Create(ctx, &req)
 	if err != nil {
-		gincontext.Fail(c, err)
+		gincontext.Fail(ctx, err)
 		return
 	} else {
-		gincontext.Success(c, res)
+		gincontext.Success(ctx, res)
 	}
 }
 
-// Delete 删除用户
+// Delete 删除用户管理
 // @Tags 用户管理
-// @Summary 删除用户
+// @Summary 删除用户管理
 // @accept application/json
 // @Produce application/json
-// @Param req body dtouser.UserDeleteReq true "删除用户"
+// @Param req body dtouser.UserDeleteReq true "删除用户管理"
 // @Success 200 {object} gincontext.DtoRender{data=string} "{"code": 0,"data": "ok","msg": "删除成功"}"
 // @Router /demoapp/user/delete [post]
-func (ctr *userCtr) Delete(c *gin.Context) {
+func (ctr *userCtr) Delete(ctx *gin.Context) {
 	var req dtouser.UserDeleteReq
-	if err := c.ShouldBindJSON(&req); err != nil {
-		gincontext.Fail(c, err)
+	if err := ctx.ShouldBindJSON(&req); err != nil {
+		gincontext.Fail(ctx, err)
 		return
 	}
 
-	if err := ctr.userSvc.Delete(c, &req); err != nil {
-		gincontext.Fail(c, err)
+	if err := ctr.userSvc.Delete(ctx, &req); err != nil {
+		gincontext.Fail(ctx, err)
 		return
 	} else {
-		gincontext.Success(c, "删除成功")
+		gincontext.Success(ctx, "删除成功")
 	}
 }
 
-// Update 修改用户
+// Update 修改用户管理
 // @Tags 用户管理
-// @Summary 修改用户
+// @Summary 修改用户管理
 // @accept application/json
 // @Produce application/json
-// @Param req body dtouser.UserUpdateReq true "修改用户"
+// @Param req body dtouser.UserUpdateReq true "修改用户管理"
 // @Success 200 {object} gincontext.DtoRender{data=string} "{"code": 0,"data": "ok","msg": "修改成功"}"
 // @Router /demoapp/user/update [post]
-func (ctr *userCtr) Update(c *gin.Context) {
+func (ctr *userCtr) Update(ctx *gin.Context) {
 	var req dtouser.UserUpdateReq
-	if err := c.ShouldBindJSON(&req); err != nil {
-		gincontext.Fail(c, err)
+	if err := ctx.ShouldBindJSON(&req); err != nil {
+		gincontext.Fail(ctx, err)
 		return
 	}
-	if err := ctr.userSvc.Update(c, &req); err != nil {
-		gincontext.Fail(c, err)
+	if err := ctr.userSvc.Update(ctx, &req); err != nil {
+		gincontext.Fail(ctx, err)
 		return
 	} else {
-		gincontext.Success(c, "修改成功")
+		gincontext.Success(ctx, "修改成功")
 	}
 }
 
-// Detail 用户详情
+// Detail 用户管理详情
 // @Tags 用户管理
-// @Summary 用户详情
+// @Summary 用户管理详情
 // @accept application/json
 // @Produce application/json
-// @Param req query dtouser.UserDetailReq true "用户详情"
+// @Param req query dtouser.UserDetailReq true "用户管理详情"
 // @Success 200 {object} gincontext.DtoRender{data=dtouser.UserDetailResp} "{"code": 0,"data": "ok","msg": "success"}"
 // @Router /demoapp/user/detail [get]
-func (ctr *userCtr) Detail(c *gin.Context) {
+func (ctr *userCtr) Detail(ctx *gin.Context) {
 	var req dtouser.UserDetailReq
-	if err := c.ShouldBindQuery(&req); err != nil {
-		gincontext.Fail(c, err)
+	if err := ctx.ShouldBindQuery(&req); err != nil {
+		gincontext.Fail(ctx, err)
 		return
 	}
-	res, err := ctr.userSvc.Detail(c, &req)
+	res, err := ctr.userSvc.Detail(ctx, &req)
 	if err != nil {
-		gincontext.Fail(c, err)
+		gincontext.Fail(ctx, err)
 		return
 	} else {
-		gincontext.Success(c, res)
+		gincontext.Success(ctx, res)
 	}
 }
 
-// PageList 用户列表
+// PageList 用户管理列表
 // @Tags 用户管理
-// @Summary 用户列表分页
+// @Summary 用户管理列表分页
 // @accept application/json
 // @Produce application/json
-// @Param req query dtouser.UserPageListReq true "用户列表"
+// @Param req query dtouser.UserPageListReq true "用户管理列表"
 // @Success 200 {object} gincontext.DtoRender{data=dtouser.UserPageListResp} "{"code": 0,"data": "ok","msg": "success"}"
 // @Router /demoapp/user/pageList [get]
-func (ctr *userCtr) PageList(c *gin.Context) {
+func (ctr *userCtr) PageList(ctx *gin.Context) {
 	var req dtouser.UserPageListReq
-	if err := c.ShouldBindQuery(&req); err != nil {
-		gincontext.Fail(c, err)
+	if err := ctx.ShouldBindQuery(&req); err != nil {
+		gincontext.Fail(ctx, err)
 		return
 	}
-	res, err := ctr.userSvc.PageList(c, &req)
+	res, err := ctr.userSvc.PageList(ctx, &req)
 	if err != nil {
-		gincontext.Fail(c, err)
+		gincontext.Fail(ctx, err)
 		return
 	} else {
-		gincontext.Success(c, res)
+		gincontext.Success(ctx, res)
 	}
 }

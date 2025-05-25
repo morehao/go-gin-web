@@ -7,7 +7,7 @@ import (
 )
 
 type ExampleSvc interface {
-	FormatData(c *gin.Context) *dtoexample.FormatDataRes
+	FormatData(ctx *gin.Context) *dtoexample.FormatDataRes
 }
 
 var _ ExampleSvc = (*exampleSvc)(nil)
@@ -19,7 +19,7 @@ func NewExampleSvc() ExampleSvc {
 	return &exampleSvc{}
 }
 
-func (svc *exampleSvc) FormatData(c *gin.Context) *dtoexample.FormatDataRes {
+func (svc *exampleSvc) FormatData(ctx *gin.Context) *dtoexample.FormatDataRes {
 	return &dtoexample.FormatDataRes{
 		Items: []dtoexample.Item{
 			{

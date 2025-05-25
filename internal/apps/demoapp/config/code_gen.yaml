@@ -1,32 +1,23 @@
-mysql_dsn: root:123456@tcp(127.0.0.1:3306)/practice?charset=utf8mb4&parseTime=True&loc=Local
-layer_name_map:
-  model: model
+mysql_dsn: root:123456@tcp(127.0.0.1:3306)/demo?charset=utf8mb4&parseTime=True&loc=Local
+#layer_parent_dir_map:
+#  model: model
+#  dao: dao
+#layer_name_map:
+#  model: mysqlmodel
+#  dao: mysqldao
 module:
-  internal_app_root_dir: internal/demoapp
-  project_root_dir: demoapp
-  description: 公司账户管理
-  api_doc_tag: 公司账户管理
-  api_group: companyAccount
-  api_prefix: /demoapp/companyAccount
-  package_name: companyAccount
-  table_name: company_account
+  package_name: user
+  description: 用户管理
+  table_name: user
 model:
-  internal_app_root_dir: internal/demoapp
-  project_root_dir: demoapp
-  description: 公司
-  package_name: company
-  table_name: company
+  package_name: user
+  description: 用户
+  table_name: user
 api:
-  internal_app_root_dir: internal/demoapp
-  project_root_dir: demoapp
-  description: 禁用公司账户
-  package_name: companyAccount
-  sub_module_name: companyAccount
-  target_filename: company_account.go
+  package_name: user
+  target_filename: user_login_log.go
+  function_name: Delete
   http_method: POST
-  function_name: Disable
-  api_doc_tag: 公司账户管理
-  api_group:  companyAccount
-  api_prefix: /demoapp/companyAccount/
-  api_suffix: disable
+  description: 删除登录记录
+  api_doc_tag: 用户登录记录
 

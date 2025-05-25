@@ -4,6 +4,7 @@ import (
 	"gorm.io/gorm"
 )
 
+// UserEntity 用户管理表结构体
 type UserEntity struct {
 	gorm.Model
 	CompanyID    uint   `gorm:"column:company_id;comment:公司id"`
@@ -16,10 +17,10 @@ type UserEntity struct {
 
 type UserEntityList []UserEntity
 
-const TblNameUser = "user"
+const TableNameUser = "user"
 
 func (UserEntity) TableName() string {
-	return TblNameUser
+	return TableNameUser
 }
 
 func (l UserEntityList) ToMap() map[uint]UserEntity {

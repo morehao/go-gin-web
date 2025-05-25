@@ -11,8 +11,8 @@ type Base struct {
 	Tx *gorm.DB
 }
 
-// Db 获取Db
-func (base *Base) Db(ctx *gin.Context) (db *gorm.DB) {
+// DB 获取DB
+func (base *Base) DB(ctx *gin.Context) (db *gorm.DB) {
 	if base.Tx != nil {
 		return base.Tx.WithContext(ctx)
 	}
