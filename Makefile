@@ -82,6 +82,14 @@ swag:
 	@./scripts/swag.sh $(APP)
 	@echo "✅ Swagger 文档已生成"
 
+codegen:
+	$(call validate_app)
+	$(if $(MODE),, $(error ❌ 请使用 MODE 参数指定生成模式，例如 MODE=api,module,model))
+
+	@echo "🔧 开始生成代码：APP=$(APP)，MODE=$(MODE)"
+	@cd internal/apps/$(APP) && gocli generate --mode=$(MODE)
+
+
 # 构建 Docker 镜像
 docker-build:
 	$(call validate_app)

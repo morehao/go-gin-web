@@ -147,7 +147,7 @@ paths:
               type: object
       summary: 创建用户
       tags:
-      - 用户管理
+      - 用户
   /demoapp/user/delete:
     post:
       consumes:
@@ -173,7 +173,7 @@ paths:
               type: object
       summary: 删除用户
       tags:
-      - 用户管理
+      - 用户
   /demoapp/user/detail:
     get:
       consumes:
@@ -198,7 +198,7 @@ paths:
               type: object
       summary: 用户详情
       tags:
-      - 用户管理
+      - 用户
   /demoapp/user/pageList:
     get:
       consumes:
@@ -227,7 +227,7 @@ paths:
               type: object
       summary: 用户列表分页
       tags:
-      - 用户管理
+      - 用户
   /demoapp/user/update:
     post:
       consumes:
@@ -253,5 +253,5 @@ paths:
               type: object
       summary: 修改用户
       tags:
-      - 用户管理
+      - 用户
 swagger: "2.0"

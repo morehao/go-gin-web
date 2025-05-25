@@ -28,12 +28,12 @@ func NewUserCtr() UserCtr {
 	}
 }
 
-// Create 创建用户管理
-// @Tags 用户管理
-// @Summary 创建用户管理
+// Create 创建用户
+// @Tags 用户
+// @Summary 创建用户
 // @accept application/json
 // @Produce application/json
-// @Param req body dtouser.UserCreateReq true "创建用户管理"
+// @Param req body dtouser.UserCreateReq true "创建用户"
 // @Success 200 {object} gincontext.DtoRender{data=dtouser.UserCreateResp} "{"code": 0,"data": "ok","msg": "success"}"
 // @Router /demoapp/user/create [post]
 func (ctr *userCtr) Create(ctx *gin.Context) {
@@ -51,12 +51,12 @@ func (ctr *userCtr) Create(ctx *gin.Context) {
 	}
 }
 
-// Delete 删除用户管理
-// @Tags 用户管理
-// @Summary 删除用户管理
+// Delete 删除用户
+// @Tags 用户
+// @Summary 删除用户
 // @accept application/json
 // @Produce application/json
-// @Param req body dtouser.UserDeleteReq true "删除用户管理"
+// @Param req body dtouser.UserDeleteReq true "删除用户"
 // @Success 200 {object} gincontext.DtoRender{data=string} "{"code": 0,"data": "ok","msg": "删除成功"}"
 // @Router /demoapp/user/delete [post]
 func (ctr *userCtr) Delete(ctx *gin.Context) {
@@ -74,12 +74,12 @@ func (ctr *userCtr) Delete(ctx *gin.Context) {
 	}
 }
 
-// Update 修改用户管理
-// @Tags 用户管理
-// @Summary 修改用户管理
+// Update 修改用户
+// @Tags 用户
+// @Summary 修改用户
 // @accept application/json
 // @Produce application/json
-// @Param req body dtouser.UserUpdateReq true "修改用户管理"
+// @Param req body dtouser.UserUpdateReq true "修改用户"
 // @Success 200 {object} gincontext.DtoRender{data=string} "{"code": 0,"data": "ok","msg": "修改成功"}"
 // @Router /demoapp/user/update [post]
 func (ctr *userCtr) Update(ctx *gin.Context) {
@@ -96,12 +96,12 @@ func (ctr *userCtr) Update(ctx *gin.Context) {
 	}
 }
 
-// Detail 用户管理详情
-// @Tags 用户管理
-// @Summary 用户管理详情
+// Detail 用户详情
+// @Tags 用户
+// @Summary 用户详情
 // @accept application/json
 // @Produce application/json
-// @Param req query dtouser.UserDetailReq true "用户管理详情"
+// @Param req query dtouser.UserDetailReq true "用户详情"
 // @Success 200 {object} gincontext.DtoRender{data=dtouser.UserDetailResp} "{"code": 0,"data": "ok","msg": "success"}"
 // @Router /demoapp/user/detail [get]
 func (ctr *userCtr) Detail(ctx *gin.Context) {
@@ -119,12 +119,12 @@ func (ctr *userCtr) Detail(ctx *gin.Context) {
 	}
 }
 
-// PageList 用户管理列表
-// @Tags 用户管理
-// @Summary 用户管理列表分页
+// PageList 用户列表
+// @Tags 用户
+// @Summary 用户列表分页
 // @accept application/json
 // @Produce application/json
-// @Param req query dtouser.UserPageListReq true "用户管理列表"
+// @Param req query dtouser.UserPageListReq true "用户列表"
 // @Success 200 {object} gincontext.DtoRender{data=dtouser.UserPageListResp} "{"code": 0,"data": "ok","msg": "success"}"
 // @Router /demoapp/user/pageList [get]
 func (ctr *userCtr) PageList(ctx *gin.Context) {

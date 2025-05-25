@@ -24,7 +24,7 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "用户管理"
+                    "用户"
                 ],
                 "summary": "创建用户",
                 "parameters": [
@@ -69,7 +69,7 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "用户管理"
+                    "用户"
                 ],
                 "summary": "删除用户",
                 "parameters": [
@@ -114,7 +114,7 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "用户管理"
+                    "用户"
                 ],
                 "summary": "用户详情",
                 "parameters": [
@@ -157,7 +157,7 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "用户管理"
+                    "用户"
                 ],
                 "summary": "用户列表分页",
                 "parameters": [
@@ -206,7 +206,7 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "用户管理"
+                    "用户"
                 ],
                 "summary": "修改用户",
                 "parameters": [
