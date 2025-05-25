@@ -11,5 +11,10 @@ func exampleRouter(routerGroup *gin.RouterGroup) {
 	exampleGroup := routerGroup.Group("/example")
 	{
 		exampleGroup.GET("/formatData", exampleCtr.FormatData)
+		exampleGroup.GET("/sseTime", exampleCtr.SSETime)
+		exampleGroup.GET("/sseTimeRaw", exampleCtr.SSETimeRaw)
+		exampleGroup.GET("/sseProcess", exampleCtr.SSEProcess)
+		exampleGroup.GET("/sseChat", exampleCtr.SSEChat)
+		exampleGroup.GET("/sseRaw", exampleCtr.SSERaw)
 	}
 }

@@ -21,17 +21,17 @@ func NewExampleSvc() ExampleSvc {
 
 func (svc *exampleSvc) FormatData(ctx *gin.Context) *dtoexample.FormatDataRes {
 	return &dtoexample.FormatDataRes{
-		Items: []dtoexample.Item{
+		Items: []dtoexample.FormatDataItem{
 			{
 				Price:     1.22245,
 				PriceList: []float64{1.22245, 1.22255},
 			},
 		},
-		Item: dtoexample.Item{
+		FormatDataItem: dtoexample.FormatDataItem{
 			Price:     1.22245,
 			PriceList: []float64{1.22245, 1.22255},
 		},
-		ItemMap: map[string]dtoexample.Item{
+		ItemMap: map[string]dtoexample.FormatDataItem{
 			"1": {
 				Price:     1.22245,
 				PriceList: []float64{1.22245, 1.22255},
