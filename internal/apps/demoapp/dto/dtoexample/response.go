@@ -2,7 +2,7 @@ package dtoexample
 
 import "fmt"
 
-type FormatDataRes struct {
+type FormatResResp struct {
 	Items []FormatDataItem `json:"items"`
 	FormatDataItem
 	ItemMap   map[string]FormatDataItem `json:"itemMap"`

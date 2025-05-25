@@ -7,41 +7,29 @@ import (
 	"time"
 
 	"go-gin-web/internal/apps/demoapp/dto/dtoexample"
-	"go-gin-web/internal/apps/demoapp/service/svcexample"
 
 	"github.com/gin-gonic/gin"
-	"github.com/morehao/golib/gcontext/gincontext"
 )
 
-type ExampleCtr interface {
-	FormatData(ctx *gin.Context)
-	SSETime(ctx *gin.Context)
-	SSETimeRaw(ctx *gin.Context)
-	SSEProcess(ctx *gin.Context)
-	SSEChat(ctx *gin.Context)
-	SSERaw(ctx *gin.Context)
+type SSECtr interface {
+	Time(ctx *gin.Context)
+	TimeRaw(ctx *gin.Context)
+	Process(ctx *gin.Context)
+	Chat(ctx *gin.Context)
+	Raw(ctx *gin.Context)
 }
 
-type exampleCtr struct {
-	exampleSvc svcexample.ExampleSvc
+type sseCtr struct {
 }
 
-var _ ExampleCtr = (*exampleCtr)(nil)
+var _ SSECtr = (*sseCtr)(nil)
 
-func NewExampleCtr() ExampleCtr {
-	return &exampleCtr{
-		exampleSvc: svcexample.NewExampleSvc(),
-	}
+func NewSSECtr() SSECtr {
+	return &sseCtr{}
 }
 
-func (ctr *exampleCtr) FormatData(ctx *gin.Context) {
-	res := ctr.exampleSvc.FormatData(ctx)
-
-	gincontext.SuccessWithFormat(ctx, res)
-}
-
-// SSETime 实时时间流示例
-func (ctr *exampleCtr) SSETime(ctx *gin.Context) {
+// Time 实时时间流示例
+func (ctr *sseCtr) Time(ctx *gin.Context) {
 	// 设置 SSE 响应头
 	ctx.Header("Content-Type", "text/event-stream")
 	ctx.Header("Cache-Control", "no-cache")
@@ -72,8 +60,8 @@ func (ctr *exampleCtr) SSETime(ctx *gin.Context) {
 	})
 }
 
-// SSETimeRaw Write写入实时时间流示例
-func (ctr *exampleCtr) SSETimeRaw(ctx *gin.Context) {
+// TimeRaw Write写入实时时间流示例
+func (ctr *sseCtr) TimeRaw(ctx *gin.Context) {
 	// 设置 SSE 响应头
 	ctx.Header("Content-Type", "text/event-stream")
 	ctx.Header("Cache-Control", "no-cache")
@@ -109,8 +97,8 @@ func (ctr *exampleCtr) SSETimeRaw(ctx *gin.Context) {
 	})
 }
 
-// SSEProcess 模拟数据处理进度示例
-func (ctr *exampleCtr) SSEProcess(ctx *gin.Context) {
+// Process 模拟数据处理进度示例
+func (ctr *sseCtr) Process(ctx *gin.Context) {
 	// 设置 SSE 响应头
 	ctx.Header("Content-Type", "text/event-stream")
 	ctx.Header("Cache-Control", "no-cache")
@@ -141,8 +129,8 @@ func (ctr *exampleCtr) SSEProcess(ctx *gin.Context) {
 	})
 }
 
-// SSEChat 聊天消息流示例
-func (ctr *exampleCtr) SSEChat(ctx *gin.Context) {
+// Chat 聊天消息流示例
+func (ctr *sseCtr) Chat(ctx *gin.Context) {
 	// 设置 SSE 响应头
 	ctx.Header("Content-Type", "text/event-stream")
 	ctx.Header("Cache-Control", "no-cache")
@@ -191,8 +179,8 @@ func (ctr *exampleCtr) SSEChat(ctx *gin.Context) {
 	})
 }
 
-// SSERaw 自定义格式的 SSE 示例
-func (ctr *exampleCtr) SSERaw(ctx *gin.Context) {
+// Raw 自定义格式的 SSE 示例
+func (ctr *sseCtr) Raw(ctx *gin.Context) {
 	// 设置 SSE 响应头
 	ctx.Header("Content-Type", "text/event-stream")
 	ctx.Header("Cache-Control", "no-cache")

@@ -6,15 +6,22 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func exampleRouter(routerGroup *gin.RouterGroup) {
-	exampleCtr := ctrexample.NewExampleCtr()
-	exampleGroup := routerGroup.Group("/example")
+func formatRouter(routerGroup *gin.RouterGroup) {
+	formatCtr := ctrexample.NewFormatCtr()
+	formatGroup := routerGroup.Group("/format")
 	{
-		exampleGroup.GET("/formatData", exampleCtr.FormatData)
-		exampleGroup.GET("/sseTime", exampleCtr.SSETime)
-		exampleGroup.GET("/sseTimeRaw", exampleCtr.SSETimeRaw)
-		exampleGroup.GET("/sseProcess", exampleCtr.SSEProcess)
-		exampleGroup.GET("/sseChat", exampleCtr.SSEChat)
-		exampleGroup.GET("/sseRaw", exampleCtr.SSERaw)
+		formatGroup.GET("/formatRes", formatCtr.FormatRes)
+	}
+}
+
+func sseRouter(routerGroup *gin.RouterGroup) {
+	sseCtr := ctrexample.NewSSECtr()
+	sseGroup := routerGroup.Group("/sse")
+	{
+		sseGroup.GET("/time", sseCtr.Time)
+		sseGroup.GET("/timeRaw", sseCtr.TimeRaw)
+		sseGroup.GET("/process", sseCtr.Process)
+		sseGroup.GET("/chat", sseCtr.Chat)
+		sseGroup.GET("/raw", sseCtr.Raw)
 	}
 }
