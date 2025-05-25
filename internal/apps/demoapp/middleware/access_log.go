@@ -22,24 +22,24 @@ var (
 )
 
 func AccessLog() gin.HandlerFunc {
-	return func(c *gin.Context) {
+	return func(ctx *gin.Context) {
 		start := time.Now()
 
-		requestId := getRequestId(c)
-		c.Set(glog.KeyRequestId, requestId)
+		requestId := getRequestId(ctx)
+		ctx.Set(glog.KeyRequestId, requestId)
 
-		path := c.Request.URL.Path
-		c.Set(glog.KeyUri, path)
+		path := ctx.Request.URL.Path
+		ctx.Set(glog.KeyUri, path)
 
-		reqQuery := gincontext.GetReqQuery(c)
+		reqQuery := gincontext.GetReqQuery(ctx)
 		// 截断参数
 		if len(reqQuery) > reqQueryMaxLen {
 			reqQuery = reqQuery[:reqQueryMaxLen]
 		}
 
-		reqBody, getBodyErr := gincontext.GetReqBody(c)
+		reqBody, getBodyErr := gincontext.GetReqBody(ctx)
 		if getBodyErr != nil {
-			c.Error(getBodyErr)
+			ctx.Error(getBodyErr)
 		}
 		reqBodySize := len(reqBody)
 		if len(reqBody) > reqBodyMaxLen {
@@ -47,10 +47,10 @@ func AccessLog() gin.HandlerFunc {
 		}
 
 		// Body writer
-		respBodyWriter := &gincontext.RespWriter{Body: bytes.NewBufferString(""), ResponseWriter: c.Writer}
-		c.Writer = respBodyWriter
+		respBodyWriter := &gincontext.RespWriter{Body: bytes.NewBufferString(""), ResponseWriter: ctx.Writer}
+		ctx.Writer = respBodyWriter
 
-		c.Next()
+		ctx.Next()
 
 		end := time.Now()
 		cost := glog.GetRequestCost(start, end)
@@ -63,7 +63,7 @@ func AccessLog() gin.HandlerFunc {
 			responseBodySize = len(responseBody)
 			if responseBodySize > 0 {
 				if err := jsoniter.Unmarshal([]byte(responseBody), &errInfo); err != nil {
-					c.Error(err)
+					ctx.Error(err)
 				}
 			}
 			if len(responseBody) > respBodyMaxLen {
@@ -72,17 +72,17 @@ func AccessLog() gin.HandlerFunc {
 		}
 
 		keysAndValues := []interface{}{
-			glog.KeyHost, c.Request.Host,
-			glog.KeyClientIp, gincontext.GetClientIp(c),
-			glog.KeyHandle, c.HandlerName(),
-			glog.KeyProto, c.Request.Proto,
-			glog.KeyRefer, c.Request.Referer(),
-			glog.KeyUserAgent, c.Request.UserAgent(),
-			glog.KeyHeader, gincontext.GetHeader(c),
-			glog.KeyCookie, gincontext.GetCookie(c),
+			glog.KeyHost, ctx.Request.Host,
+			glog.KeyClientIp, gincontext.GetClientIp(ctx),
+			glog.KeyHandle, ctx.HandlerName(),
+			glog.KeyProto, ctx.Request.Proto,
+			glog.KeyRefer, ctx.Request.Referer(),
+			glog.KeyUserAgent, ctx.Request.UserAgent(),
+			glog.KeyHeader, gincontext.GetHeader(ctx),
+			glog.KeyCookie, gincontext.GetCookie(ctx),
 			glog.KeyUri, path,
-			glog.KeyMethod, c.Request.Method,
-			glog.KeyHttpStatusCode, c.Writer.Status(),
+			glog.KeyMethod, ctx.Request.Method,
+			glog.KeyHttpStatusCode, ctx.Writer.Status(),
 			glog.KeyRequestQuery, reqQuery,
 			glog.KeyRequestBody, reqBody,
 			glog.KeyRequestBodySize, reqBodySize,
@@ -93,16 +93,16 @@ func AccessLog() gin.HandlerFunc {
 			glog.KeyCost, cost,
 			glog.KeyErrorCode, errInfo.Code,
 			glog.KeyErrorMsg, errInfo.Msg,
-			glog.KeyRequestErr, c.Errors.ByType(gin.ErrorTypePrivate).String(),
+			glog.KeyRequestErr, ctx.Errors.ByType(gin.ErrorTypePrivate).String(),
 		}
-		glog.Infow(c, glog.MsgFlagNotice, keysAndValues...)
+		glog.Infow(ctx, glog.MsgFlagNotice, keysAndValues...)
 	}
 }
 
-func getRequestId(c *gin.Context) string {
-	requestId := c.Request.Header.Get(glog.KeyRequestId)
+func getRequestId(ctx *gin.Context) string {
+	requestId := ctx.Request.Header.Get(glog.KeyRequestId)
 	if requestId == "" {
-		requestId = c.GetString(glog.KeyRequestId)
+		requestId = ctx.GetString(glog.KeyRequestId)
 	}
 	if requestId == "" {
 		requestId = glog.GenRequestID()
@@ -114,36 +114,36 @@ func AccessLogOtel() gin.HandlerFunc {
 	traceProvider := trace.NewTracerProvider()
 	otel.SetTracerProvider(traceProvider)
 	tr := traceProvider.Tracer("gin-server")
-	return func(c *gin.Context) {
-		traceId, spanId, traceFlags := getTraceInfo(c, tr)
-		c.Set(glog.KeyTraceId, traceId)
-		c.Set(glog.KeyTraceFlags, traceFlags)
-		c.Set(glog.KeySpanId, spanId)
-		c.Set(glog.KeyRequestId, c.Request.Header.Get(glog.KeyRequestId))
-		glog.Info(c, "[middleware]")
-		c.Next()
+	return func(ctx *gin.Context) {
+		traceId, spanId, traceFlags := getTraceInfo(ctx, tr)
+		ctx.Set(glog.KeyTraceId, traceId)
+		ctx.Set(glog.KeyTraceFlags, traceFlags)
+		ctx.Set(glog.KeySpanId, spanId)
+		ctx.Set(glog.KeyRequestId, ctx.Request.Header.Get(glog.KeyRequestId))
+		glog.Info(ctx, "[middleware]")
+		ctx.Next()
 	}
 }
 
-func getTraceInfo(c *gin.Context, tracer oteltrace.Tracer) (string, string, string) {
-	traceId := c.Request.Header.Get(glog.KeyTraceId)
-	spanId := c.Request.Header.Get(glog.KeySpanId)
-	traceFlags := c.Request.Header.Get(glog.KeyTraceFlags)
+func getTraceInfo(ctx *gin.Context, tracer oteltrace.Tracer) (string, string, string) {
+	traceId := ctx.Request.Header.Get(glog.KeyTraceId)
+	spanId := ctx.Request.Header.Get(glog.KeySpanId)
+	traceFlags := ctx.Request.Header.Get(glog.KeyTraceFlags)
 
 	if traceId == "" {
-		traceId = c.GetString(glog.KeyTraceId)
-		spanId = c.GetString(glog.KeySpanId)
-		traceFlags = c.GetString(glog.KeyTraceFlags)
+		traceId = ctx.GetString(glog.KeyTraceId)
+		spanId = ctx.GetString(glog.KeySpanId)
+		traceFlags = ctx.GetString(glog.KeyTraceFlags)
 	}
 
-	rCtx := c.Request.Context()
+	rCtx := ctx.Request.Context()
 	if traceId == "" {
-		spanCtx, span := tracer.Start(rCtx, c.Request.URL.Path)
+		spanCtx, span := tracer.Start(rCtx, ctx.Request.URL.Path)
 		defer span.End()
 		traceId = span.SpanContext().TraceID().String()
 		spanId = span.SpanContext().SpanID().String()
 		traceFlags = span.SpanContext().TraceFlags().String()
-		c.Request = c.Request.WithContext(spanCtx)
+		ctx.Request = ctx.Request.WithContext(spanCtx)
 	} else {
 		newTraceId, _ := oteltrace.TraceIDFromHex(traceId)
 		traceFlagsByte := byte(1)
@@ -168,12 +168,12 @@ func getTraceInfo(c *gin.Context, tracer oteltrace.Tracer) (string, string, stri
 		}
 		spanContext := oteltrace.NewSpanContext(spanContextCfg)
 		spanCtx := oteltrace.ContextWithRemoteSpanContext(rCtx, spanContext)
-		_, span := tracer.Start(spanCtx, c.Request.URL.Path)
+		_, span := tracer.Start(spanCtx, ctx.Request.URL.Path)
 		defer span.End()
 		traceId = span.SpanContext().TraceID().String()
 		spanId = span.SpanContext().SpanID().String()
 		traceFlags = span.SpanContext().TraceFlags().String()
-		c.Request = c.Request.WithContext(spanCtx)
+		ctx.Request = ctx.Request.WithContext(spanCtx)
 	}
 	return traceId, spanId, traceFlags
 }

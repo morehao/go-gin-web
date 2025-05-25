@@ -11,13 +11,13 @@ module:
   table_name: user
 model:
   package_name: user
-  description: 用户
-  table_name: user
+  description: 用户登录记录
+  table_name: user_login_log
 api:
   package_name: user
   target_filename: user_login_log.go
-  function_name: Delete
+  function_name: ResetStatusV2
   http_method: POST
-  description: 删除登录记录
+  description: 重置登录记录V2
   api_doc_tag: 用户登录记录
 
