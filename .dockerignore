@@ -2,6 +2,6 @@
 .DS_Store
 .git
 
-apps/internal/genCode/*
-apps/internal/resource/*
+internal/apps/internal/genCode/*
+internal/apps/internal/resource/*
 log/*

@@ -8,7 +8,6 @@ require (
 	github.com/elastic/go-elasticsearch/v8 v8.17.1
 	github.com/gin-gonic/gin v1.10.0
 	github.com/json-iterator/go v1.1.12
-	github.com/morehao/go-tools v1.2.8
 	github.com/redis/go-redis/v9 v9.7.3
 	github.com/stretchr/testify v1.10.0
 	github.com/swaggo/files v1.0.1
@@ -52,6 +51,7 @@ require (
 	github.com/mattn/go-isatty v0.0.20 // indirect
 	github.com/modern-go/concurrent v0.0.0-20180306012644-bacd9c7ef1dd // indirect
 	github.com/modern-go/reflect2 v1.0.2 // indirect
+	github.com/morehao/golib v1.2.11 // indirect
 	github.com/pelletier/go-toml/v2 v2.2.2 // indirect
 	github.com/pkg/errors v0.9.1 // indirect
 	github.com/pmezard/go-difflib v1.0.0 // indirect

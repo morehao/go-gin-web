@@ -3,10 +3,10 @@ package storages
 import (
 	"fmt"
 
-	"go-gin-web/apps/demo/config"
+	"go-gin-web/internal/apps/demoapp/config"
 
 	"github.com/elastic/go-elasticsearch/v8"
-	"github.com/morehao/go-tools/storages/dbes"
+	"github.com/morehao/golib/storages/dbes"
 )
 
 var (
@@ -14,7 +14,7 @@ var (
 )
 
 const (
-	ESServiceDemo = "demo"
+	ESServiceDemo = "demoapp"
 )
 
 func InitMultiEs(configs []dbes.ESConfig) error {

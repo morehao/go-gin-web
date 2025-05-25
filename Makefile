@@ -3,9 +3,11 @@
 # 构建相关变量
 APP =
 BINARY = $(APP)
-MAIN_DIR = ./apps/$(APP)/cmd
+MAIN_DIR = ./internal/apps/$(APP)
 BUILD_DIR = ./output/build
 VERSION = $(shell date +%Y%m%d%H%M%S)-$(shell git rev-parse --short HEAD 2>/dev/null || echo "unknown")
+
+APP_CONFIG_PATH = /app/config.yaml
 
 # go命令的环境变量
 GO_ENV = CGO_ENABLED=0 GOPROXY=https://goproxy.cn,direct
@@ -25,8 +27,8 @@ define validate_app
 		echo "❌ 请使用 APP=<名称> 指定要操作的应用程序，例如：make build APP=demo"; \
 		exit 1; \
 	fi
-	@if [ ! -d "./apps/$(APP)" ]; then \
-		echo "❌ 应用程序 '$(APP)' 不存在于 ./apps 目录下，请使用 make list-apps 查看可用应用"; \
+	@if [ ! -d "./internal/apps/$(APP)" ]; then \
+		echo "❌ 应用程序 '$(APP)' 不存在于 ./internal/apps 目录下"; \
 		exit 1; \
 	fi
 endef
@@ -80,28 +82,44 @@ swag:
 	@./scripts/swag.sh $(APP)
 	@echo "✅ Swagger 文档已生成"
 
+codegen:
+	$(call validate_app)
+	$(if $(MODE),, $(error ❌ 请使用 MODE 参数指定生成模式，例如 MODE=api,module,model))
+
+	@echo "🔧 开始生成代码：APP=$(APP)，MODE=$(MODE)"
+	@cd internal/apps/$(APP) && gocli generate --mode=$(MODE)
+
+
 # 构建 Docker 镜像
 docker-build:
 	$(call validate_app)
 	@echo "🐳 正在构建 $(APP) 的 Docker 镜像..."
-	@docker build -t $(DOCKER_IMAGE):latest -f ./apps/$(APP)/internal/scripts/Dockerfile .
+	@docker build -t $(DOCKER_IMAGE):latest -f ./internal/apps/$(APP)/scripts/Dockerfile .
 	@echo "✅ Docker 镜像 $(DOCKER_IMAGE):latest 已构建完成"
 
 # 运行 Docker 容器
-docker-run:
-	$(call validate_app)
+docker-run: check-image
 	@echo "🚀 正在运行 $(APP) 容器..."
+	-@docker rm -f $(APP) 2>/dev/null || true
 	@docker run -d \
 		--name $(APP) \
-		--add-host=host.docker.internal:host-gateway \
+		-e APP_CONFIG_PATH=$(APP_CONFIG_PATH) \
 		-p 8099:8099 \
 		$(DOCKER_IMAGE):latest
 	@echo "✅ 容器 $(APP) 已启动，服务地址：http://localhost:8099"
 
+# 检查镜像是否存在，没有就构建
+check-image:
+	@if [ -n "$$(docker images -q $(DOCKER_IMAGE):latest)" ]; then \
+		echo "⚠️ 镜像 $(DOCKER_IMAGE):latest 已存在，准备删除重建..."; \
+		docker rmi -f $(DOCKER_IMAGE):latest; \
+	fi
+	$(MAKE) docker-build
+
 # 列出所有可用的应用程序
 list-apps:
 	@echo "📂 可用的应用程序:"
-	@ls -1 ./apps
+	@ls -1 ./internal/apps
 
 # 运行代码检查工具
 lint:

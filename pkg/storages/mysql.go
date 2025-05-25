@@ -3,9 +3,9 @@ package storages
 import (
 	"fmt"
 
-	"go-gin-web/apps/demo/config"
+	"go-gin-web/internal/apps/demoapp/config"
 
-	"github.com/morehao/go-tools/storages/dbmysql"
+	"github.com/morehao/golib/storages/dbmysql"
 	"gorm.io/gorm"
 )
 

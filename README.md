@@ -6,29 +6,44 @@
 # 功能实现
 ## 项目结构设计
 
-采用标准的Go项目结构，包含cmd、internal、pkg、log等目录。目录结构如下：
+参考了[project-layout](https://github.com/golang-standards/project-layout)。当前项目结构如下：
 ``` bash
 .
-├── config
-├── docs
+├── cmd
+│   └── demoapp
 ├── internal
-│   ├── app
-│   │   ├── controller
-│   │   ├── dto
-│   │   ├── middleware
-│   │   ├── model
-│   │   ├── object
-│   │   ├── router
-│   │   └── service
-│   └── pkg
-│       ├── context
-│       ├── errorCode
-│       ├── helper
-│       └── test
+│   └── apps
+│       └── demoapp
+│           ├── code
+│           ├── config
+│           ├── controller
+│           │   ├── ctrexample
+│           │   └── ctruser
+│           ├── dao
+│           │   └── daouser
+│           ├── docs
+│           ├── dto
+│           │   ├── dtoexample
+│           │   └── dtouser
+│           ├── middleware
+│           ├── model
+│           ├── object
+│           │   ├── objcommon
+│           │   └── objuser
+│           ├── router
+│           ├── scripts
+│           └── service
+│               ├── svcexample
+│               └── svcuser
 ├── log
+├── output
+│   └── build
 ├── pkg
+│   ├── storages
+│   ├── test
 │   └── utils
-└── sql
+└── scripts
+    └── sql
 ```
 
 
@@ -53,16 +68,16 @@ GinRender 组件用于统一处理 HTTP 响应，确保响应格式一致。
 
 安装命令行终端
 ```bash
-go install github.com/morehao/gcli@latest
+go install github.com/morehao/gocli@latest
 ```
-确保配置文件有中有代码生成所需要的配置项`code_gen`，在`项目根目录下`使用`gcli`生成代码，示例如下：
+确保项目应用目录下有代码生成配置文件，示例：`go-gin-web/internal/apps/demoapp/config/code_gen.yaml`。代码生成命令如下：
 ```bash
 # 基于表生成整个功能模块
-gcli generate -m module
+make codegen MODE=module APP=demoapp
 # 生成model代码
-gcli generate -m model
+make codegen MODE=model APP=demoapp
 # 生成单个接口代码
-gcli generate -m api
+make codegen MODE=api APP=demoapp
 ```
 
 ## 接口文档
@@ -73,20 +88,19 @@ go install github.com/swaggo/swag/cmd/swag@latest
 ```
 生成接口文档
 ``` shell
-chmod +x scripts/swag.sh
-scripts/swag.sh demo
+make swag APP=demoapp
 ```
 访问接口文档
-访问 `http://localhost:8099/demo/swagger/index.html` 即可查看接口文档。
+访问 `http://localhost:8099/demoapp/swagger/index.html` 即可查看接口文档。
 
 ## 项目部署
 构建镜像
 ``` bash
-make APP=demo docker-build
+make docker-build APP=demoapp
 ```
 运行容器
 ``` bash
- make APP=demo docker-run
+ make docker-run APP=demoapp
 ```
 
 ## 快速生成新项目
@@ -109,5 +123,5 @@ go-cutter -d /goProject/yourAppName
 - Makefile文件
 
 ## 相关组件
-相关组件均在[go-tools](https://github.com/morehao/go-tools)包中实现。
+相关组件均在[golib](https://github.com/morehao/golib)包中实现。
 

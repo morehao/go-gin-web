@@ -1,26 +1,48 @@
 package test
 
 import (
-	"path"
-	"runtime"
 	"sync"
-
-	helper2 "go-gin-web/pkg/storages"
 
 	"github.com/gin-gonic/gin"
 )
 
+var initializer Initializer
 var once sync.Once
+var lock sync.Mutex
 
-func Init() {
+func Init(appName string) {
 	once.Do(func() {
-		_, file, _, _ := runtime.Caller(0)
-		rootDir := path.Dir(path.Dir(path.Dir(path.Dir(file))))
-		helper2.SetRootDir(rootDir)
-		helper2.ConfInit()
-		helper2.LogInit()
-		helper2.ResourceInit()
+		lock.Lock()
+		defer lock.Unlock()
+		initFunc, ok := initFuncMap[appName]
+		if !ok {
+			panic("unknown app name: " + appName)
+		}
+		initializer = initFunc()
+		if err := initializer.Initialize(); err != nil {
+			panic(err)
+		}
 	})
+}
+
+func Done() {
+	if initializer == nil {
+		panic("initializer is nil")
+	}
+	if err := initializer.Close(); err != nil {
+		panic(err)
+	}
+}
+
+type Initializer interface {
+	Initialize() error
+	Close() error
+}
+
+type InitFunc func() Initializer
+
+var initFuncMap = map[string]InitFunc{
+	AppNameDemo: newDemo,
 }
 
 func NewCtx(opts ...Option) *gin.Context {
@@ -29,8 +51,4 @@ func NewCtx(opts ...Option) *gin.Context {
 		opt(ctx)
 	}
 	return ctx
-}
-
-func Done() {
-	helper2.Close()
 }

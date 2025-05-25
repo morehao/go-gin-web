@@ -1,0 +1,483 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "contact": {}
+    },
+    "paths": {
+<<<<<<<< HEAD:apps/demo/internal/docs/swagger.json
+        "/demo/user/create": {
+========
+        "/demoapp/user/create": {
+>>>>>>>> develop:internal/apps/demoapp/docs/swagger.json
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "用户"
+                ],
+                "summary": "创建用户",
+                "parameters": [
+                    {
+                        "description": "创建用户",
+                        "name": "req",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+<<<<<<<< HEAD:apps/demo/internal/docs/swagger.json
+                            "$ref": "#/definitions/go-gin-web_apps_demo_internal_dto_dtoUser.UserCreateReq"
+========
+                            "$ref": "#/definitions/go-gin-web_internal_apps_demoapp_dto_dtouser.UserCreateReq"
+>>>>>>>> develop:internal/apps/demoapp/docs/swagger.json
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "{\"code\": 0,\"data\": \"ok\",\"msg\": \"success\"}",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/gincontext.DtoRender"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+<<<<<<<< HEAD:apps/demo/internal/docs/swagger.json
+                                            "$ref": "#/definitions/go-gin-web_apps_demo_internal_dto_dtoUser.UserCreateResp"
+========
+                                            "$ref": "#/definitions/go-gin-web_internal_apps_demoapp_dto_dtouser.UserCreateResp"
+>>>>>>>> develop:internal/apps/demoapp/docs/swagger.json
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        },
+<<<<<<<< HEAD:apps/demo/internal/docs/swagger.json
+        "/demo/user/delete": {
+========
+        "/demoapp/user/delete": {
+>>>>>>>> develop:internal/apps/demoapp/docs/swagger.json
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "用户"
+                ],
+                "summary": "删除用户",
+                "parameters": [
+                    {
+                        "description": "删除用户",
+                        "name": "req",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+<<<<<<<< HEAD:apps/demo/internal/docs/swagger.json
+                            "$ref": "#/definitions/go-gin-web_apps_demo_internal_dto_dtoUser.UserDeleteReq"
+========
+                            "$ref": "#/definitions/go-gin-web_internal_apps_demoapp_dto_dtouser.UserDeleteReq"
+>>>>>>>> develop:internal/apps/demoapp/docs/swagger.json
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "{\"code\": 0,\"data\": \"ok\",\"msg\": \"删除成功\"}",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/gincontext.DtoRender"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        },
+<<<<<<<< HEAD:apps/demo/internal/docs/swagger.json
+        "/demo/user/detail": {
+========
+        "/demoapp/user/detail": {
+>>>>>>>> develop:internal/apps/demoapp/docs/swagger.json
+            "get": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "用户"
+                ],
+                "summary": "用户详情",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "数据自增id",
+                        "name": "id",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "{\"code\": 0,\"data\": \"ok\",\"msg\": \"success\"}",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/gincontext.DtoRender"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+<<<<<<<< HEAD:apps/demo/internal/docs/swagger.json
+                                            "$ref": "#/definitions/go-gin-web_apps_demo_internal_dto_dtoUser.UserDetailResp"
+========
+                                            "$ref": "#/definitions/go-gin-web_internal_apps_demoapp_dto_dtouser.UserDetailResp"
+>>>>>>>> develop:internal/apps/demoapp/docs/swagger.json
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        },
+<<<<<<<< HEAD:apps/demo/internal/docs/swagger.json
+        "/demo/user/pageList": {
+========
+        "/demoapp/user/pageList": {
+>>>>>>>> develop:internal/apps/demoapp/docs/swagger.json
+            "get": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "用户"
+                ],
+                "summary": "用户列表分页",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "页码",
+                        "name": "page",
+                        "in": "query"
+                    },
+                    {
+                        "maximum": 1000,
+                        "type": "integer",
+                        "description": "每页数据条数",
+                        "name": "pageSize",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "{\"code\": 0,\"data\": \"ok\",\"msg\": \"success\"}",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/gincontext.DtoRender"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+<<<<<<<< HEAD:apps/demo/internal/docs/swagger.json
+                                            "$ref": "#/definitions/go-gin-web_apps_demo_internal_dto_dtoUser.UserPageListResp"
+========
+                                            "$ref": "#/definitions/go-gin-web_internal_apps_demoapp_dto_dtouser.UserPageListResp"
+>>>>>>>> develop:internal/apps/demoapp/docs/swagger.json
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        },
+<<<<<<<< HEAD:apps/demo/internal/docs/swagger.json
+        "/demo/user/update": {
+========
+        "/demoapp/user/update": {
+>>>>>>>> develop:internal/apps/demoapp/docs/swagger.json
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "用户"
+                ],
+                "summary": "修改用户",
+                "parameters": [
+                    {
+                        "description": "修改用户",
+                        "name": "req",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+<<<<<<<< HEAD:apps/demo/internal/docs/swagger.json
+                            "$ref": "#/definitions/go-gin-web_apps_demo_internal_dto_dtoUser.UserUpdateReq"
+========
+                            "$ref": "#/definitions/go-gin-web_internal_apps_demoapp_dto_dtouser.UserUpdateReq"
+>>>>>>>> develop:internal/apps/demoapp/docs/swagger.json
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "{\"code\": 0,\"data\": \"ok\",\"msg\": \"修改成功\"}",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/gincontext.DtoRender"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "gincontext.DtoRender": {
+            "type": "object",
+            "properties": {
+                "code": {
+                    "type": "integer"
+                },
+                "data": {},
+                "msg": {
+                    "type": "string"
+                }
+            }
+        },
+<<<<<<<< HEAD:apps/demo/internal/docs/swagger.json
+        "go-gin-web_apps_demo_internal_dto_dtoUser.UserCreateReq": {
+========
+        "go-gin-web_internal_apps_demoapp_dto_dtouser.UserCreateReq": {
+>>>>>>>> develop:internal/apps/demoapp/docs/swagger.json
+            "type": "object",
+            "properties": {
+                "companyId": {
+                    "description": "公司id",
+                    "type": "integer"
+                },
+                "departmentId": {
+                    "description": "部门id",
+                    "type": "integer"
+                },
+                "name": {
+                    "description": "姓名",
+                    "type": "string"
+                }
+            }
+        },
+<<<<<<<< HEAD:apps/demo/internal/docs/swagger.json
+        "go-gin-web_apps_demo_internal_dto_dtoUser.UserCreateResp": {
+========
+        "go-gin-web_internal_apps_demoapp_dto_dtouser.UserCreateResp": {
+>>>>>>>> develop:internal/apps/demoapp/docs/swagger.json
+            "type": "object",
+            "properties": {
+                "id": {
+                    "description": "数据自增id",
+                    "type": "integer"
+                }
+            }
+        },
+<<<<<<<< HEAD:apps/demo/internal/docs/swagger.json
+        "go-gin-web_apps_demo_internal_dto_dtoUser.UserDeleteReq": {
+========
+        "go-gin-web_internal_apps_demoapp_dto_dtouser.UserDeleteReq": {
+>>>>>>>> develop:internal/apps/demoapp/docs/swagger.json
+            "type": "object",
+            "required": [
+                "id"
+            ],
+            "properties": {
+                "id": {
+                    "description": "数据自增id",
+                    "type": "integer"
+                }
+            }
+        },
+<<<<<<<< HEAD:apps/demo/internal/docs/swagger.json
+        "go-gin-web_apps_demo_internal_dto_dtoUser.UserDetailResp": {
+========
+        "go-gin-web_internal_apps_demoapp_dto_dtouser.UserDetailResp": {
+>>>>>>>> develop:internal/apps/demoapp/docs/swagger.json
+            "type": "object",
+            "required": [
+                "id"
+            ],
+            "properties": {
+                "companyId": {
+                    "description": "公司id",
+                    "type": "integer"
+                },
+                "createdAt": {
+                    "description": "创建时间",
+                    "type": "integer"
+                },
+                "createdBy": {
+                    "description": "创建人id",
+                    "type": "integer"
+                },
+                "departmentId": {
+                    "description": "部门id",
+                    "type": "integer"
+                },
+                "id": {
+                    "description": "数据自增id",
+                    "type": "integer"
+                },
+                "name": {
+                    "description": "姓名",
+                    "type": "string"
+                },
+                "updatedAt": {
+                    "description": "更新时间",
+                    "type": "integer"
+                },
+                "updatedBy": {
+                    "description": "更新人id",
+                    "type": "integer"
+                }
+            }
+        },
+<<<<<<<< HEAD:apps/demo/internal/docs/swagger.json
+        "go-gin-web_apps_demo_internal_dto_dtoUser.UserPageListItem": {
+========
+        "go-gin-web_internal_apps_demoapp_dto_dtouser.UserPageListItem": {
+>>>>>>>> develop:internal/apps/demoapp/docs/swagger.json
+            "type": "object",
+            "required": [
+                "id"
+            ],
+            "properties": {
+                "companyId": {
+                    "description": "公司id",
+                    "type": "integer"
+                },
+                "createdAt": {
+                    "description": "创建时间",
+                    "type": "integer"
+                },
+                "createdBy": {
+                    "description": "创建人id",
+                    "type": "integer"
+                },
+                "departmentId": {
+                    "description": "部门id",
+                    "type": "integer"
+                },
+                "id": {
+                    "description": "数据自增id",
+                    "type": "integer"
+                },
+                "name": {
+                    "description": "姓名",
+                    "type": "string"
+                },
+                "updatedAt": {
+                    "description": "更新时间",
+                    "type": "integer"
+                },
+                "updatedBy": {
+                    "description": "更新人id",
+                    "type": "integer"
+                }
+            }
+        },
+<<<<<<<< HEAD:apps/demo/internal/docs/swagger.json
+        "go-gin-web_apps_demo_internal_dto_dtoUser.UserPageListResp": {
+========
+        "go-gin-web_internal_apps_demoapp_dto_dtouser.UserPageListResp": {
+>>>>>>>> develop:internal/apps/demoapp/docs/swagger.json
+            "type": "object",
+            "properties": {
+                "list": {
+                    "description": "数据列表",
+                    "type": "array",
+                    "items": {
+<<<<<<<< HEAD:apps/demo/internal/docs/swagger.json
+                        "$ref": "#/definitions/go-gin-web_apps_demo_internal_dto_dtoUser.UserPageListItem"
+========
+                        "$ref": "#/definitions/go-gin-web_internal_apps_demoapp_dto_dtouser.UserPageListItem"
+>>>>>>>> develop:internal/apps/demoapp/docs/swagger.json
+                    }
+                },
+                "total": {
+                    "description": "数据总条数",
+                    "type": "integer"
+                }
+            }
+        },
+<<<<<<<< HEAD:apps/demo/internal/docs/swagger.json
+        "go-gin-web_apps_demo_internal_dto_dtoUser.UserUpdateReq": {
+========
+        "go-gin-web_internal_apps_demoapp_dto_dtouser.UserUpdateReq": {
+>>>>>>>> develop:internal/apps/demoapp/docs/swagger.json
+            "type": "object",
+            "required": [
+                "id"
+            ],
+            "properties": {
+                "companyId": {
+                    "description": "公司id",
+                    "type": "integer"
+                },
+                "departmentId": {
+                    "description": "部门id",
+                    "type": "integer"
+                },
+                "id": {
+                    "description": "数据自增id",
+                    "type": "integer"
+                },
+                "name": {
+                    "description": "姓名",
+                    "type": "string"
+                }
+            }
+        }
+    }
+}
