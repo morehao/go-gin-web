@@ -14,7 +14,7 @@ var (
 )
 
 const (
-	DBNameDemo = "practice"
+	DBNameDemo = "demo"
 )
 
 func InitMultiMysql(configs []dbmysql.MysqlConfig) error {
