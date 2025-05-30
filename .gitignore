@@ -1,5 +1,7 @@
 .idea
-log/*
+.vscode
 .DS_Store
 .history
+
+**/log/**
 output/*

@@ -9,7 +9,7 @@ log:
     module: default
     level: info
     writer: file
-    dir: log
+    dir: ../../log
     extra_keys:
       - requestId
   gorm:
@@ -17,7 +17,7 @@ log:
     module: gorm
     level: debug
     writer: file
-    dir: log
+    dir: ../../log
     extra_keys:
       - requestId
   redis:
@@ -25,7 +25,7 @@ log:
     module: redis
     level: debug
     writer: file
-    dir: log
+    dir: ../../log
     extra_keys:
       - requestId
   es:
@@ -33,7 +33,7 @@ log:
     module: redis
     level: debug
     writer: file
-    dir: log
+    dir: ../../log
     extra_keys:
       - requestId
 
