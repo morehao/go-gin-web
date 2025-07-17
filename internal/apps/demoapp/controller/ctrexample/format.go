@@ -1,9 +1,8 @@
 package ctrexample
 
 import (
-	"go-gin-web/internal/apps/demoapp/service/svcexample"
-
 	"github.com/gin-gonic/gin"
+	"github.com/morehao/go-gin-web/internal/apps/demoapp/service/svcexample"
 	"github.com/morehao/golib/gcontext/gincontext"
 )
 

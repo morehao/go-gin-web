@@ -3,12 +3,10 @@ package ctrexample
 import (
 	"fmt"
 	"io"
-	"net/http"
 	"time"
 
-	"go-gin-web/internal/apps/demoapp/dto/dtoexample"
-
 	"github.com/gin-gonic/gin"
+	"github.com/morehao/golib/glog"
 )
 
 type SSECtr interface {
@@ -35,29 +33,19 @@ func (ctr *sseCtr) Time(ctx *gin.Context) {
 	ctx.Header("Cache-Control", "no-cache")
 	ctx.Header("Connection", "keep-alive")
 
-	// 创建一个用于停止的通道
-	clientGone := ctx.Request.Context().Done()
-
-	ticker := time.NewTicker(time.Second)
-	defer ticker.Stop()
-
-	ctx.Stream(func(w io.Writer) bool {
-		select {
-		case <-clientGone:
-			fmt.Println("client gone")
+	clientGone := ctx.Stream(func(w io.Writer) bool {
+		_, err := fmt.Fprintf(w, "data: %s\n\n", time.Now().Format(time.DateTime))
+		if err != nil {
 			return false
-		case t := <-ticker.C:
-			_, err := fmt.Fprintf(w, "event: time\n")
-			if err != nil {
-				return false
-			}
-			_, err = fmt.Fprintf(w, "data: %s\n\n", t.Format(time.DateTime))
-			if err != nil {
-				return false
-			}
-			return true
 		}
+		return true
 	})
+	if clientGone {
+		glog.Infof(ctx, "[sseCtr.Time] Client disconnected during streaming")
+	} else {
+		glog.Infof(ctx, "[sseCtr.Time] Stream completed normally")
+	}
+	return
 }
 
 // TimeRaw Write写入实时时间流示例
@@ -67,34 +55,25 @@ func (ctr *sseCtr) TimeRaw(ctx *gin.Context) {
 	ctx.Header("Cache-Control", "no-cache")
 	ctx.Header("Connection", "keep-alive")
 
-	// 创建一个用于停止的通道
-	clientGone := ctx.Request.Context().Done()
+	clientGone := ctx.Stream(func(w io.Writer) bool {
+		currentTime := time.Now().Format("2006-01-02 15:04:05")
+		sseData := fmt.Sprintf("id: %d\nevent: time\ndata: %s\n\n",
+			time.Now().Unix(), currentTime)
 
-	ctx.Stream(func(w io.Writer) bool {
-		select {
-		case <-clientGone:
-			fmt.Println("client gone")
+		// 直接写入到 w
+		_, err := w.Write([]byte(sseData))
+		if err != nil {
 			return false
-		default:
-			currentTime := time.Now().Format("2006-01-02 15:04:05")
-			sseData := fmt.Sprintf("id: %d\nevent: time\ndata: %s\n\n",
-				time.Now().Unix(), currentTime)
-
-			// 直接写入到 w
-			_, err := w.Write([]byte(sseData))
-			if err != nil {
-				return false
-			}
-
-			// 刷新缓冲区确保数据立即发送
-			if flusher, ok := w.(http.Flusher); ok {
-				flusher.Flush()
-			}
-
-			time.Sleep(1 * time.Second)
-			return true
 		}
+
+		time.Sleep(1 * time.Second)
+		return true
 	})
+	if clientGone {
+		glog.Infof(ctx, "[sseCtr.TimeRaw] Client disconnected during streaming")
+	} else {
+		glog.Infof(ctx, "[sseCtr.TimeRaw] Stream completed normally")
+	}
 }
 
 // Process 模拟数据处理进度示例
@@ -104,29 +83,26 @@ func (ctr *sseCtr) Process(ctx *gin.Context) {
 	ctx.Header("Cache-Control", "no-cache")
 	ctx.Header("Connection", "keep-alive")
 
-	// 创建一个用于停止的通道
-	clientGone := ctx.Request.Context().Done()
-
 	progress := 0
 
-	ctx.Stream(func(w io.Writer) bool {
-		select {
-		case <-clientGone:
+	clientGone := ctx.Stream(func(w io.Writer) bool {
+		if progress <= 100 {
+			// 发送进度更新
+			ctx.SSEvent("progress", fmt.Sprintf(`{"progress": %d, "message": "Processing... %d%%"}`, progress, progress))
+			progress += 10
+			time.Sleep(500 * time.Millisecond)
+			return true
+		} else {
+			// 完成时发送完成事件
+			ctx.SSEvent("complete", `{"progress": 100, "message": "Task completed!"}`)
 			return false
-		default:
-			if progress <= 100 {
-				// 发送进度更新
-				ctx.SSEvent("progress", fmt.Sprintf(`{"progress": %d, "message": "Processing... %d%%"}`, progress, progress))
-				progress += 10
-				time.Sleep(500 * time.Millisecond)
-				return true
-			} else {
-				// 完成时发送完成事件
-				ctx.SSEvent("complete", `{"progress": 100, "message": "Task completed!"}`)
-				return false
-			}
 		}
 	})
+	if clientGone {
+		glog.Infof(ctx, "[sseCtr.Process] Client disconnected during streaming")
+	} else {
+		glog.Infof(ctx, "[sseCtr.Process] Stream completed normally")
+	}
 }
 
 // Chat 聊天消息流示例
@@ -146,37 +122,31 @@ func (ctr *sseCtr) Chat(ctx *gin.Context) {
 		"Thanks for trying this demo. Goodbye! 👋",
 	}
 
-	// 创建一个用于停止的通道
-	clientGone := ctx.Request.Context().Done()
-
 	messageIndex := 0
 
-	ctx.Stream(func(w io.Writer) bool {
-		select {
-		case <-clientGone:
-			return false
-		default:
-			if messageIndex < len(messages) {
-				msg := dtoexample.SSEMessage{
-					ID:    fmt.Sprintf("msg_%d", messageIndex+1),
-					Event: "message",
-					Data: fmt.Sprintf(`{"id": %d, "text": "%s", "timestamp": "%s"}`,
-						messageIndex+1,
-						messages[messageIndex],
-						time.Now().Format("15:04:05")),
-				}
+	clientGone := ctx.Stream(func(w io.Writer) bool {
+		if messageIndex < len(messages) {
 
-				ctx.SSEvent("message", msg.Data)
-				messageIndex++
-				time.Sleep(2 * time.Second)
-				return true
-			} else {
-				// 所有消息发送完毕
-				ctx.SSEvent("end", `{"message": "Conversation ended"}`)
-				return false
-			}
+			dataMsg := fmt.Sprintf(`{"id": %d, "text": "%s", "timestamp": "%s"}`,
+				messageIndex+1,
+				messages[messageIndex],
+				time.Now().Format("15:04:05"))
+
+			ctx.SSEvent("message", dataMsg)
+			messageIndex++
+			time.Sleep(2 * time.Second)
+			return true
+		} else {
+			// 所有消息发送完毕
+			ctx.SSEvent("end", `{"message": "Conversation ended"}`)
+			return false
 		}
 	})
+	if clientGone {
+		glog.Infof(ctx, "[sseCtr.Chat] Client disconnected during streaming")
+	} else {
+		glog.Infof(ctx, "[sseCtr.Chat] Stream completed normally")
+	}
 }
 
 // Raw 自定义格式的 SSE 示例
@@ -186,40 +156,25 @@ func (ctr *sseCtr) Raw(ctx *gin.Context) {
 	ctx.Header("Cache-Control", "no-cache")
 	ctx.Header("Connection", "keep-alive")
 
-	// 创建一个用于停止的通道
-	clientGone := ctx.Request.Context().Done()
-
 	counter := 0
 
-	ctx.Stream(func(w io.Writer) bool {
-		select {
-		case <-clientGone:
-			return false
-		default:
-			if counter < 10 {
-				// 方式3: 使用自定义结构体 + w 参数
-				msg := dtoexample.SSEMessage{
-					ID:    fmt.Sprintf("event_%d", counter),
-					Event: "counter",
-					Data:  fmt.Sprintf(`{"count": %d, "message": "This is event #%d"}`, counter, counter),
-				}
+	clientGone := ctx.Stream(func(w io.Writer) bool {
+		if counter < 10 {
 
-				// 直接写入格式化的 SSE 数据到 w
-				_, err := fmt.Fprint(w, msg.Format())
-				if err != nil {
-					return false
-				}
+			dataMsg := fmt.Sprintf(`{"count": %d, "message": "This is event #%d"}`, counter, counter)
 
-				// 刷新缓冲区
-				if flusher, ok := w.(http.Flusher); ok {
-					flusher.Flush()
-				}
+			ctx.SSEvent("message", dataMsg)
 
-				counter++
-				time.Sleep(1 * time.Second)
-				return true
-			}
-			return false
+			counter++
+			time.Sleep(1 * time.Second)
+			return true
 		}
+		ctx.SSEvent("message", `{"message": "Stream ended"}`)
+		return false
 	})
+	if clientGone {
+		glog.Infof(ctx, "[sseCtr.Raw] Client disconnected during streaming")
+	} else {
+		glog.Infof(ctx, "[sseCtr.Raw] Stream completed normally")
+	}
 }

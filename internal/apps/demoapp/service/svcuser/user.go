@@ -1,12 +1,12 @@
 package svcuser
 
 import (
-	"go-gin-web/internal/apps/demoapp/code"
-	"go-gin-web/internal/apps/demoapp/dao/daouser"
-	"go-gin-web/internal/apps/demoapp/dto/dtouser"
-	"go-gin-web/internal/apps/demoapp/model"
-	"go-gin-web/internal/apps/demoapp/object/objcommon"
-	"go-gin-web/internal/apps/demoapp/object/objuser"
+	"github.com/morehao/go-gin-web/internal/apps/demoapp/code"
+	"github.com/morehao/go-gin-web/internal/apps/demoapp/dao/daouser"
+	"github.com/morehao/go-gin-web/internal/apps/demoapp/dto/dtouser"
+	"github.com/morehao/go-gin-web/internal/apps/demoapp/model"
+	"github.com/morehao/go-gin-web/internal/apps/demoapp/object/objcommon"
+	"github.com/morehao/go-gin-web/internal/apps/demoapp/object/objuser"
 
 	"github.com/gin-gonic/gin"
 	"github.com/morehao/golib/gcontext/gincontext"

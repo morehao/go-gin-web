@@ -5,8 +5,8 @@ import (
 	"path"
 	"runtime"
 
-	"go-gin-web/internal/apps/demoapp/config"
-	"go-gin-web/pkg/storages"
+	"github.com/morehao/go-gin-web/internal/apps/demoapp/config"
+	"github.com/morehao/go-gin-web/pkg/storages"
 
 	"github.com/morehao/golib/glog"
 )

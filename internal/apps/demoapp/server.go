@@ -5,11 +5,11 @@ import (
 	"path/filepath"
 	"runtime"
 
-	"go-gin-web/internal/apps/demoapp/config"
-	_ "go-gin-web/internal/apps/demoapp/docs"
-	"go-gin-web/internal/apps/demoapp/middleware"
-	"go-gin-web/internal/apps/demoapp/router"
-	"go-gin-web/pkg/storages"
+	"github.com/morehao/go-gin-web/internal/apps/demoapp/config"
+	_ "github.com/morehao/go-gin-web/internal/apps/demoapp/docs"
+	"github.com/morehao/go-gin-web/internal/apps/demoapp/middleware"
+	"github.com/morehao/go-gin-web/internal/apps/demoapp/router"
+	"github.com/morehao/go-gin-web/pkg/storages"
 
 	"github.com/gin-gonic/gin"
 	"github.com/morehao/golib/glog"

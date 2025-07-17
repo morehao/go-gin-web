@@ -1,7 +1,7 @@
 package router
 
 import (
-	"go-gin-web/internal/apps/demoapp/controller/ctrexample"
+	"github.com/morehao/go-gin-web/internal/apps/demoapp/controller/ctrexample"
 
 	"github.com/gin-gonic/gin"
 )

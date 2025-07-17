@@ -77,7 +77,6 @@ func AccessLog() gin.HandlerFunc {
 			glog.KeyHandle, ctx.HandlerName(),
 			glog.KeyProto, ctx.Request.Proto,
 			glog.KeyRefer, ctx.Request.Referer(),
-			glog.KeyUserAgent, ctx.Request.UserAgent(),
 			glog.KeyHeader, gincontext.GetHeader(ctx),
 			glog.KeyCookie, gincontext.GetCookie(ctx),
 			glog.KeyUri, path,

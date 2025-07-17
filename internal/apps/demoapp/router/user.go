@@ -1,7 +1,7 @@
 package router
 
 import (
-	"go-gin-web/internal/apps/demoapp/controller/ctruser"
+	"github.com/morehao/go-gin-web/internal/apps/demoapp/controller/ctruser"
 
 	"github.com/gin-gonic/gin"
 )
