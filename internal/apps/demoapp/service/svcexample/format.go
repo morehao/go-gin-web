@@ -1,9 +1,8 @@
 package svcexample
 
 import (
-	"github.com/morehao/go-gin-web/internal/apps/demoapp/dto/dtoexample"
-
 	"github.com/gin-gonic/gin"
+	"github.com/morehao/go-gin-web/internal/apps/demoapp/dto/dtoexample"
 )
 
 type FormatSvc interface {
