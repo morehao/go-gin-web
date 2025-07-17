@@ -30,7 +30,7 @@ log:
       - requestId
   es:
     service: demoapp
-    module: redis
+    module: es
     level: debug
     writer: file
     dir: ../../log

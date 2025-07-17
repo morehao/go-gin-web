@@ -1,8 +1,6 @@
-module go-gin-web
+module github.com/morehao/go-gin-web
 
-go 1.23.0
-
-toolchain go1.23.3
+go 1.23.3
 
 require (
 	github.com/elastic/go-elasticsearch/v8 v8.18.0

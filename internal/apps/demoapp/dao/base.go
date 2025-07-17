@@ -1,9 +1,8 @@
 package dao
 
 import (
-	"go-gin-web/pkg/storages"
-
 	"github.com/gin-gonic/gin"
+	"github.com/morehao/go-gin-web/pkg/storages"
 	"gorm.io/gorm"
 )
 

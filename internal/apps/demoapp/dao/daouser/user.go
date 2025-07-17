@@ -4,9 +4,9 @@ import (
 	"fmt"
 	"time"
 
-	"go-gin-web/internal/apps/demoapp/code"
-	"go-gin-web/internal/apps/demoapp/dao"
-	"go-gin-web/internal/apps/demoapp/model"
+	"github.com/morehao/go-gin-web/internal/apps/demoapp/code"
+	"github.com/morehao/go-gin-web/internal/apps/demoapp/dao"
+	"github.com/morehao/go-gin-web/internal/apps/demoapp/model"
 
 	"github.com/gin-gonic/gin"
 	"github.com/morehao/golib/gutils"

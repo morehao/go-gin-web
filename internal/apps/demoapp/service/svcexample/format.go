@@ -1,7 +1,7 @@
 package svcexample
 
 import (
-	"go-gin-web/internal/apps/demoapp/dto/dtoexample"
+	"github.com/morehao/go-gin-web/internal/apps/demoapp/dto/dtoexample"
 
 	"github.com/gin-gonic/gin"
 )
