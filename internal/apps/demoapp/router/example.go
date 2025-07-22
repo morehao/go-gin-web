@@ -25,3 +25,11 @@ func sseRouter(routerGroup *gin.RouterGroup) {
 		sseGroup.GET("/raw", sseCtr.Raw)
 	}
 }
+
+func clientRouter(routerGroup *gin.RouterGroup) {
+	clientCtr := ctrexample.NewClientCtr()
+	clientGroup := routerGroup.Group("/client")
+	{
+		clientGroup.GET("/CallGetHttpbingo", clientCtr.CallGetHttpbingo)
+	}
+}

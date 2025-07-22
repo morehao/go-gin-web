@@ -6,6 +6,7 @@ import (
 
 	"github.com/morehao/golib/conf"
 	"github.com/morehao/golib/glog"
+	"github.com/morehao/golib/protocol/gresty"
 	"github.com/morehao/golib/storages/dbes"
 	"github.com/morehao/golib/storages/dbmysql"
 	"github.com/morehao/golib/storages/dbredis"
@@ -19,12 +20,17 @@ type Config struct {
 	MysqlConfigs []dbmysql.MysqlConfig     `yaml:"mysql_configs"`
 	RedisConfigs []dbredis.RedisConfig     `yaml:"redis_configs"`
 	ESConfigs    []dbes.ESConfig           `yaml:"es_configs"`
+	Client       Client                    `yaml:"client"`
 }
 
 type Server struct {
 	Name string `yaml:"name"` // 服务名称
 	Port string `yaml:"port"` // 服务端口
 	Env  string `yaml:"env"`  // 环境变量
+}
+
+type Client struct {
+	HTTPBingo *gresty.Client `yaml:"httpbingo"`
 }
 
 func SetRootDir(rootDir string) {

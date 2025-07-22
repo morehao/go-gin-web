@@ -31,10 +31,9 @@ func (d *demo) Initialize() error {
 
 func (d *demo) initConf() {
 	_, file, _, _ := runtime.Caller(0)
-	rootDir := path.Join(path.Dir(path.Dir(path.Dir(file))), "apps", AppNameDemo)
+	rootDir := path.Join(path.Dir(path.Dir(path.Dir(file))), "internal/apps", AppNameDemo)
 	config.SetRootDir(rootDir)
 	config.InitConf()
-	return
 }
 
 func (d *demo) preInit() error {

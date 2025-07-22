@@ -3,6 +3,13 @@ server:
   port: 8099
   env: dev
 
+client:
+  httpbingo:
+    host: https://httpbingo.org
+    module: httpbingo
+    retry: 3
+    timeout: 5s
+
 log:
   default:
     service: demoapp
