@@ -4,8 +4,7 @@ import (
 	"fmt"
 
 	"github.com/morehao/go-gin-web/internal/apps/demoapp/config"
-
-	"github.com/morehao/golib/storages/dbredis"
+	"github.com/morehao/golib/dbstore/dbredis"
 	"github.com/redis/go-redis/v9"
 )
 

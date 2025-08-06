@@ -5,11 +5,11 @@ import (
 	"os"
 
 	"github.com/morehao/golib/conf"
+	"github.com/morehao/golib/dbstore/dbes"
+	"github.com/morehao/golib/dbstore/dbmysql"
+	"github.com/morehao/golib/dbstore/dbredis"
 	"github.com/morehao/golib/glog"
 	"github.com/morehao/golib/protocol/gresty"
-	"github.com/morehao/golib/storages/dbes"
-	"github.com/morehao/golib/storages/dbmysql"
-	"github.com/morehao/golib/storages/dbredis"
 )
 
 var Conf *Config
