@@ -4,7 +4,7 @@ import (
 	"fmt"
 
 	"github.com/morehao/go-gin-web/internal/apps/demoapp/config"
-	"github.com/morehao/golib/dbstore/dbmysql"
+  "github.com/morehao/golib/dbstore/dbmysql"
 	"gorm.io/gorm"
 )
 
