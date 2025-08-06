@@ -18,8 +18,6 @@ require (
 	gorm.io/gorm v1.30.0
 )
 
-replace github.com/morehao/golib v1.2.11 => /Users/morehao/Documents/practice/go/golib
-
 require (
 	filippo.io/edwards25519 v1.1.0 // indirect
 	github.com/KyleBanks/depth v1.2.1 // indirect
