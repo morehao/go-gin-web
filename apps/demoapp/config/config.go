@@ -56,12 +56,6 @@ func getConfigPath() string {
 		return relativePath
 	}
 
-	// 尝试当前目录的config子目录
-	currentDirPath := "config/config.yaml"
-	if fileExists(currentDirPath) {
-		return currentDirPath
-	}
-
 	// 获取可执行文件所在目录的上级目录
 	execPath, err := os.Executable()
 	if err == nil {

@@ -78,9 +78,18 @@ deps:
 swag:
 	$(call validate_app)
 	@echo "📚 正在生成 Swagger 文档..."
-	@chmod +x ./scripts/swag.sh
-	@./scripts/swag.sh $(APP)
-	@echo "✅ Swagger 文档已生成"
+	@which swag > /dev/null || (echo "⚠️  swag 未安装，正在安装..." && go install github.com/swaggo/swag/cmd/swag@latest)
+	@rm -rf apps/$(APP)/docs/*
+	@swag init \
+		--parseDependency \
+		--parseInternal \
+		-g apps/$(APP)/cmd/main.go \
+		--dir . \
+		--output apps/$(APP)/docs \
+		--outputTypes go \
+		--instanceName $(APP)
+	@echo "✅ Swagger 文档已生成：apps/$(APP)/docs"
+
 
 codegen:
 	$(call validate_app)

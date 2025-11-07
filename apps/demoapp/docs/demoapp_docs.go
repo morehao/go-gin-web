@@ -3,7 +3,7 @@ package docs
 
 import "github.com/swaggo/swag"
 
-const docTemplate = `{
+const docTemplatedemoapp = `{
     "schemes": {{ marshal .Schemes }},
     "swagger": "2.0",
     "info": {
@@ -15,11 +15,7 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
-<<<<<<<< HEAD:apps/demo/internal/docs/docs.go
-        "/demo/user/create": {
-========
         "/demoapp/user/create": {
->>>>>>>> develop:internal/apps/demoapp/docs/docs.go
             "post": {
                 "consumes": [
                     "application/json"
@@ -38,11 +34,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-<<<<<<<< HEAD:apps/demo/internal/docs/docs.go
-                            "$ref": "#/definitions/go-gin-web_apps_demo_internal_dto_dtoUser.UserCreateReq"
-========
-                            "$ref": "#/definitions/go-gin-web_internal_apps_demoapp_dto_dtouser.UserCreateReq"
->>>>>>>> develop:internal/apps/demoapp/docs/docs.go
+                            "$ref": "#/definitions/github_com_morehao_go-gin-web_apps_demoapp_internal_dto_dtouser.UserCreateReq"
                         }
                     }
                 ],
@@ -58,11 +50,7 @@ const docTemplate = `{
                                     "type": "object",
                                     "properties": {
                                         "data": {
-<<<<<<<< HEAD:apps/demo/internal/docs/docs.go
-                                            "$ref": "#/definitions/go-gin-web_apps_demo_internal_dto_dtoUser.UserCreateResp"
-========
-                                            "$ref": "#/definitions/go-gin-web_internal_apps_demoapp_dto_dtouser.UserCreateResp"
->>>>>>>> develop:internal/apps/demoapp/docs/docs.go
+                                            "$ref": "#/definitions/github_com_morehao_go-gin-web_apps_demoapp_internal_dto_dtouser.UserCreateResp"
                                         }
                                     }
                                 }
@@ -72,11 +60,7 @@ const docTemplate = `{
                 }
             }
         },
-<<<<<<<< HEAD:apps/demo/internal/docs/docs.go
-        "/demo/user/delete": {
-========
         "/demoapp/user/delete": {
->>>>>>>> develop:internal/apps/demoapp/docs/docs.go
             "post": {
                 "consumes": [
                     "application/json"
@@ -95,11 +79,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-<<<<<<<< HEAD:apps/demo/internal/docs/docs.go
-                            "$ref": "#/definitions/go-gin-web_apps_demo_internal_dto_dtoUser.UserDeleteReq"
-========
-                            "$ref": "#/definitions/go-gin-web_internal_apps_demoapp_dto_dtouser.UserDeleteReq"
->>>>>>>> develop:internal/apps/demoapp/docs/docs.go
+                            "$ref": "#/definitions/github_com_morehao_go-gin-web_apps_demoapp_internal_dto_dtouser.UserDeleteReq"
                         }
                     }
                 ],
@@ -125,11 +105,7 @@ const docTemplate = `{
                 }
             }
         },
-<<<<<<<< HEAD:apps/demo/internal/docs/docs.go
-        "/demo/user/detail": {
-========
         "/demoapp/user/detail": {
->>>>>>>> develop:internal/apps/demoapp/docs/docs.go
             "get": {
                 "consumes": [
                     "application/json"
@@ -162,11 +138,7 @@ const docTemplate = `{
                                     "type": "object",
                                     "properties": {
                                         "data": {
-<<<<<<<< HEAD:apps/demo/internal/docs/docs.go
-                                            "$ref": "#/definitions/go-gin-web_apps_demo_internal_dto_dtoUser.UserDetailResp"
-========
-                                            "$ref": "#/definitions/go-gin-web_internal_apps_demoapp_dto_dtouser.UserDetailResp"
->>>>>>>> develop:internal/apps/demoapp/docs/docs.go
+                                            "$ref": "#/definitions/github_com_morehao_go-gin-web_apps_demoapp_internal_dto_dtouser.UserDetailResp"
                                         }
                                     }
                                 }
@@ -176,11 +148,7 @@ const docTemplate = `{
                 }
             }
         },
-<<<<<<<< HEAD:apps/demo/internal/docs/docs.go
-        "/demo/user/pageList": {
-========
         "/demoapp/user/pageList": {
->>>>>>>> develop:internal/apps/demoapp/docs/docs.go
             "get": {
                 "consumes": [
                     "application/json"
@@ -219,11 +187,7 @@ const docTemplate = `{
                                     "type": "object",
                                     "properties": {
                                         "data": {
-<<<<<<<< HEAD:apps/demo/internal/docs/docs.go
-                                            "$ref": "#/definitions/go-gin-web_apps_demo_internal_dto_dtoUser.UserPageListResp"
-========
-                                            "$ref": "#/definitions/go-gin-web_internal_apps_demoapp_dto_dtouser.UserPageListResp"
->>>>>>>> develop:internal/apps/demoapp/docs/docs.go
+                                            "$ref": "#/definitions/github_com_morehao_go-gin-web_apps_demoapp_internal_dto_dtouser.UserPageListResp"
                                         }
                                     }
                                 }
@@ -233,11 +197,7 @@ const docTemplate = `{
                 }
             }
         },
-<<<<<<<< HEAD:apps/demo/internal/docs/docs.go
-        "/demo/user/update": {
-========
         "/demoapp/user/update": {
->>>>>>>> develop:internal/apps/demoapp/docs/docs.go
             "post": {
                 "consumes": [
                     "application/json"
@@ -256,11 +216,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-<<<<<<<< HEAD:apps/demo/internal/docs/docs.go
-                            "$ref": "#/definitions/go-gin-web_apps_demo_internal_dto_dtoUser.UserUpdateReq"
-========
-                            "$ref": "#/definitions/go-gin-web_internal_apps_demoapp_dto_dtouser.UserUpdateReq"
->>>>>>>> develop:internal/apps/demoapp/docs/docs.go
+                            "$ref": "#/definitions/github_com_morehao_go-gin-web_apps_demoapp_internal_dto_dtouser.UserUpdateReq"
                         }
                     }
                 ],
@@ -300,11 +256,7 @@ const docTemplate = `{
                 }
             }
         },
-<<<<<<<< HEAD:apps/demo/internal/docs/docs.go
-        "go-gin-web_apps_demo_internal_dto_dtoUser.UserCreateReq": {
-========
-        "go-gin-web_internal_apps_demoapp_dto_dtouser.UserCreateReq": {
->>>>>>>> develop:internal/apps/demoapp/docs/docs.go
+        "github_com_morehao_go-gin-web_apps_demoapp_internal_dto_dtouser.UserCreateReq": {
             "type": "object",
             "properties": {
                 "companyId": {
@@ -321,11 +273,7 @@ const docTemplate = `{
                 }
             }
         },
-<<<<<<<< HEAD:apps/demo/internal/docs/docs.go
-        "go-gin-web_apps_demo_internal_dto_dtoUser.UserCreateResp": {
-========
-        "go-gin-web_internal_apps_demoapp_dto_dtouser.UserCreateResp": {
->>>>>>>> develop:internal/apps/demoapp/docs/docs.go
+        "github_com_morehao_go-gin-web_apps_demoapp_internal_dto_dtouser.UserCreateResp": {
             "type": "object",
             "properties": {
                 "id": {
@@ -334,11 +282,7 @@ const docTemplate = `{
                 }
             }
         },
-<<<<<<<< HEAD:apps/demo/internal/docs/docs.go
-        "go-gin-web_apps_demo_internal_dto_dtoUser.UserDeleteReq": {
-========
-        "go-gin-web_internal_apps_demoapp_dto_dtouser.UserDeleteReq": {
->>>>>>>> develop:internal/apps/demoapp/docs/docs.go
+        "github_com_morehao_go-gin-web_apps_demoapp_internal_dto_dtouser.UserDeleteReq": {
             "type": "object",
             "required": [
                 "id"
@@ -350,11 +294,7 @@ const docTemplate = `{
                 }
             }
         },
-<<<<<<<< HEAD:apps/demo/internal/docs/docs.go
-        "go-gin-web_apps_demo_internal_dto_dtoUser.UserDetailResp": {
-========
-        "go-gin-web_internal_apps_demoapp_dto_dtouser.UserDetailResp": {
->>>>>>>> develop:internal/apps/demoapp/docs/docs.go
+        "github_com_morehao_go-gin-web_apps_demoapp_internal_dto_dtouser.UserDetailResp": {
             "type": "object",
             "required": [
                 "id"
@@ -394,11 +334,7 @@ const docTemplate = `{
                 }
             }
         },
-<<<<<<<< HEAD:apps/demo/internal/docs/docs.go
-        "go-gin-web_apps_demo_internal_dto_dtoUser.UserPageListItem": {
-========
-        "go-gin-web_internal_apps_demoapp_dto_dtouser.UserPageListItem": {
->>>>>>>> develop:internal/apps/demoapp/docs/docs.go
+        "github_com_morehao_go-gin-web_apps_demoapp_internal_dto_dtouser.UserPageListItem": {
             "type": "object",
             "required": [
                 "id"
@@ -438,22 +374,14 @@ const docTemplate = `{
                 }
             }
         },
-<<<<<<<< HEAD:apps/demo/internal/docs/docs.go
-        "go-gin-web_apps_demo_internal_dto_dtoUser.UserPageListResp": {
-========
-        "go-gin-web_internal_apps_demoapp_dto_dtouser.UserPageListResp": {
->>>>>>>> develop:internal/apps/demoapp/docs/docs.go
+        "github_com_morehao_go-gin-web_apps_demoapp_internal_dto_dtouser.UserPageListResp": {
             "type": "object",
             "properties": {
                 "list": {
                     "description": "数据列表",
                     "type": "array",
                     "items": {
-<<<<<<<< HEAD:apps/demo/internal/docs/docs.go
-                        "$ref": "#/definitions/go-gin-web_apps_demo_internal_dto_dtoUser.UserPageListItem"
-========
-                        "$ref": "#/definitions/go-gin-web_internal_apps_demoapp_dto_dtouser.UserPageListItem"
->>>>>>>> develop:internal/apps/demoapp/docs/docs.go
+                        "$ref": "#/definitions/github_com_morehao_go-gin-web_apps_demoapp_internal_dto_dtouser.UserPageListItem"
                     }
                 },
                 "total": {
@@ -462,11 +390,7 @@ const docTemplate = `{
                 }
             }
         },
-<<<<<<<< HEAD:apps/demo/internal/docs/docs.go
-        "go-gin-web_apps_demo_internal_dto_dtoUser.UserUpdateReq": {
-========
-        "go-gin-web_internal_apps_demoapp_dto_dtouser.UserUpdateReq": {
->>>>>>>> develop:internal/apps/demoapp/docs/docs.go
+        "github_com_morehao_go-gin-web_apps_demoapp_internal_dto_dtouser.UserUpdateReq": {
             "type": "object",
             "required": [
                 "id"
@@ -493,20 +417,20 @@ const docTemplate = `{
     }
 }`
 
-// SwaggerInfo holds exported Swagger Info so clients can modify it
-var SwaggerInfo = &swag.Spec{
+// SwaggerInfodemoapp holds exported Swagger Info so clients can modify it
+var SwaggerInfodemoapp = &swag.Spec{
 	Version:          "",
 	Host:             "",
 	BasePath:         "",
 	Schemes:          []string{},
 	Title:            "",
 	Description:      "",
-	InfoInstanceName: "swagger",
-	SwaggerTemplate:  docTemplate,
+	InfoInstanceName: "demoapp",
+	SwaggerTemplate:  docTemplatedemoapp,
 	LeftDelim:        "{{",
 	RightDelim:       "}}",
 }
 
 func init() {
-	swag.Register(SwaggerInfo.InstanceName(), SwaggerInfo)
+	swag.Register(SwaggerInfodemoapp.InstanceName(), SwaggerInfodemoapp)
 }

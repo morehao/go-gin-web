@@ -7,7 +7,7 @@ RUN go build -ldflags="-s -w" -o /app/demoapp ./cmd/demoapp
 
 FROM alpine:3.19
 COPY --from=builder /app/demoapp /app/demoapp
-COPY --from=builder /build/internal/apps/demoapp/config/config.prod.yaml /app/config.yaml
+COPY --from=builder /build/apps/demoapp/config/config.prod.yaml /app/config.yaml
 
 WORKDIR /app
 EXPOSE 8099

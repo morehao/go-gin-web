@@ -26,7 +26,7 @@ func main() {
 	engine.Use(gin.Recovery())
 	routerGroup := engine.Group(fmt.Sprintf("/%s", config.Conf.Server.Name))
 	if config.Conf.Server.Env == "dev" {
-		routerGroup.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
+		routerGroup.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler, ginSwagger.InstanceName("demoapp")))
 	}
 	routerGroup.Use(middleware.AccessLog())
 	router.RegisterRouter(routerGroup)
