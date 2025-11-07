@@ -4,11 +4,10 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/morehao/go-gin-web/internal/apps/demoapp/code"
-	"github.com/morehao/go-gin-web/internal/apps/demoapp/dao"
-	"github.com/morehao/go-gin-web/internal/apps/demoapp/model"
-
 	"github.com/gin-gonic/gin"
+	"github.com/morehao/go-gin-web/apps/demoapp/dao"
+	"github.com/morehao/go-gin-web/apps/demoapp/model"
+	"github.com/morehao/go-gin-web/pkg/code"
 	"github.com/morehao/golib/gutils"
 	"gorm.io/gorm"
 )

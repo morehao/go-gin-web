@@ -1,8 +1,8 @@
 package dtouser
 
 import (
-	"github.com/morehao/go-gin-web/internal/apps/demoapp/object/objcommon"
-	"github.com/morehao/go-gin-web/internal/apps/demoapp/object/objuser"
+	"github.com/morehao/go-gin-web/apps/demoapp/object/objcommon"
+	"github.com/morehao/go-gin-web/apps/demoapp/object/objuser"
 )
 
 type UserCreateResp struct {

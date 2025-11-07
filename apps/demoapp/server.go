@@ -5,10 +5,10 @@ import (
 	"path/filepath"
 	"runtime"
 
-	"github.com/morehao/go-gin-web/internal/apps/demoapp/config"
-	_ "github.com/morehao/go-gin-web/internal/apps/demoapp/docs"
-	"github.com/morehao/go-gin-web/internal/apps/demoapp/middleware"
-	"github.com/morehao/go-gin-web/internal/apps/demoapp/router"
+	"github.com/morehao/go-gin-web/apps/demoapp/config"
+	_ "github.com/morehao/go-gin-web/apps/demoapp/docs"
+	"github.com/morehao/go-gin-web/apps/demoapp/middleware"
+	"github.com/morehao/go-gin-web/apps/demoapp/router"
 	"github.com/morehao/go-gin-web/pkg/storages"
 
 	"github.com/gin-gonic/gin"

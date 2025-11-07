@@ -2,7 +2,7 @@ package ctrexample
 
 import (
 	"github.com/gin-gonic/gin"
-	"github.com/morehao/go-gin-web/internal/apps/demoapp/client/httpbingo"
+	"github.com/morehao/go-gin-web/apps/demoapp/client/httpbingo"
 	"github.com/morehao/golib/gcontext/gincontext"
 	"github.com/morehao/golib/glog"
 )
