@@ -9,8 +9,8 @@ if [ -z "$MODULE" ]; then
   exit 1
 fi
 
-APP_DIR="internal/apps/${MODULE}"
-MAIN_FILE="internal/apps/${MODULE}/server.go"
+APP_DIR="apps/${MODULE}"
+MAIN_FILE="apps/${MODULE}/server.go"
 DOCS_DIR="${APP_DIR}/docs"
 
 # 检查目录和入口文件是否存在

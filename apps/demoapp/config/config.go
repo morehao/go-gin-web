@@ -3,6 +3,7 @@ package config
 import (
 	"fmt"
 	"os"
+	"path/filepath"
 
 	"github.com/morehao/golib/conf"
 	"github.com/morehao/golib/dbstore/dbes"
@@ -33,19 +34,49 @@ type Client struct {
 	HTTPBingo *gresty.Client `yaml:"httpbingo"`
 }
 
-func SetRootDir(rootDir string) {
-	conf.SetAppRootDir(rootDir)
-}
-
 func InitConf() {
-	// 读取环境变量，如果没设置，则用默认路径
-	configPath := os.Getenv("APP_CONFIG_PATH")
-	if configPath == "" {
-		configPath = conf.GetAppRootDir() + "/config/config.yaml"
-	}
+	configPath := getConfigPath()
 	fmt.Println("Load config file:", configPath)
 
 	var cfg Config
 	conf.LoadConfig(configPath, &cfg)
 	Conf = &cfg
+}
+
+// getConfigPath 获取配置文件路径，优先级：环境变量 > 相对路径 > 绝对路径
+func getConfigPath() string {
+	// 优先使用环境变量
+	if configPath := os.Getenv("APP_CONFIG_PATH"); configPath != "" {
+		return configPath
+	}
+
+	// 尝试相对路径（从当前工作目录）
+	relativePath := "../config/config.yaml"
+	if fileExists(relativePath) {
+		return relativePath
+	}
+
+	// 尝试当前目录的config子目录
+	currentDirPath := "config/config.yaml"
+	if fileExists(currentDirPath) {
+		return currentDirPath
+	}
+
+	// 获取可执行文件所在目录的上级目录
+	execPath, err := os.Executable()
+	if err == nil {
+		// 可执行文件目录的上级目录/config/config.yaml
+		absPath := filepath.Join(filepath.Dir(execPath), "..", "config", "config.yaml")
+		if fileExists(absPath) {
+			return absPath
+		}
+	}
+
+	// 默认返回相对路径
+	return relativePath
+}
+
+func fileExists(path string) bool {
+	_, err := os.Stat(path)
+	return err == nil
 }

@@ -5,8 +5,8 @@ import (
 	"strconv"
 
 	"github.com/gin-gonic/gin"
-	"github.com/morehao/go-gin-web/internal/apps/demoapp/config"
-	"github.com/morehao/go-gin-web/internal/apps/demoapp/dao/daouser"
+	"github.com/morehao/go-gin-web/apps/demoapp/config"
+	"github.com/morehao/go-gin-web/apps/demoapp/dao/daouser"
 	"github.com/morehao/go-gin-web/pkg/storages"
 )
 

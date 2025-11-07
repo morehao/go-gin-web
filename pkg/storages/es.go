@@ -4,7 +4,7 @@ import (
 	"fmt"
 
 	"github.com/elastic/go-elasticsearch/v8"
-	"github.com/morehao/go-gin-web/internal/apps/demoapp/config"
+	"github.com/morehao/go-gin-web/apps/demoapp/config"
 	"github.com/morehao/golib/dbstore/dbes"
 )
 

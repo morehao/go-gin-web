@@ -3,7 +3,7 @@
 # 构建相关变量
 APP =
 BINARY = $(APP)
-MAIN_DIR = ./internal/apps/$(APP)
+MAIN_DIR = ./apps/$(APP)/cmd
 BUILD_DIR = ./output/build
 VERSION = $(shell date +%Y%m%d%H%M%S)-$(shell git rev-parse --short HEAD 2>/dev/null || echo "unknown")
 
@@ -24,11 +24,11 @@ all: clean deps build run
 # 定义函数：验证 APP 参数是否有效
 define validate_app
 	@if [ -z "$(APP)" ]; then \
-		echo "❌ 请使用 APP=<名称> 指定要操作的应用程序，例如：make build APP=demo"; \
+		echo "❌ 请使用 APP=<名称> 指定要操作的应用程序，例如：make build APP=demoapp"; \
 		exit 1; \
 	fi
-	@if [ ! -d "./internal/apps/$(APP)" ]; then \
-		echo "❌ 应用程序 '$(APP)' 不存在于 ./internal/apps 目录下"; \
+	@if [ ! -d "./apps/$(APP)" ]; then \
+		echo "❌ 应用程序 '$(APP)' 不存在于 ./apps 目录下"; \
 		exit 1; \
 	fi
 endef
@@ -87,14 +87,14 @@ codegen:
 	$(if $(MODE),, $(error ❌ 请使用 MODE 参数指定生成模式，例如 MODE=api,module,model))
 
 	@echo "🔧 开始生成代码：APP=$(APP)，MODE=$(MODE)"
-	@cd internal/apps/$(APP) && gocli generate --mode=$(MODE)
+	@cd apps/$(APP) && gocli generate --mode=$(MODE)
 
 
 # 构建 Docker 镜像
 docker-build:
 	$(call validate_app)
 	@echo "🐳 正在构建 $(APP) 的 Docker 镜像..."
-	@docker build -t $(DOCKER_IMAGE):latest -f ./internal/apps/$(APP)/scripts/Dockerfile .
+	@docker build -t $(DOCKER_IMAGE):latest -f ./apps/$(APP)/scripts/Dockerfile .
 	@echo "✅ Docker 镜像 $(DOCKER_IMAGE):latest 已构建完成"
 
 # 运行 Docker 容器
@@ -119,7 +119,7 @@ check-image:
 # 列出所有可用的应用程序
 list-apps:
 	@echo "📂 可用的应用程序:"
-	@ls -1 ./internal/apps
+	@ls -1 ./apps
 
 # 运行代码检查工具
 lint:
