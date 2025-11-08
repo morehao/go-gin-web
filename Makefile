@@ -105,7 +105,7 @@ codegen:
 	$(if $(MODE),, $(error ❌ 请使用 MODE 参数指定生成模式，例如 MODE=api,module,model))
 
 	@echo "🔧 开始生成代码：APP=$(APP)，MODE=$(MODE)"
-	@cd apps/$(APP) && gocli generate --mode=$(MODE)
+	@gocli generate --mode=$(MODE) --app=$(APP)
 
 
 # 构建 Docker 镜像
