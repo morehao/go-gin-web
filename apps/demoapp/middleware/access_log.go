@@ -29,7 +29,7 @@ func AccessLog() gin.HandlerFunc {
 		ctx.Set(glog.KeyRequestId, requestId)
 
 		path := ctx.Request.URL.Path
-		ctx.Set(glog.KeyUri, path)
+		ctx.Set(glog.KeyUrl, path)
 
 		reqQuery := gincontext.GetReqQuery(ctx)
 		// 截断参数
@@ -79,7 +79,7 @@ func AccessLog() gin.HandlerFunc {
 			glog.KeyRefer, ctx.Request.Referer(),
 			glog.KeyHeader, gincontext.GetHeader(ctx),
 			glog.KeyCookie, gincontext.GetCookie(ctx),
-			glog.KeyUri, path,
+			glog.KeyUrl, path,
 			glog.KeyMethod, ctx.Request.Method,
 			glog.KeyHttpStatusCode, ctx.Writer.Status(),
 			glog.KeyRequestQuery, reqQuery,
