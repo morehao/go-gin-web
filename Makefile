@@ -13,7 +13,16 @@ APP_CONFIG_PATH = /app/config.yaml
 GO_ENV = CGO_ENABLED=0 GOPROXY=https://goproxy.cn,direct
 
 # Docker 相关变量
-DOCKER_IMAGE = $(APP)
+# 获取 git tag（如果存在）
+GIT_TAG = $(shell git describe --tags --exact-match 2>/dev/null)
+# 获取 commit hash 短格式
+GIT_COMMIT = $(shell git rev-parse --short HEAD 2>/dev/null || echo "unknown")
+# 构建镜像 tag：如果有 git tag 则使用 tag-commit，否则使用 commit
+DOCKER_TAG = $(if $(GIT_TAG),$(GIT_TAG)-$(GIT_COMMIT),$(GIT_COMMIT))
+# 完整的镜像名称：appname:tag
+DOCKER_IMAGE = $(APP):$(DOCKER_TAG)
+# 镜像名称（不含tag，用于查询）
+DOCKER_IMAGE_NAME = $(APP)
 
 # 伪目标
 .PHONY: all build clean run lint test swag docker-build docker-run help list-apps deps tidy
@@ -103,25 +112,29 @@ codegen:
 docker-build:
 	$(call validate_app)
 	@echo "🐳 正在构建 $(APP) 的 Docker 镜像..."
-	docker buildx build -f ./apps/$(APP)/scripts/Dockerfile .
-	@echo "✅ Docker 镜像 $(DOCKER_IMAGE):latest 已构建完成"
+	@echo "   镜像名称: $(DOCKER_IMAGE)"
+	@echo "   Git Tag: $(if $(GIT_TAG),$(GIT_TAG),无)"
+	@echo "   Git Commit: $(GIT_COMMIT)"
+	docker buildx build -t $(DOCKER_IMAGE) -f ./apps/$(APP)/scripts/Dockerfile .
+	@echo "✅ Docker 镜像 $(DOCKER_IMAGE) 已构建完成"
 
 # 运行 Docker 容器
 docker-run: check-image
 	@echo "🚀 正在运行 $(APP) 容器..."
+	@echo "   使用镜像: $(DOCKER_IMAGE)"
 	-@docker rm -f $(APP) 2>/dev/null || true
 	@docker run -d \
 		--name $(APP) \
 		-e APP_CONFIG_PATH=$(APP_CONFIG_PATH) \
 		-p 8099:8099 \
-		$(DOCKER_IMAGE):latest
+		$(DOCKER_IMAGE)
 	@echo "✅ 容器 $(APP) 已启动，服务地址：http://localhost:8099"
 
 # 检查镜像是否存在，没有就构建
 check-image:
-	@if [ -n "$$(docker images -q $(DOCKER_IMAGE):latest)" ]; then \
-		echo "⚠️ 镜像 $(DOCKER_IMAGE):latest 已存在，准备删除重建..."; \
-		docker rmi -f $(DOCKER_IMAGE):latest; \
+	@if [ -n "$$(docker images -q $(DOCKER_IMAGE))" ]; then \
+		echo "⚠️ 镜像 $(DOCKER_IMAGE) 已存在，准备删除重建..."; \
+		docker rmi -f $(DOCKER_IMAGE); \
 	fi
 	$(MAKE) docker-build
 
@@ -146,7 +159,13 @@ help:
 	@echo "  make run APP=<名称>     - 运行指定的应用程序"
 	@echo "  make test APP=<名称>    - 运行测试"
 	@echo "  make swag APP=<名称>    - 生成 Swagger 文档"
-	@echo "  make docker-build APP=<名称>  - 构建 Docker 镜像"
+	@echo "  make codegen APP=<名称> MODE=<模式> - 生成代码（MODE=api,module,model）"
+	@echo "  make docker-build APP=<名称>  - 构建 Docker 镜像（标签基于 git tag 和 commit hash）"
 	@echo "  make docker-run APP=<名称> - 运行 Docker 容器"
 	@echo "  make list-apps          - 列出所有可用的应用程序"
 	@echo "  make lint               - 运行代码检查工具"
+	@echo ""
+	@echo "📝 Docker 镜像标签说明："
+	@echo "  - 如果当前 commit 有 git tag：镜像标签为 <tag>-<commit>"
+	@echo "  - 如果当前 commit 无 git tag：镜像标签为 <commit>"
+	@echo "  - 示例：demoapp:v1.0.0-abc1234 或 demoapp:abc1234"
