@@ -34,8 +34,14 @@ type Client struct {
 	HTTPBingo *gresty.Client `yaml:"httpbingo"`
 }
 
+// InitConf 初始化配置（运行时使用，自动查找配置文件）
 func InitConf() {
 	configPath := getConfigPath()
+	LoadConfig(configPath)
+}
+
+// LoadConfig 从指定路径加载配置并设置全局变量（测试环境可直接使用）
+func LoadConfig(configPath string) {
 	fmt.Println("Load config file:", configPath)
 
 	var cfg Config
