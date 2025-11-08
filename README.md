@@ -25,38 +25,40 @@ Follows [project-layout](https://github.com/golang-standards/project-layout). Cu
 
 ```bash
 .
-├── cmd
-│   └── demoapp
-├── internal
-│   └── apps
-│       └── demoapp
-│           ├── code
-│           ├── config
-│           ├── controller
-│           │   ├── ctrexample
-│           │   └── ctruser
-│           ├── dao
-│           │   └── daouser
-│           ├── docs
-│           ├── dto
-│           │   ├── dtoexample
-│           │   └── dtouser
-│           ├── middleware
-│           ├── model
-│           ├── object
-│           │   ├── objcommon
-│           │   └── objuser
-│           ├── router
-│           ├── scripts
-│           └── service
-│               ├── svcexample
-│               └── svcuser
+├── apps
+│   ├── demoapp
+│   │   ├── cmd
+│   │   ├── client
+│   │   │   └── httpbingo
+│   │   ├── config
+│   │   ├── dao
+│   │   │   └── daouser
+│   │   ├── docs
+│   │   ├── internal
+│   │   │   ├── controller
+│   │   │   │   ├── ctrexample
+│   │   │   │   └── ctruser
+│   │   │   ├── dto
+│   │   │   │   ├── dtoexample
+│   │   │   │   └── dtouser
+│   │   │   └── service
+│   │   │       ├── svcexample
+│   │   │       └── svcuser
+│   │   ├── middleware
+│   │   ├── model
+│   │   ├── object
+│   │   │   ├── objcommon
+│   │   │   └── objuser
+│   │   ├── router
+│   │   └── scripts
+│   └── newapp
 ├── log
 ├── output
 │   └── build
 ├── pkg
+│   ├── code
 │   ├── storages
-│   ├── test
+│   ├── testutil
 │   └── utils
 └── scripts
     └── sql
@@ -74,7 +76,7 @@ Install the CLI tool:
 go install github.com/morehao/gocli@latest
 ```
 
-Ensure a `code_gen.yaml` config file exists under the application directory, e.g., `go-gin-web/internal/apps/demoapp/config/code_gen.yaml`.
+Ensure a `code_gen.yaml` config file exists under the application directory, e.g., `go-gin-web/apps/demoapp/config/code_gen.yaml`.
 
 Run code generation commands:
 
@@ -147,7 +149,7 @@ gocli cutter -d /goProject/yourAppName
 
 This will scaffold a new project named `yourAppName` under `/goProject` based on the current template.
 
-See [cutter](https://github.com/morehao/gocli?tab=readme-ov-file#cutter) for more usage details.
+See [cutter](https://github.com/morehao/gocli) for more usage details.
 
 ---
 

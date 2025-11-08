@@ -18,39 +18,41 @@
 参考了[project-layout](https://github.com/golang-standards/project-layout)。当前项目结构如下：
 ``` bash
 .
-├── cmd
-│   └── demoapp
-├── internal
-│   └── apps
-│       └── demoapp
-│           ├── code
-│           ├── config
-│           ├── controller
-│           │   ├── ctrexample
-│           │   └── ctruser
-│           ├── dao
-│           │   └── daouser
-│           ├── docs
-│           ├── dto
-│           │   ├── dtoexample
-│           │   └── dtouser
-│           ├── middleware
-│           ├── model
-│           ├── object
-│           │   ├── objcommon
-│           │   └── objuser
-│           ├── router
-│           ├── scripts
-│           └── service
-│               ├── svcexample
-│               └── svcuser
+├── apps
+│   ├── demoapp
+│   │   ├── cmd
+│   │   ├── client
+│   │   │   └── httpbingo
+│   │   ├── config
+│   │   ├── dao
+│   │   │   └── daouser
+│   │   ├── docs
+│   │   ├── internal
+│   │   │   ├── controller
+│   │   │   │   ├── ctrexample
+│   │   │   │   └── ctruser
+│   │   │   ├── dto
+│   │   │   │   ├── dtoexample
+│   │   │   │   └── dtouser
+│   │   │   └── service
+│   │   │       ├── svcexample
+│   │   │       └── svcuser
+│   │   ├── middleware
+│   │   ├── model
+│   │   ├── object
+│   │   │   ├── objcommon
+│   │   │   └── objuser
+│   │   ├── router
+│   │   └── scripts
+│   └── newapp
 ├── log
 ├── output
-│   └── build
+│   └── build
 ├── pkg
-│   ├── storages
-│   ├── test
-│   └── utils
+│   ├── code
+│   ├── storages
+│   ├── testutil
+│   └── utils
 └── scripts
     └── sql
 ```
@@ -63,7 +65,7 @@
 ```bash
 go install github.com/morehao/gocli@latest
 ```
-确保项目应用目录下有代码生成配置文件，示例：`go-gin-web/internal/apps/demoapp/config/code_gen.yaml`。代码生成命令如下：
+确保项目应用目录下有代码生成配置文件，示例：`go-gin-web/apps/demoapp/config/code_gen.yaml`。代码生成命令如下：
 ```bash
 # 基于表生成整个功能模块
 make codegen MODE=module APP=demoapp
@@ -108,7 +110,7 @@ gocli cutter -d /goProject/yourAppName
 ```
 执行后，会以当前项目为模板项目，在`/goProject`目录下生成一个名为`yourAppName`的项目。
 
-`go-cutter`是一个快速生成项目代码的命令行工具，可以基于现有项目快速生成一个新的项目，具体使用方法请参考 [cutter](https://github.com/morehao/gocli?tab=readme-ov-file#cutter)。
+`go-cutter`是一个快速生成项目代码的命令行工具，可以基于现有项目快速生成一个新的项目，具体使用方法请参考 [cutter](https://github.com/morehao/gocli)。
 
 
 ## 相关组件
