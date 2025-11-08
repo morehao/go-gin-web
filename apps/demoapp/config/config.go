@@ -10,7 +10,7 @@ import (
 	"github.com/morehao/golib/dbstore/dbmysql"
 	"github.com/morehao/golib/dbstore/dbredis"
 	"github.com/morehao/golib/glog"
-	"github.com/morehao/golib/protocol/gresty"
+	"github.com/morehao/golib/protocol/ghttp"
 )
 
 var Conf *Config
@@ -31,7 +31,7 @@ type Server struct {
 }
 
 type Client struct {
-	HTTPBingo *gresty.Client `yaml:"httpbingo"`
+	HTTPBingo *ghttp.Client `yaml:"httpbingo"`
 }
 
 // InitConf 初始化配置（运行时使用，自动查找配置文件）
