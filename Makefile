@@ -103,7 +103,7 @@ codegen:
 docker-build:
 	$(call validate_app)
 	@echo "🐳 正在构建 $(APP) 的 Docker 镜像..."
-	@docker build -t $(DOCKER_IMAGE):latest -f ./apps/$(APP)/scripts/Dockerfile .
+	docker buildx build -f ./apps/$(APP)/scripts/Dockerfile .
 	@echo "✅ Docker 镜像 $(DOCKER_IMAGE):latest 已构建完成"
 
 # 运行 Docker 容器

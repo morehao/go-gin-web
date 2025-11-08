@@ -17,7 +17,7 @@ RUN go mod download
 RUN go build -ldflags="-s -w" -o /app/demoapp ./apps/demoapp/cmd
 
 # 运行阶段
-FROM alpine:3.19
+FROM alpine:3.22
 
 # 从构建阶段复制二进制文件
 COPY --from=builder /app/demoapp /app/demoapp
