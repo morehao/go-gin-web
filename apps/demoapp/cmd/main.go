@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"fmt"
 
 	"github.com/gin-gonic/gin"
@@ -31,8 +32,9 @@ func main() {
 	routerGroup.Use(middleware.AccessLog())
 	router.RegisterRouter(routerGroup)
 	if err := engine.Run(fmt.Sprintf(":%s", config.Conf.Server.Port)); err != nil {
-		fmt.Println(fmt.Sprintf("%s run fail, port:%s", config.Conf.Server.Name, config.Conf.Server.Port))
+		glog.Errorf(context.Background(), "%s run fail, port:%s", config.Conf.Server.Name, config.Conf.Server.Port)
+		panic(err)
 	} else {
-		fmt.Println(fmt.Sprintf("%s run success, port:%s", config.Conf.Server.Name, config.Conf.Server.Port))
+		glog.Infof(context.Background(), "%s run success, port:%s", config.Conf.Server.Name, config.Conf.Server.Port)
 	}
 }
